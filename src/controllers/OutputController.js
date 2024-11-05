@@ -7,12 +7,12 @@ class OutputController {
     );
   }
 
-  static printProducts(products) {
-    if (!products) {
+  static printProductList(productList) {
+    if (!productList) {
       MissionUtils.Console.print('재고 없음');
       return;
     }
-    products.forEach(({ name, price, quantity, promotion }) => {
+    productList.forEach(({ name, price, quantity, promotion }) => {
       const productOutput = `- ${name} ${price.toLocaleString(
         'ko',
       )}원 ${quantity}개 ${promotion}`;

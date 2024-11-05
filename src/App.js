@@ -12,7 +12,7 @@ class App {
   }
 
   async run() {
-    await this.#store.prepareProducts();
+    this.#store.prepareProducts();
   }
 }
 
