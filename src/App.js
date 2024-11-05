@@ -1,5 +1,19 @@
+import { Customer, Store, Worker } from './objects/index.js';
+
 class App {
-  async run() {}
+  #customer;
+  #worker;
+  #store;
+
+  constructor() {
+    this.#customer = new Customer();
+    this.#worker = new Worker();
+    this.#store = new Store();
+  }
+
+  async run() {
+    await this.#store.prepareProducts();
+  }
 }
 
 export default App;
