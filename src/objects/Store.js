@@ -1,37 +1,55 @@
-import * as fs from 'fs';
-import { OutputController } from '../controllers/index.js';
+import {
+  FileController,
+  InputController,
+  OutputController,
+} from '../controllers/index.js';
+import Customer from './Customer.js';
+import Product from './Product.js';
+import Promotion from './Promotion.js';
 
 class Store {
   #products;
-  #productEventList;
+  #promotions;
 
   prepareProducts() {
-    const rawProducts = fs.readFileSync('public/products.md', 'utf8');
-    const rawProductEvents = fs.readFileSync('public/promotions.md', 'utf8');
+    const products = FileController.getProducts();
+    const promotions = FileController.getPromotions();
 
-    this.#products = Store.#parseProducts(rawProducts);
-    this.#productEventList = Store.#parseProductEventList(rawProductEvents);
+    this.#products = new Product(products);
+    this.#promotions = new Promotion(promotions);
 
     OutputController.printHello();
-    OutputController.printProducts(this.#products);
+    OutputController.printProducts(this.#products.products);
   }
 
-  static #parseProducts(rawProducts) {
-    const tempProducts = rawProducts.trim().split('\n');
-    tempProducts.shift();
-    return tempProducts.map((productInformation) => {
-      const [name, price, quantity, promotion] = productInformation.split(',');
-      return { name, price, quantity, promotion };
-    });
-  }
+  async checkPromotion(orderHistory) {
+    for await (const [item, quantity] of orderHistory) {
+      const currentProduct = this.#products.getPromotionProduct(item);
+      const currentPromotion = this.#promotions.getPromotion(
+        currentProduct.promotion,
+      );
 
-  static #parseProductEventList(rawProductEvents) {
-    const tempProductEvents = rawProductEvents.trim().split('\n');
-    tempProductEvents.shift();
-    return tempProductEvents.map((tempProductEvent) => {
-      const [name, buy, get, startDate, endDate] = tempProductEvent.split(',');
-      return { name, buy, get, startDate, endDate };
-    });
+      const isProductLeft = this.#products.getIsProductLeft(item, quantity + 1);
+      if (!isProductLeft) continue;
+
+      if (quantity === currentPromotion.buy) {
+        const answer = await InputController.askOneMoreFree(item);
+        if (answer === 'Y') {
+          orderHistory.set(item, quantity + 1);
+          continue;
+        }
+      }
+      if (quantity < currentPromotion.buy) {
+        const answer = await InputController.askMoreForPromotion(
+          item,
+          quantity,
+        );
+        if (answer === 'Y') {
+          orderHistory.set(item, quantity + 1);
+          continue;
+        }
+      }
+    }
   }
 }
 
