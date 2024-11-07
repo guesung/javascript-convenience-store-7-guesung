@@ -1,11 +1,11 @@
 import { expectLogContains, getLogSpy, getOutput } from '../lib/test/utils.js';
-import { Store } from './index.js';
+import { Worker } from './index.js';
 import OrderHistory from './OrderHistory.js';
 
-describe('Store', () => {
+describe('Worker', () => {
   describe('prepareProducts', () => {
     test('상품을 준비한다.', () => {
-      const store = new Store();
+      const store = new Worker();
       store.prepareProducts();
       const logSpy = getLogSpy();
 
@@ -34,5 +34,31 @@ describe('Store', () => {
       ];
       expectLogContains(output, expected);
     });
+  });
+
+  describe('checkPromotion', () => {
+    test.only('1개를 무료로 받을 수 있다면, 이에 대해 요청한다.', async () => {
+      const store = new Worker();
+      store.prepareProducts();
+      const logSpy = getLogSpy();
+
+      const orderHistory = new OrderHistory();
+      orderHistory.addItem('콜라');
+      orderHistory.addItem('콜라');
+
+      store.checkPromotion(orderHistory);
+
+      const output = getOutput(logSpy);
+
+      console.log(output);
+    });
+  });
+
+  describe('calculate', () => {
+    const store = new Worker();
+    const orderHistory = new OrderHistory();
+    orderHistory.addItem('콜라');
+    orderHistory.addItem('콜라');
+    orderHistory.addItem('콜라');
   });
 });

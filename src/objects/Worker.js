@@ -1,7 +1,7 @@
 import { FileController, OutputController } from '../controllers/index.js';
 import Product from './Product.js';
 
-class Store {
+class Worker {
   #product;
 
   get product() {
@@ -19,4 +19,4 @@ class Store {
   }
 }
 
-export default Store;
+export default Worker;

@@ -1,23 +1,23 @@
 import InputController from './controllers/InputController.js';
-import { Customer, Store } from './objects/index.js';
+import { Customer, Worker } from './objects/index.js';
 
 class App {
-  #store;
+  #worker;
   #customer;
 
   constructor() {
-    this.#store = new Store();
+    this.#worker = new Worker();
     this.#customer = new Customer();
   }
 
   async run() {
-    this.#store.prepareProducts();
+    this.#worker.prepareProducts();
 
-    await this.#customer.order(this.#store.product);
+    await this.#customer.order(this.#worker.product);
 
-    await this.#customer.checkPromotion(this.#store.product);
+    await this.#customer.checkPromotion(this.#worker.product);
 
-    this.#customer.calculateOrder(this.#store.product);
+    this.#customer.calculateOrder(this.#worker.product);
 
     const isMembershipDiscount =
       await InputController.getIsMembershipDiscount();
