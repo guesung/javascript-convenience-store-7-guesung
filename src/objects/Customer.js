@@ -9,8 +9,8 @@ class Customer {
     this.#receipt = [];
   }
 
-  async order() {
-    const items = await InputController.readItems();
+  async order(product) {
+    const items = await InputController.readItems(product);
 
     this.#orderHistory = new OrderHistory(items);
   }
@@ -20,7 +20,7 @@ class Customer {
       const promotionInfo = product.getPromotionInfo(item);
       const isProductLeft = product.getIsProductLeft(item, quantity + 1);
 
-      if (!isProductLeft) continue;
+      if (!promotionInfo || !isProductLeft) continue;
 
       if (quantity === promotionInfo.buy) {
         const answer = await InputController.askOneMoreFree(item);
@@ -41,15 +41,23 @@ class Customer {
       const promotionInfo = product.getPromotionInfo(item);
       const price = product.getPrice(item);
 
-      const promotionQuantity = Math.floor(
-        quantity / (promotionInfo.buy + promotionInfo.get),
-      );
+      let promotionQuantity = 0;
+      let promotionAdjustQuantity = 0;
+
+      if (promotionInfo) {
+        promotionQuantity = Math.floor(
+          quantity / (promotionInfo.buy + promotionInfo.get),
+        );
+        promotionAdjustQuantity =
+          promotionQuantity * (promotionInfo.buy + promotionInfo.get);
+      }
 
       this.#receipt.push({
         quantity,
         price,
         name: item,
         promotionQuantity,
+        promotionAdjustQuantity,
       });
 
       product.reduceProduct(item, quantity);
