@@ -47,6 +47,16 @@ describe('편의점', () => {
   });
 
   describe('정상적인 경우', () => {
+    test('인사를 한다,', async () => {
+      await run({
+        inputs: ['[콜라-1]', 'N', 'N'],
+        expected: [
+          '안녕하세요. W편의점입니다.',
+          '현재 보유하고 있는 상품입니다.',
+        ],
+      });
+    });
+
     test('파일에 있는 상품 목록을 출력한다.', async () => {
       await run({
         inputs: ['[콜라-1]', 'N', 'N'],
@@ -76,16 +86,24 @@ describe('편의점', () => {
     test('여러 개의 일반 상품 구매한다.', async () => {
       await run({
         inputs: ['[비타민워터-3],[물-2],[정식도시락-2]', 'N', 'N'],
-        expectedIgnoringWhiteSpaces: ['내실돈18,300'],
+        expectedIgnoringWhiteSpaces: [
+          '행사할인-0',
+          '멤버십할인-0',
+          '총구매액718,300',
+          '내실돈18,300',
+        ],
+      });
+      await run({
+        inputs: ['[콜라-3],[에너지바-5]', 'Y', 'N'],
+        expectedIgnoringWhiteSpaces: ['내실돈9,000'],
       });
     });
 
     test('기간에 해당하지 않는 프로모션은 적용하지 않는다.', async () => {
       mockNowDate('2024-02-01');
-
       await run({
         inputs: ['[감자칩-2]', 'N', 'N'],
-        expectedIgnoringWhiteSpaces: ['내실돈3,000'],
+        expectedIgnoringWhiteSpaces: ['내실돈3,000', '행사할인-0'],
       });
     });
   });
@@ -124,7 +142,7 @@ describe('편의점', () => {
       await runExceptions({
         inputs: ['[컵볶이-3]', 'N', 'N'],
         inputsToTerminate: INPUTS_TO_TERMINATE,
-        expectedErrorMessage: ERROR_MESSAGE.zeroQuantity,
+        expectedErrorMessage: ERROR_MESSAGE.noItem,
       });
     });
   });
