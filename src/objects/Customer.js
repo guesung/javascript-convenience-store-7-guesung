@@ -5,33 +5,29 @@ class Customer {
   #orderHistory;
   #receipt;
 
-  constructor() {
-    this.#receipt = [];
-  }
-
   async order(store) {
     const items = await InputController.readItems(store);
 
     this.#orderHistory = new OrderHistory(items);
   }
 
-  async checkItemsPromotion(store) {
+  async checkItemsPromotion(product) {
     for await (const [item, quantity] of this.#orderHistory.orderMap) {
-      await this.#checkItemPromotion(store, item, quantity);
+      await this.#checkItemPromotion(product, item, quantity);
     }
   }
 
-  async #checkItemPromotion(store, item, quantity) {
-    const promotionInfo = store.product.getPromotionInfo(item);
+  async #checkItemPromotion(product, item, quantity) {
+    const promotionInfo = product.getPromotionInfo(item);
     if (!promotionInfo) return;
 
     const promotionUnit = promotionInfo.buy + promotionInfo.get;
     const isPromotionProductLessThanQuantity =
-      store.product.getPromotionProductQuantity(item) < quantity;
+      product.getPromotionProductQuantity(item) < quantity;
 
     const currentPromotionQuantity =
       Math.floor(
-        Math.min(quantity, store.product.getPromotionProductQuantity(item)) /
+        Math.min(quantity, product.getPromotionProductQuantity(item)) /
           promotionUnit,
       ) * promotionUnit;
 
@@ -43,10 +39,25 @@ class Customer {
     if ((quantity + 1) % promotionUnit === 0) await this.#askOneMoreFree(item);
   }
 
-  calculateOrder(store) {
+  async #askNoPromotion(item, quantity) {
+    const isMoreForPromotion = await InputController.readIsBuyWithoutPromotion(
+      item,
+      quantity,
+    );
+    if (isMoreForPromotion) this.#orderHistory.addQuantity(item);
+  }
+
+  async #askOneMoreFree(item) {
+    const isOneMoreFree = await InputController.readIsGetFreePromotion(item);
+    if (isOneMoreFree) this.#orderHistory.addQuantity(item);
+  }
+
+  calculateOrder(product) {
+    this.#receipt = [];
+
     for (const [item, quantity] of this.#orderHistory.orderMap) {
-      const promotionInfo = store.product.getPromotionInfo(item);
-      const price = store.product.getPrice(item);
+      const promotionInfo = product.getPromotionInfo(item);
+      const price = product.getPrice(item);
 
       let promotionQuantity = 0;
       let promotionAdjustQuantity = 0;
@@ -67,25 +78,12 @@ class Customer {
         promotionAdjustQuantity,
       });
 
-      store.product.reduceProduct(item, quantity);
+      product.reduceProduct(item, quantity);
     }
   }
 
   calculateAll(isMembershipDiscount) {
     OutputController.printReceipt(this.#receipt, isMembershipDiscount);
-  }
-
-  async #askNoPromotion(item, quantity) {
-    const isMoreForPromotion = await InputController.readIsBuyWithoutPromotion(
-      item,
-      quantity,
-    );
-    if (isMoreForPromotion) this.#orderHistory.addQuantity(item);
-  }
-
-  async #askOneMoreFree(item) {
-    const isOneMoreFree = await InputController.readIsGetFreePromotion(item);
-    if (isOneMoreFree) this.#orderHistory.addQuantity(item);
   }
 }
 

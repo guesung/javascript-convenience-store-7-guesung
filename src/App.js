@@ -17,9 +17,9 @@ class App {
 
       await customer.order(this.#store);
 
-      await customer.checkItemsPromotion(this.#store);
+      await customer.checkItemsPromotion(this.#store.product);
 
-      customer.calculateOrder(this.#store);
+      customer.calculateOrder(this.#store.product);
 
       const isMembershipDiscount =
         await InputController.readtIsMembershipDiscount();
