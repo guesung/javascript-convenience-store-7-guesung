@@ -15,10 +15,6 @@ class Worker {
     this.#receipt = [];
   }
 
-  get product() {
-    return this.#product;
-  }
-
   prepareProducts() {
     const products = FileController.getProducts();
     const promotions = FileController.getPromotions();
@@ -30,24 +26,18 @@ class Worker {
   }
 
   async openStore() {
-    // const a = true
+    await InputController.retryWhileOrderFinish(async () => {
+      await this.#takeOrder();
 
-    // while(a){
-    // const customer = new Customer();
+      await this.#checkPromotion();
 
-    await this.#takeOrder();
+      this.#calculateOrder();
 
-    await this.#checkPromotion();
+      const isMembershipDiscount =
+        await InputController.getIsMembershipDiscount();
 
-    this.#calculateOrder();
-
-    const isMembershipDiscount =
-      await InputController.getIsMembershipDiscount();
-
-    this.#calculateAll(isMembershipDiscount);
-
-    // break;
-    // }
+      this.#calculateAll(isMembershipDiscount);
+    });
   }
 
   async #takeOrder() {
@@ -64,15 +54,15 @@ class Worker {
       if (!promotionInfo || !isProductLeft) continue;
 
       if (quantity === promotionInfo.buy) {
-        const answer = await InputController.askOneMoreFree(item);
-        if (answer === 'Y') this.#orderHistory.addQuantity(item);
+        const isOneMoreFree = await InputController.getIsOneMoreFree(item);
+        if (isOneMoreFree) this.#orderHistory.addQuantity(item);
       }
       if (quantity < promotionInfo.buy) {
-        const answer = await InputController.askMoreForPromotion(
+        const isMoreForPromotion = await InputController.getIsMoreForPromotion(
           item,
           quantity,
         );
-        if (answer === 'Y') this.#orderHistory.addQuantity(item);
+        if (isMoreForPromotion) this.#orderHistory.addQuantity(item);
       }
     }
   }
