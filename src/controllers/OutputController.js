@@ -61,12 +61,16 @@ class OutputController {
 
     let membershipDiscount;
 
-    if (isMembershipDiscount === 'N') membershipDiscount = 0;
+    if (!isMembershipDiscount) membershipDiscount = 0;
     else
-      membershipDiscount = receipt.reduce(
-        (prev, cur) => prev + cur.promotionAdjustQuantity * cur.price,
-        0,
-      );
+      membershipDiscount =
+        (receipt.reduce(
+          (prev, cur) =>
+            prev + (cur.quantity - cur.promotionAdjustQuantity) * cur.price,
+          0,
+        ) *
+          3) /
+        10;
 
     MissionUtils.Console.print(
       `멤버십할인 -${membershipDiscount.toLocaleString()}`,
