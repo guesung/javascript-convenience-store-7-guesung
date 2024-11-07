@@ -13,21 +13,21 @@ class Customer {
     this.#orderHistory = new OrderHistory(items);
   }
 
-  async checkItemsPromotion(product) {
+  async checkItemsPromotion(store) {
     for await (const [item, quantity] of this.#orderHistory.orderMap) {
-      await this.#checkItemPromotion(product, item, quantity);
+      await this.#checkItemPromotion(store, item, quantity);
     }
   }
 
-  async #checkItemPromotion(product, item, quantity) {
-    const promotionInfo = product.getPromotionInfo(item);
+  async #checkItemPromotion(store, item, quantity) {
+    const promotionInfo = store.getPromotionInfo(item);
     if (!promotionInfo) return;
 
     const promotionUnit = promotionInfo.buy + promotionInfo.get;
-    const isPromotionProductLessThanQuantity = product.getPromotionProductQuantity(item) < quantity;
+    const isPromotionProductLessThanQuantity = store.getPromotionProductQuantity(item) < quantity;
 
     const currentPromotionQuantity =
-      Math.floor(Math.min(quantity, product.getPromotionProductQuantity(item)) / promotionUnit) *
+      Math.floor(Math.min(quantity, store.getPromotionProductQuantity(item)) / promotionUnit) *
       promotionUnit;
 
     if (isPromotionProductLessThanQuantity) {
@@ -48,12 +48,12 @@ class Customer {
     if (isOneMoreFree) this.#orderHistory.addQuantity(item);
   }
 
-  calculateOrder(product) {
+  calculateOrder(store) {
     this.#receipt = [];
 
     for (const [item, quantity] of this.#orderHistory.orderMap) {
-      const promotionInfo = product.getPromotionInfo(item);
-      const price = product.getPrice(item);
+      const promotionInfo = store.getPromotionInfo(item);
+      const price = store.getPrice(item);
 
       let promotionQuantity = 0;
       let promotionAdjustQuantity = 0;
@@ -71,7 +71,7 @@ class Customer {
         promotionAdjustQuantity,
       });
 
-      product.reduceProduct(item, quantity);
+      store.reduceProduct(item, quantity);
     }
   }
 

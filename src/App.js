@@ -10,16 +10,14 @@ class App {
   }
 
   async run() {
-    this.#store.prepareProducts();
-
     await InputController.retryWhileOrderFinish(async () => {
       const customer = new Customer();
 
       await customer.order(this.#store);
 
-      await customer.checkItemsPromotion(this.#store.product);
+      await customer.checkItemsPromotion(this.#store);
 
-      customer.calculateOrder(this.#store.product);
+      customer.calculateOrder(this.#store);
 
       const isMembershipDiscount = await InputController.readtIsMembershipDiscount();
 

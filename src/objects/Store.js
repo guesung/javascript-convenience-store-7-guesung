@@ -1,26 +1,77 @@
 import { FileController, OutputController } from '../controllers/index.js';
 import { ERROR_MESSAGE } from '../lib/constants.js';
-import Product from './Product.js';
 
 class Store {
-  product;
+  #products;
+  #promotions;
 
-  prepareProducts() {
-    const products = FileController.getProducts();
-    const promotions = FileController.getPromotions();
+  constructor() {
+    this.#products = FileController.getProducts();
+    this.#promotions = FileController.getPromotions();
 
     OutputController.printHello();
-    OutputController.printProducts(products);
-
-    this.product = new Product(products, promotions);
+    OutputController.printProducts(this.#products);
   }
 
   validateItemsQuantity(items) {
     items.forEach(([name, quantity]) => {
-      const productQuantity = this.product.getProductQuantity(name);
+      const productQuantity = this.getProductQuantity(name);
       if (productQuantity === 0) throw new Error(ERROR_MESSAGE.noItem);
       if (productQuantity < quantity) throw new Error(ERROR_MESSAGE.overQuantity);
     });
+  }
+
+  getPromotionInfo(item) {
+    const productInfo = this.#getPromotionProductInfo(item);
+    const promotionInfo = this.#promotions.find(
+      (promotion) => promotion.name === productInfo.promotion,
+    );
+
+    return promotionInfo;
+  }
+
+  getProductQuantity(item) {
+    return this.#getProducts(item).reduce((prev, cur) => prev + cur.quantity, 0);
+  }
+
+  #getPromotionProducts(item) {
+    return this.#getProducts(item).filter((product) => product.promotion !== '');
+  }
+
+  getPromotionProductQuantity(item) {
+    return this.#getPromotionProducts(item).reduce((prev, cur) => prev + cur.quantity, 0);
+  }
+
+  #getPromotionProductInfo(item) {
+    return this.#getProducts(item).find((product) => product.promotion !== 'null');
+  }
+
+  getIsProductLeft(item, quantity) {
+    return this.getProductQuantity(item) >= quantity;
+  }
+
+  reduceProduct(item, quantity = 1) {
+    const products = this.#getProducts(item);
+    let leftQuantity = quantity;
+
+    products.forEach((product) => {
+      if (product.quantity > 0) {
+        const reducedQuantity = Math.min(product.quantity, leftQuantity);
+        product.quantity -= reducedQuantity;
+        leftQuantity -= reducedQuantity;
+      }
+    });
+  }
+
+  getPrice(item) {
+    const products = this.#getProducts(item);
+    const product = products[0];
+
+    return product.price;
+  }
+
+  #getProducts(item) {
+    return this.#products.filter((product) => product.name === item);
   }
 }
 
