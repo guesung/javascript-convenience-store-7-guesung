@@ -1,5 +1,6 @@
 import { InputController, OutputController } from '../controllers/index.js';
 import OrderHistory from './OrderHistory.js';
+import Receipt from './Receipt.js';
 
 // TODO: Customer에 책임이 너무 많다.
 
@@ -49,7 +50,7 @@ class Customer {
   }
 
   calculateOrder(store) {
-    this.#receipt = [];
+    this.#receipt = new Receipt();
 
     for (const [item, quantity] of this.#orderHistory.orderMap) {
       const promotionInfo = store.getPromotionInfo(item);
@@ -63,7 +64,7 @@ class Customer {
         promotionAdjustQuantity = promotionQuantity * (promotionInfo.buy + promotionInfo.get);
       }
 
-      this.#receipt.push({
+      this.#receipt.addItem({
         quantity,
         price,
         name: item,
