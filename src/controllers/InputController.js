@@ -58,7 +58,7 @@ class InputController {
   static async askMoreForPromotion(item, quantity) {
     return retryWhileCatchedError(async () => {
       const answer = await MissionUtils.Console.readLineAsync(
-        `현재 ${item} ${quantity}개는 프로모션 할인이 적용되지 않습니다. 그래도 구매하시겠습니까? (Y/N)`,
+        `현재 ${item} ${quantity}개는 프로모션 할인이 적용되지 않습니다. 그래도 구매하시겠습니까? (Y/N)\n`,
       );
 
       this.#validateYesOrNo(answer);
@@ -70,7 +70,7 @@ class InputController {
   static async getIsMembershipDiscount() {
     return retryWhileCatchedError(async () => {
       const answer = await MissionUtils.Console.readLineAsync(
-        '멤버십 할인을 받으시겠습니까? (Y/N)',
+        '멤버십 할인을 받으시겠습니까? (Y/N)\n',
       );
 
       this.#validateYesOrNo(answer);

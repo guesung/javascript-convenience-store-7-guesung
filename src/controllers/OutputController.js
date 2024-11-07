@@ -11,9 +11,7 @@ class OutputController {
     products.forEach(({ name, price, quantity, promotion }) => {
       const quantityOutput = this.#getQuantityOutput(quantity);
 
-      const productOutput = `- ${name} ${price.toLocaleString(
-        'ko',
-      )}원 ${quantityOutput} ${promotion}`;
+      const productOutput = `- ${name} ${price.toLocaleString()}원 ${quantityOutput} ${promotion}`;
 
       MissionUtils.Console.print(productOutput);
     });
@@ -30,9 +28,9 @@ class OutputController {
 
     receipt.forEach((product) => {
       MissionUtils.Console.print(
-        `${product.name}   ${product.quantity}   ${product.price.toLocaleString(
-          'ko',
-        )}`,
+        `${product.name}   ${
+          product.quantity
+        }   ${product.price.toLocaleString()}`,
       );
     });
 
@@ -51,7 +49,7 @@ class OutputController {
       0,
     );
     MissionUtils.Console.print(
-      `총구매액  ${totalQuantity} ${totalPrice.toLocaleString('ko')}`,
+      `총구매액  ${totalQuantity} ${totalPrice.toLocaleString()}`,
     );
 
     const promotionPrice = receipt.reduce((prev, cur) => {
@@ -59,25 +57,23 @@ class OutputController {
         return cur.promotionQuantity * cur.price + prev;
       return prev;
     }, 0);
-    MissionUtils.Console.print(
-      `행사할인 -${promotionPrice.toLocaleString('ko')}`,
-    );
+    MissionUtils.Console.print(`행사할인 -${promotionPrice.toLocaleString()}`);
 
     let membershipDiscount;
 
-    if (!isMembershipDiscount) membershipDiscount = 0;
+    if (isMembershipDiscount === 'N') membershipDiscount = 0;
     else
-      membershipDiscount = Math.min(
-        ((totalPrice - promotionPrice) * 3) / 10,
-        8000,
+      membershipDiscount = receipt.reduce(
+        (prev, cur) => prev + cur.promotionAdjustQuantity * cur.price,
+        0,
       );
 
     MissionUtils.Console.print(
-      `멤버십할인 -${membershipDiscount.toLocaleString('ko')}`,
+      `멤버십할인 -${membershipDiscount.toLocaleString()}`,
     );
 
     const realPrice = totalPrice - promotionPrice - membershipDiscount;
-    MissionUtils.Console.print(`내실돈 ${realPrice.toLocaleString('ko')}`);
+    MissionUtils.Console.print(`내실돈 ${realPrice.toLocaleString()}`);
   }
 }
 
