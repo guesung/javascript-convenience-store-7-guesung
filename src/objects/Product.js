@@ -1,14 +1,67 @@
 class Product {
   #products;
+  #promotions;
 
-  constructor(products) {
+  constructor(products, promotions) {
     this.#products = products;
+    this.#promotions = promotions;
   }
 
-  /**
-   * 1. 상품을 등록한다.
-   * 2. 상품을 재고한다.
-   */
+  get products() {
+    return this.#products;
+  }
+
+  getPromotionInfo(item) {
+    const productInfo = this.#getPromotionProductInfo(item);
+    const promotionInfo = this.#promotions.find(
+      (promotion) => promotion.name === productInfo.promotion,
+    );
+
+    return promotionInfo;
+  }
+
+  getProductQuantity(item) {
+    return this.#getProducts(item).reduce(
+      (prev, cur) => prev + cur.quantity,
+      0,
+    );
+  }
+
+  #getPromotionProductInfo(item) {
+    return this.#getProducts(item).find(
+      (product) => product.promotion !== 'null',
+    );
+  }
+
+  getIsProductLeft(item, quantity) {
+    return this.getProductQuantity(item) >= quantity;
+  }
+
+  reduceProduct(item, quantity = 1) {
+    const products = this.#getProducts(item);
+    let leftQuantity = quantity;
+
+    products.forEach((product) => {
+      if (product.quantity > 0) {
+        const reducedQuantity = Math.min(product.quantity, leftQuantity);
+        product.quantity -= reducedQuantity;
+        leftQuantity -= reducedQuantity;
+      }
+    });
+  }
+
+  getPrice(item) {
+    const products = this.#getProducts(item);
+    const product = products[0];
+
+    return product.price;
+  }
+
+  #getProducts(item) {
+    return this.#products
+      .filter((product) => product.name === item)
+      .sort((a, b) => a.promotion === 'null');
+  }
 }
 
 export default Product;
