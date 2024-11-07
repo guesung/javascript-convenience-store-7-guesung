@@ -1,13 +1,37 @@
 import { MissionUtils } from '@woowacourse/mission-utils';
+import { ERROR_MESSAGE, INPUT_MEESAGE } from '../lib/constants.js';
+import { retryWhileCatchedError } from '../lib/utils.js';
 
 class InputController {
-  static async readItems() {
-    const rawItems = await MissionUtils.Console.readLineAsync(
-      '구매하실 상품명과 수량을 입력해 주세요. (예: [사이다-2],[감자칩-1])\n',
-    );
-    const items = this.#parseItems(rawItems);
+  static async readItems(product) {
+    return retryWhileCatchedError(async () => {
+      const rawItems = await MissionUtils.Console.readLineAsync(
+        INPUT_MEESAGE.readItem,
+      );
+      this.#validateItemsFormat(rawItems);
+      const items = this.#parseItems(rawItems);
+      this.#validateItemsQuantity(product, items);
 
-    return items;
+      return items;
+    });
+  }
+
+  static #validateItemsQuantity(product, items) {
+    items.forEach(([name, quantity]) => {
+      if (product.getProductQuantity(name) === 0)
+        throw new Error(ERROR_MESSAGE.noItem);
+      if (product.quantity === 0) throw new Error(ERROR_MESSAGE.zeroQuantity);
+      if (product.getProductQuantity(name) < quantity)
+        throw new Error(ERROR_MESSAGE.overQuantity);
+    });
+  }
+
+  static #validateItemsFormat(rawItems) {
+    const items = rawItems.split(',');
+    items.forEach((item) => {
+      if (!/^\[[가-힣a-zA-Z]+-\d+\]$/.test(item))
+        throw new Error(ERROR_MESSAGE.notFormat);
+    });
   }
 
   static #parseItems(rawItems) {
