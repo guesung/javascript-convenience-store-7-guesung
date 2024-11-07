@@ -11,22 +11,15 @@ class Worker {
   #orderHistory;
   #receipt;
 
-  constructor() {
+  constructor(product) {
+    this.#product = product;
     this.#receipt = [];
   }
 
-  prepareProducts() {
-    const products = FileController.getProducts();
-    const promotions = FileController.getPromotions();
-
-    this.#product = new Product(products, promotions);
-
-    OutputController.printHello();
-    OutputController.printProducts(this.#product.products);
-  }
-
-  async openStore() {
+  async openStore(product) {
     await InputController.retryWhileOrderFinish(async () => {
+      this.#product = product;
+
       await this.#takeOrder();
 
       await this.#checkPromotion();

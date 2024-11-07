@@ -1,16 +1,15 @@
 import { Worker } from './objects/index.js';
+import Store from './objects/Store.js';
 
 class App {
   #worker;
 
-  constructor() {
-    this.#worker = new Worker();
-  }
-
   async run() {
-    this.#worker.prepareProducts();
+    const product = Store.prepareProducts();
 
-    await this.#worker.openStore();
+    this.#worker = new Worker(product);
+
+    await this.#worker.openStore(product);
   }
 }
 
