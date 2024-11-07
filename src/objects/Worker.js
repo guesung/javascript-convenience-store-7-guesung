@@ -16,13 +16,11 @@ class Worker {
     this.#receipt = [];
   }
 
-  async openStore(product) {
+  async openStore() {
     await InputController.retryWhileOrderFinish(async () => {
-      this.#product = product;
-
       await this.#takeOrder();
 
-      await this.#checkPromotion();
+      await this.#checkItemsPromotion();
 
       this.#calculateOrder();
 
@@ -39,25 +37,34 @@ class Worker {
     this.#orderHistory = new OrderHistory(items);
   }
 
-  async #checkPromotion() {
+  async #checkItemsPromotion() {
     for await (const [item, quantity] of this.#orderHistory.orderMap) {
-      const promotionInfo = this.#product.getPromotionInfo(item);
-      const isProductLeft = this.#product.getIsProductLeft(item, quantity + 1);
-
-      if (!promotionInfo || !isProductLeft) continue;
-
-      if (quantity === promotionInfo.buy) {
-        const isOneMoreFree = await InputController.getIsOneMoreFree(item);
-        if (isOneMoreFree) this.#orderHistory.addQuantity(item);
-      }
-      if (quantity < promotionInfo.buy) {
-        const isMoreForPromotion = await InputController.getIsMoreForPromotion(
-          item,
-          quantity,
-        );
-        if (isMoreForPromotion) this.#orderHistory.addQuantity(item);
-      }
+      await this.#checkItemPromotion(item, quantity);
     }
+  }
+
+  async #checkItemPromotion(item, quantity) {
+    const promotionInfo = this.#product.getPromotionInfo(item);
+    const isProductLeft = this.#product.getIsProductLeft(item, quantity + 1);
+
+    if (!promotionInfo || !isProductLeft) return;
+
+    if (quantity === promotionInfo.buy) await this.#askOneMoreFree(item);
+    if (quantity < promotionInfo.buy)
+      await this.#askMoreForPromotion(item, quantity);
+  }
+
+  async #askOneMoreFree(item) {
+    const isOneMoreFree = await InputController.getIsOneMoreFree(item);
+    if (isOneMoreFree) this.#orderHistory.addQuantity(item);
+  }
+
+  async #askMoreForPromotion(item, quantity) {
+    const isMoreForPromotion = await InputController.getIsMoreForPromotion(
+      item,
+      quantity,
+    );
+    if (isMoreForPromotion) this.#orderHistory.addQuantity(item);
   }
 
   #calculateOrder() {
