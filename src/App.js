@@ -22,7 +22,7 @@ class App {
       customer.calculateOrder(this.#store);
 
       const isMembershipDiscount =
-        await InputController.getIsMembershipDiscount();
+        await InputController.readtIsMembershipDiscount();
 
       customer.calculateAll(isMembershipDiscount);
     });

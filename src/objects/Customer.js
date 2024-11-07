@@ -76,7 +76,7 @@ class Customer {
   }
 
   async #askNoPromotion(item, quantity) {
-    const isMoreForPromotion = await InputController.getIsNoPromotion(
+    const isMoreForPromotion = await InputController.readIsBuyWithoutPromotion(
       item,
       quantity,
     );
@@ -84,7 +84,7 @@ class Customer {
   }
 
   async #askOneMoreFree(item) {
-    const isOneMoreFree = await InputController.getIsOneMoreFree(item);
+    const isOneMoreFree = await InputController.readIsGetFreePromotion(item);
     if (isOneMoreFree) this.#orderHistory.addQuantity(item);
   }
 }
