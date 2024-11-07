@@ -14,10 +14,21 @@ class Store {
   }
 
   validateItemsQuantity(items) {
+    this.validateItemsZero(items);
+    this.validateItemsOverQuantity(items);
+  }
+
+  validateItemsZero(items) {
+    items.forEach(([name]) => {
+      const productQuantity = this.getProductQuantity(name);
+      if (productQuantity === 0) throw new Error(ERROR_MESSAGE.itemsZero);
+    });
+  }
+
+  validateItemsOverQuantity(items) {
     items.forEach(([name, quantity]) => {
       const productQuantity = this.getProductQuantity(name);
-      if (productQuantity === 0) throw new Error(ERROR_MESSAGE.noItem);
-      if (productQuantity < quantity) throw new Error(ERROR_MESSAGE.overQuantity);
+      if (productQuantity < quantity) throw new Error(ERROR_MESSAGE.itemsOverQuantity);
     });
   }
 
