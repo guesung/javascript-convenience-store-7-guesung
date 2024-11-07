@@ -1,8 +1,9 @@
 import { FileController, OutputController } from '../controllers/index.js';
+import { ERROR_MESSAGE } from '../lib/constants.js';
 import Product from './Product.js';
 
 class Store {
-  #products;
+  product;
 
   prepareProducts() {
     const products = FileController.getProducts();
@@ -11,7 +12,16 @@ class Store {
     OutputController.printHello();
     OutputController.printProducts(products);
 
-    this.#products = new Product(products, promotions);
+    this.product = new Product(products, promotions);
+  }
+
+  validateItemsQuantity(items) {
+    items.forEach(([name, quantity]) => {
+      const productQuantity = this.product.getProductQuantity(name);
+      if (productQuantity === 0) throw new Error(ERROR_MESSAGE.noItem);
+      if (productQuantity < quantity)
+        throw new Error(ERROR_MESSAGE.overQuantity);
+    });
   }
 }
 

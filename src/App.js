@@ -1,15 +1,31 @@
-import { Worker } from './objects/index.js';
+import InputController from './controllers/InputController.js';
+import Customer from './objects/Customer.js';
 import Store from './objects/Store.js';
 
 class App {
-  #worker;
+  #store;
+
+  constructor() {
+    this.#store = new Store();
+  }
 
   async run() {
-    const product = Store.prepareProducts();
+    this.#store.prepareProducts();
 
-    this.#worker = new Worker(product);
+    await InputController.retryWhileOrderFinish(async () => {
+      const customer = new Customer();
 
-    await this.#worker.openStore(product);
+      await customer.order(this.#store);
+
+      await customer.checkItemsPromotion(this.#store);
+
+      customer.calculateOrder(this.#store);
+
+      const isMembershipDiscount =
+        await InputController.getIsMembershipDiscount();
+
+      customer.calculateAll(isMembershipDiscount);
+    });
   }
 }
 

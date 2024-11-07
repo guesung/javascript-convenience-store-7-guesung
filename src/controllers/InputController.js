@@ -2,25 +2,16 @@ import { MissionUtils } from '@woowacourse/mission-utils';
 import { ERROR_MESSAGE, INPUT_MEESAGE } from '../lib/constants.js';
 
 class InputController {
-  static async readItems(product) {
+  static async readItems(store) {
     return this.#retryWhileCatchedError(async () => {
       const rawItems = await MissionUtils.Console.readLineAsync(
         INPUT_MEESAGE.readItem,
       );
       this.#validateItemsFormat(rawItems);
       const items = this.#parseItems(rawItems);
-      this.#validateItemsQuantity(product, items);
+      store.validateItemsQuantity(items);
 
       return items;
-    });
-  }
-
-  static #validateItemsQuantity(product, items) {
-    items.forEach(([name, quantity]) => {
-      if (product.getProductQuantity(name) === 0)
-        throw new Error(ERROR_MESSAGE.noItem);
-      if (product.getProductQuantity(name) < quantity)
-        throw new Error(ERROR_MESSAGE.overQuantity);
     });
   }
 
