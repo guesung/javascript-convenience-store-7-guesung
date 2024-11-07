@@ -1,69 +1,15 @@
-import { MissionUtils } from '@woowacourse/mission-utils';
-import { EOL as LINE_SEPARATOR } from 'os';
 import App from '../src/App.js';
+import {
+  expectLogContains,
+  expectLogContainsWithoutSpacesAndEquals,
+  getLogSpy,
+  getOutput,
+  mockNowDate,
+  mockQuestions,
+  runExceptions,
+} from '../src/lib/test/utils.js';
 
-const mockQuestions = (inputs) => {
-  const messages = [];
-
-  MissionUtils.Console.readLineAsync = jest.fn((prompt) => {
-    messages.push(prompt);
-    const input = inputs.shift();
-
-    if (input === undefined) {
-      throw new Error('NO INPUT');
-    }
-
-    return Promise.resolve(input);
-  });
-
-  MissionUtils.Console.readLineAsync.messages = messages;
-};
-
-const mockNowDate = (date = null) => {
-  const mockDateTimes = jest.spyOn(MissionUtils.DateTimes, 'now');
-  mockDateTimes.mockReturnValue(new Date(date));
-  return mockDateTimes;
-};
-
-const getLogSpy = () => {
-  const logSpy = jest.spyOn(MissionUtils.Console, 'print');
-  logSpy.mockClear();
-  return logSpy;
-};
-
-const getOutput = (logSpy) => [...logSpy.mock.calls].join(LINE_SEPARATOR);
-
-const expectLogContains = (received, expects) => {
-  expects.forEach((exp) => {
-    expect(received).toContain(exp);
-  });
-};
-
-const expectLogContainsWithoutSpacesAndEquals = (received, expects) => {
-  const processedReceived = received.replace(/[\s=]/g, '');
-  expects.forEach((exp) => {
-    expect(processedReceived).toContain(exp);
-  });
-};
-
-const runExceptions = async ({
-  inputs = [],
-  inputsToTerminate = [],
-  expectedErrorMessage = '',
-}) => {
-  // given
-  const logSpy = getLogSpy();
-  mockQuestions([...inputs, ...inputsToTerminate]);
-
-  // when
-  const app = new App();
-  await app.run();
-
-  // then
-  expect(logSpy).toHaveBeenCalledWith(
-    expect.stringContaining(expectedErrorMessage),
-  );
-};
+const INPUTS_TO_TERMINATE = ['[비타민워터-1]', 'N', 'N'];
 
 const run = async ({
   inputs = [],
@@ -92,8 +38,6 @@ const run = async ({
     expectLogContains(output, expected);
   }
 };
-
-const INPUTS_TO_TERMINATE = ['[비타민워터-1]', 'N', 'N'];
 
 describe('편의점', () => {
   afterEach(() => {
