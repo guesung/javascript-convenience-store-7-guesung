@@ -58,9 +58,7 @@ class Product {
   }
 
   #getProducts(item) {
-    return this.#products
-      .filter((product) => product.name === item)
-      .sort((a, b) => a.promotion === 'null');
+    return this.#products.filter((product) => product.name === item);
   }
 }
 
