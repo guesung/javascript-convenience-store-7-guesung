@@ -31,8 +31,7 @@ export const getLogSpy = () => {
   return logSpy;
 };
 
-export const getOutput = (logSpy) =>
-  [...logSpy.mock.calls].join(LINE_SEPARATOR);
+export const getOutput = (logSpy) => [...logSpy.mock.calls].join(LINE_SEPARATOR);
 
 export const expectLogContains = (received, expects) => {
   expects.forEach((exp) => {
@@ -61,7 +60,5 @@ export const runExceptions = async ({
   await app.run();
 
   // then
-  expect(logSpy).toHaveBeenCalledWith(
-    expect.stringContaining(expectedErrorMessage),
-  );
+  expect(logSpy).toHaveBeenCalledWith(expect.stringContaining(expectedErrorMessage));
 };

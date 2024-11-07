@@ -2,11 +2,12 @@ import { MissionUtils } from '@woowacourse/mission-utils';
 import { ERROR_MESSAGE, INPUT_MEESAGE } from '../lib/constants.js';
 
 class InputController {
+  static #ITEMS_REGEXR = /^\[[가-힣a-zA-Z]+-\d+\]$/;
+  static #ITEMS_SEPARATOR = ',';
+
   static async readItems(store) {
     return this.#retryWhileCatchedError(async () => {
-      const rawItems = await MissionUtils.Console.readLineAsync(
-        INPUT_MEESAGE.readItem,
-      );
+      const rawItems = await MissionUtils.Console.readLineAsync(INPUT_MEESAGE.readItem);
       this.#validateItemsFormat(rawItems);
       const items = this.#parseItems(rawItems);
       store.validateItemsQuantity(items);
@@ -16,10 +17,9 @@ class InputController {
   }
 
   static #validateItemsFormat(rawItems) {
-    const items = rawItems.split(',');
+    const items = rawItems.split(this.#ITEMS_SEPARATOR);
     items.forEach((item) => {
-      if (!/^\[[가-힣a-zA-Z]+-\d+\]$/.test(item))
-        throw new Error(ERROR_MESSAGE.notFormat);
+      if (!this.#ITEMS_REGEXR.test(item)) throw new Error(ERROR_MESSAGE.notFormat);
     });
   }
 

@@ -21,29 +21,19 @@ class Product {
   }
 
   getProductQuantity(item) {
-    return this.#getProducts(item).reduce(
-      (prev, cur) => prev + cur.quantity,
-      0,
-    );
+    return this.#getProducts(item).reduce((prev, cur) => prev + cur.quantity, 0);
   }
 
   #getPromotionProducts(item) {
-    return this.#getProducts(item).filter(
-      (product) => product.promotion !== '',
-    );
+    return this.#getProducts(item).filter((product) => product.promotion !== '');
   }
 
   getPromotionProductQuantity(item) {
-    return this.#getPromotionProducts(item).reduce(
-      (prev, cur) => prev + cur.quantity,
-      0,
-    );
+    return this.#getPromotionProducts(item).reduce((prev, cur) => prev + cur.quantity, 0);
   }
 
   #getPromotionProductInfo(item) {
-    return this.#getProducts(item).find(
-      (product) => product.promotion !== 'null',
-    );
+    return this.#getProducts(item).find((product) => product.promotion !== 'null');
   }
 
   getIsProductLeft(item, quantity) {

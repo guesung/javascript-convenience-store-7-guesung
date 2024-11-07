@@ -19,8 +19,7 @@ class Store {
     items.forEach(([name, quantity]) => {
       const productQuantity = this.product.getProductQuantity(name);
       if (productQuantity === 0) throw new Error(ERROR_MESSAGE.noItem);
-      if (productQuantity < quantity)
-        throw new Error(ERROR_MESSAGE.overQuantity);
+      if (productQuantity < quantity) throw new Error(ERROR_MESSAGE.overQuantity);
     });
   }
 }

@@ -1,6 +1,8 @@
 import { InputController, OutputController } from '../controllers/index.js';
 import OrderHistory from './OrderHistory.js';
 
+// TODO: Customer에 책임이 너무 많다.
+
 class Customer {
   #orderHistory;
   #receipt;
@@ -22,14 +24,11 @@ class Customer {
     if (!promotionInfo) return;
 
     const promotionUnit = promotionInfo.buy + promotionInfo.get;
-    const isPromotionProductLessThanQuantity =
-      product.getPromotionProductQuantity(item) < quantity;
+    const isPromotionProductLessThanQuantity = product.getPromotionProductQuantity(item) < quantity;
 
     const currentPromotionQuantity =
-      Math.floor(
-        Math.min(quantity, product.getPromotionProductQuantity(item)) /
-          promotionUnit,
-      ) * promotionUnit;
+      Math.floor(Math.min(quantity, product.getPromotionProductQuantity(item)) / promotionUnit) *
+      promotionUnit;
 
     if (isPromotionProductLessThanQuantity) {
       await this.#askNoPromotion(item, quantity - currentPromotionQuantity);
@@ -40,10 +39,7 @@ class Customer {
   }
 
   async #askNoPromotion(item, quantity) {
-    const isMoreForPromotion = await InputController.readIsBuyWithoutPromotion(
-      item,
-      quantity,
-    );
+    const isMoreForPromotion = await InputController.readIsBuyWithoutPromotion(item, quantity);
     if (isMoreForPromotion) this.#orderHistory.addQuantity(item);
   }
 
@@ -63,11 +59,8 @@ class Customer {
       let promotionAdjustQuantity = 0;
 
       if (promotionInfo) {
-        promotionQuantity = Math.floor(
-          quantity / (promotionInfo.buy + promotionInfo.get),
-        );
-        promotionAdjustQuantity =
-          promotionQuantity * (promotionInfo.buy + promotionInfo.get);
+        promotionQuantity = Math.floor(quantity / (promotionInfo.buy + promotionInfo.get));
+        promotionAdjustQuantity = promotionQuantity * (promotionInfo.buy + promotionInfo.get);
       }
 
       this.#receipt.push({

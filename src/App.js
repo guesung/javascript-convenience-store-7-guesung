@@ -21,8 +21,7 @@ class App {
 
       customer.calculateOrder(this.#store.product);
 
-      const isMembershipDiscount =
-        await InputController.readtIsMembershipDiscount();
+      const isMembershipDiscount = await InputController.readtIsMembershipDiscount();
 
       customer.calculateAll(isMembershipDiscount);
     });
