@@ -49,7 +49,7 @@ describe('편의점', () => {
   describe('정상적인 경우', () => {
     test('인사를 한다,', async () => {
       await run({
-        inputs: ['[콜라-1]', 'N', 'N'],
+        inputs: ['[콜라-1]', 'N', 'N', 'N'],
         expected: [
           '안녕하세요. W편의점입니다.',
           '현재 보유하고 있는 상품입니다.',
@@ -59,7 +59,7 @@ describe('편의점', () => {
 
     test('파일에 있는 상품 목록을 출력한다.', async () => {
       await run({
-        inputs: ['[콜라-1]', 'N', 'N'],
+        inputs: ['[콜라-1]', 'N', 'N', 'N'],
         expected: [
           '- 콜라 1,000원 10개 탄산2+1',
           '- 콜라 1,000원 10개',
@@ -83,7 +83,7 @@ describe('편의점', () => {
       });
     });
 
-    test('여러 개의 일반 상품 구매한다.', async () => {
+    test('상품을 한 번 구매한다.', async () => {
       await run({
         inputs: ['[비타민워터-3],[물-2],[정식도시락-2]', 'N', 'N'],
         expectedIgnoringWhiteSpaces: [
@@ -94,7 +94,7 @@ describe('편의점', () => {
         ],
       });
       await run({
-        inputs: ['[콜라-3],[에너지바-5]', 'Y', 'N'],
+        inputs: ['[콜라-3],[에너지바-5]', 'Y', 'N', 'N'],
         expectedIgnoringWhiteSpaces: ['내실돈9,000'],
       });
     });
@@ -136,11 +136,8 @@ describe('편의점', () => {
         inputsToTerminate: INPUTS_TO_TERMINATE,
         expectedErrorMessage: ERROR_MESSAGE.noItem,
       });
-    });
-
-    test('0개의 상품을 입력할 경우 예외를 처리한다.', async () => {
       await runExceptions({
-        inputs: ['[컵볶이-3]', 'N', 'N'],
+        inputs: ['[에너지바-5]', 'N', 'Y', '[에너지바-1]', 'N'],
         inputsToTerminate: INPUTS_TO_TERMINATE,
         expectedErrorMessage: ERROR_MESSAGE.noItem,
       });
