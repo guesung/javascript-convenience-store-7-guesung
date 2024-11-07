@@ -3,6 +3,9 @@ import * as fs from 'fs';
 import { getIsDateBetween } from '../lib/utils.js';
 
 class FileController {
+  static #LINE_BREAK = '\n';
+  static #SEPARATOR = ',';
+
   static getProducts() {
     const rawProducts = fs.readFileSync('public/products.md', 'utf8');
     const products = this.#parseProducts(rawProducts);
@@ -19,10 +22,10 @@ class FileController {
   }
 
   static #parseProducts(rawProducts) {
-    const tempProducts = rawProducts.trim().split('\n');
+    const tempProducts = rawProducts.trim().split(this.#LINE_BREAK);
     tempProducts.shift();
     return tempProducts.map((productInformation) => {
-      const [name, price, quantity, promotion] = productInformation.split(',');
+      const [name, price, quantity, promotion] = productInformation.split(this.#SEPARATOR);
       return {
         name,
         price: Number(price),
@@ -33,15 +36,17 @@ class FileController {
   }
 
   static #removeIfNullString(value) {
-    if (value === 'null') return '';
+    if (value === 'null') return undefined;
+
     return value;
   }
 
   static #parseProductEventList(rawPromotions) {
     const tempProductEvents = rawPromotions.trim().split('\n');
     tempProductEvents.shift();
+
     return tempProductEvents.map((tempProductEvent) => {
-      const [name, buy, get, startDate, endDate] = tempProductEvent.split(',');
+      const [name, buy, get, startDate, endDate] = tempProductEvent.split(this.#SEPARATOR);
       return {
         name,
         buy: Number(buy),
