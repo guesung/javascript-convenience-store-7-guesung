@@ -27,6 +27,19 @@ class Product {
     );
   }
 
+  #getPromotionProducts(item) {
+    return this.#getProducts(item).filter(
+      (product) => product.promotion !== '',
+    );
+  }
+
+  getPromotionProductQuantity(item) {
+    return this.#getPromotionProducts(item).reduce(
+      (prev, cur) => prev + cur.quantity,
+      0,
+    );
+  }
+
   #getPromotionProductInfo(item) {
     return this.#getProducts(item).find(
       (product) => product.promotion !== 'null',

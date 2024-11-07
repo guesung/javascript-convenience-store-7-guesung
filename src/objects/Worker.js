@@ -45,26 +45,37 @@ class Worker {
 
   async #checkItemPromotion(item, quantity) {
     const promotionInfo = this.#product.getPromotionInfo(item);
-    const isProductLeft = this.#product.getIsProductLeft(item, quantity + 1);
+    if (!promotionInfo) return;
 
-    if (!promotionInfo || !isProductLeft) return;
+    const promotionUnit = promotionInfo.buy + promotionInfo.get;
+    const isPromotionProductLessThanQuantity =
+      this.#product.getPromotionProductQuantity(item) < quantity;
 
-    if (quantity === promotionInfo.buy) await this.#askOneMoreFree(item);
-    if (quantity < promotionInfo.buy)
-      await this.#askMoreForPromotion(item, quantity);
+    const currentPromotionQuantity =
+      Math.floor(
+        Math.min(quantity, this.#product.getPromotionProductQuantity(item)) /
+          promotionUnit,
+      ) * promotionUnit;
+
+    if (isPromotionProductLessThanQuantity) {
+      await this.#askNoPromotion(item, quantity - currentPromotionQuantity);
+      return;
+    }
+
+    if ((quantity + 1) % promotionUnit === 0) await this.#askOneMoreFree(item);
+  }
+
+  async #askNoPromotion(item, quantity) {
+    const isMoreForPromotion = await InputController.getIsNoPromotion(
+      item,
+      quantity,
+    );
+    if (isMoreForPromotion) this.#orderHistory.addQuantity(item);
   }
 
   async #askOneMoreFree(item) {
     const isOneMoreFree = await InputController.getIsOneMoreFree(item);
     if (isOneMoreFree) this.#orderHistory.addQuantity(item);
-  }
-
-  async #askMoreForPromotion(item, quantity) {
-    const isMoreForPromotion = await InputController.getIsMoreForPromotion(
-      item,
-      quantity,
-    );
-    if (isMoreForPromotion) this.#orderHistory.addQuantity(item);
   }
 
   #calculateOrder() {
