@@ -19,7 +19,6 @@ class InputController {
     items.forEach(([name, quantity]) => {
       if (product.getProductQuantity(name) === 0)
         throw new Error(ERROR_MESSAGE.noItem);
-      if (product.quantity === 0) throw new Error(ERROR_MESSAGE.zeroQuantity);
       if (product.getProductQuantity(name) < quantity)
         throw new Error(ERROR_MESSAGE.overQuantity);
     });
