@@ -9,8 +9,9 @@ class FileController {
   static getProducts() {
     const rawProducts = fs.readFileSync('public/products.md', 'utf8');
     const products = this.#parseProducts(rawProducts);
+    const sortedByPromotionProducts = this.#sortByPromotionProducts(products);
 
-    return products;
+    return sortedByPromotionProducts;
   }
 
   static getPromotions() {
@@ -30,15 +31,18 @@ class FileController {
         name,
         price: Number(price),
         quantity: Number(quantity),
-        promotion: this.#removeIfNullString(promotion),
+        promotion,
       };
     });
   }
 
-  static #removeIfNullString(value) {
-    if (value === 'null') return undefined;
-
-    return value;
+  static #sortByPromotionProducts(products) {
+    const tempProducts = [...products];
+    tempProducts.sort((a, b) => {
+      if (a?.promotion !== undefined) return -1;
+      return 1;
+    });
+    return tempProducts;
   }
 
   static #parseProductEventList(rawPromotions) {

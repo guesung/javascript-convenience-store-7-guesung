@@ -9,10 +9,17 @@ class OutputController {
     products.forEach(({ name, price, quantity, promotion }) => {
       const quantityOutput = this.#getQuantityOutput(quantity);
 
-      const productOutput = `- ${name} ${price.toLocaleString()}원 ${quantityOutput} ${promotion}`;
+      const productOutput = `- ${name} ${price.toLocaleString()}원 ${quantityOutput} ${this.removePromotionIfNull(
+        promotion,
+      )}`;
 
       MissionUtils.Console.print(productOutput);
     });
+  }
+
+  static removePromotionIfNull(promotion) {
+    if (promotion === 'null') return '';
+    return promotion;
   }
 
   static #getQuantityOutput(quantity) {
