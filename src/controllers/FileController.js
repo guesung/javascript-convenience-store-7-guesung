@@ -1,6 +1,6 @@
 import { DateTimes } from '@woowacourse/mission-utils';
 import * as fs from 'fs';
-import { isDateBetween } from '../lib/utils.js';
+import { getIsDateBetween } from '../lib/utils.js';
 
 class FileController {
   static getProducts() {
@@ -54,7 +54,7 @@ class FileController {
 
   static #filterTodayPromotions(promotions) {
     return promotions.filter((promotion) =>
-      isDateBetween(DateTimes.now(), promotion.startDate, promotion.endDate),
+      getIsDateBetween(DateTimes.now(), promotion.startDate, promotion.endDate),
     );
   }
 }
