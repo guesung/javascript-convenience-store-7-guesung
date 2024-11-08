@@ -19,9 +19,9 @@ class App {
 
       customer.calculateOrder(this.#store);
 
-      const isMembershipDiscount = await InputController.readtIsMembershipDiscount();
+      await customer.checkMembershipDiscount();
 
-      customer.calculateAll(isMembershipDiscount);
+      customer.calculateAll();
     });
   }
 }

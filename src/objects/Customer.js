@@ -6,6 +6,7 @@ import Receipt from './Receipt.js';
 
 class Customer {
   #orderHistory;
+  #isMembershipDiscount;
   #receipt;
 
   async order(store) {
@@ -76,8 +77,14 @@ class Customer {
     }
   }
 
-  calculateAll(isMembershipDiscount) {
-    OutputController.printReceipt(this.#receipt, isMembershipDiscount);
+  async checkMembershipDiscount() {
+    const isMembershipDiscount = await InputController.readtIsMembershipDiscount();
+
+    this.#isMembershipDiscount = isMembershipDiscount;
+  }
+
+  calculateAll() {
+    OutputController.printReceipt(this.#receipt, this.#isMembershipDiscount);
   }
 }
 
