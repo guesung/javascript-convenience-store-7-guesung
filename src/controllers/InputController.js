@@ -1,27 +1,18 @@
 import { MissionUtils } from '@woowacourse/mission-utils';
-import { ERROR_MESSAGE, INPUT_MEESAGE } from '../lib/constants.js';
+import { INPUT_MEESAGE } from '../lib/constants.js';
 import Validator from './Validator.js';
+import Parser from './Parser.js';
 
 class InputController {
   static async readItems(store) {
     return this.#retryWhileCatchedError(async () => {
       const rawItems = await MissionUtils.Console.readLineAsync(INPUT_MEESAGE.readItem);
       Validator.validateItemsFormat(rawItems);
-      const items = this.#parseItems(rawItems);
+      const items = Parser.parseItems(rawItems);
       Validator.validateItemsQuantity(store, items);
 
       return items;
     });
-  }
-
-  static #parseItems(rawItems) {
-    const items = rawItems
-      .split(',')
-      .map((item) => item.slice(1, -1))
-      .map((item) => item.split('-'))
-      .map(([item, quantity]) => [item, Number(quantity)]);
-
-    return items;
   }
 
   static async readIsGetFreePromotion(item) {
