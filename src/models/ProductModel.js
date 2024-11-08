@@ -1,7 +1,7 @@
 import FileController from '../views/FileView.js';
 import OutputView from '../views/OutputView.js';
 
-class StoreModel {
+class ProductModel {
   #products;
   #promotions;
 
@@ -82,4 +82,4 @@ class StoreModel {
   }
 }
 
-export default StoreModel;
+export default ProductModel;
