@@ -16,7 +16,6 @@ class StoreController {
     const promotions = FileView.getPromotions();
 
     this.#productModel = new ProductModel(products, promotions);
-    this.#receiptModel = new ReceiptModel();
 
     OutputView.printHello();
     OutputView.printProducts(products);
@@ -27,6 +26,7 @@ class StoreController {
       const items = await InputView.readItems(this.#productModel);
 
       this.#orderHistoryModel = new OrderHistoryModel(items);
+      this.#receiptModel = new ReceiptModel();
 
       await this.#checkItemsPromotion();
       await this.#checkMembershipDiscount();
