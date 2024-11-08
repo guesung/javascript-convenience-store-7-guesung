@@ -7,23 +7,28 @@ class FileController {
   static getProducts() {
     const rawProducts = fs.readFileSync('public/products.md', 'utf8');
     const products = this.#parseProducts(rawProducts);
-    const sortedByPromotionProducts = this.#sortByPromotionProducts(products);
+    this.#sortByPromotionProducts(products);
 
-    return sortedByPromotionProducts;
+    return products;
   }
 
   static getPromotions() {
     const rawPromotions = fs.readFileSync('public/promotions.md', 'utf8');
-    const promotions = this.#parseProductEventList(rawPromotions);
+    const promotions = this.#parsePromotions(rawPromotions);
     const todayPromotions = this.#filterTodayPromotions(promotions);
 
     return todayPromotions;
   }
 
   static #parseProducts(rawProducts) {
-    const tempProducts = rawProducts.trim().split(LINE_BREAK);
-    tempProducts.shift();
-    return tempProducts.map((productInformation) => {
+    const products = rawProducts.trim().split(LINE_BREAK);
+    products.shift();
+
+    return this.#productsMapping(products);
+  }
+
+  static #productsMapping(products) {
+    return products.map((productInformation) => {
       const [name, price, quantity, promotion] = productInformation.split(SEPARATOR);
       return {
         name,
@@ -35,20 +40,22 @@ class FileController {
   }
 
   static #sortByPromotionProducts(products) {
-    const tempProducts = [...products];
-    tempProducts.sort((a, b) => {
-      if (a?.promotion !== undefined) return -1;
+    products.sort((a) => {
+      if (a?.promotion !== 'null') return -1;
       return 1;
     });
-    return tempProducts;
   }
 
-  static #parseProductEventList(rawPromotions) {
-    const tempProductEvents = rawPromotions.trim().split('\n');
-    tempProductEvents.shift();
+  static #parsePromotions(rawPromotions) {
+    const promotions = rawPromotions.trim().split(LINE_BREAK);
+    promotions.shift();
 
-    return tempProductEvents.map((tempProductEvent) => {
-      const [name, buy, get, startDate, endDate] = tempProductEvent.split(SEPARATOR);
+    return this.#promotionMapping(promotions);
+  }
+
+  static #promotionMapping(promotions) {
+    return promotions.map((promotion) => {
+      const [name, buy, get, startDate, endDate] = promotion.split(SEPARATOR);
       return {
         name,
         buy: Number(buy),
