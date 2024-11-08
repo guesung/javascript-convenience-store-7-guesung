@@ -36,15 +36,15 @@ class OutputController {
 
     MissionUtils.Console.print('===========W 편의점===========');
     MissionUtils.Console.print('상품명   수량   금액');
-    receipt.receipt.forEach((product) => {
+    receipt.receipt.forEach((item) => {
       MissionUtils.Console.print(
-        `${product.name}   ${product.quantity}   ${product.price.toLocaleString()}`,
+        `${item.name}   ${item.quantity}   ${item.price.toLocaleString()}`,
       );
     });
     MissionUtils.Console.print('===========증	 정===========');
-    receipt.receipt.forEach((product) => {
-      if (product.promotionQuantity > 0)
-        MissionUtils.Console.print(`${product.name}   ${product.promotionQuantity}`);
+    receipt.receipt.forEach((item) => {
+      if (item.promotionQuantity > 0)
+        MissionUtils.Console.print(`${item.name}   ${item.promotionQuantity}`);
     });
     MissionUtils.Console.print('==============================');
     MissionUtils.Console.print(`총구매액 ${totalQuantity} ${totalPrice.toLocaleString()}`);
