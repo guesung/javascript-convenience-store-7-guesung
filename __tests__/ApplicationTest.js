@@ -10,7 +10,7 @@ import {
   runExceptions,
 } from '../src/lib/test/utils.js';
 
-const INPUTS_TO_TERMINATE = ['[비타민워터-1]', 'N', 'N'];
+const INPUTS_TO_TERMINATE = ['[비타민워터-1]', 'N', 'N', 'N', 'N'];
 
 const run = async ({
   inputs = [],
@@ -165,33 +165,66 @@ describe('편의점', () => {
   describe('예외 케이스', () => {
     test('재고 수량을 초과하여 입력할 경우 예외를 처리한다.', async () => {
       await runExceptions({
-        inputs: ['[컵라면-12]', 'N', 'N'],
+        inputs: ['[컵라면-12]'],
         inputsToTerminate: INPUTS_TO_TERMINATE,
         expectedErrorMessage: ERROR_MESSAGE.itemsOverQuantity,
       });
     });
 
-    test('형식에 올바르지 않게 작성할 경우 예외를 처리한다.', async () => {
+    test('상품에 대한 형식을 올바르지 않게 작성할 경우 예외를 처리한다.', async () => {
       await runExceptions({
-        inputs: ['[컵라면-12-3]', 'N', 'N'],
+        inputs: ['[컵라면-8-3]'],
         inputsToTerminate: INPUTS_TO_TERMINATE,
         expectedErrorMessage: ERROR_MESSAGE.notFormat,
       });
       await runExceptions({
-        inputs: ['[컵라면-12', 'N', 'N'],
+        inputs: ['[컵라면-8'],
+        inputsToTerminate: INPUTS_TO_TERMINATE,
+        expectedErrorMessage: ERROR_MESSAGE.notFormat,
+      });
+      await runExceptions({
+        inputs: ['컵라면-8'],
+        inputsToTerminate: INPUTS_TO_TERMINATE,
+        expectedErrorMessage: ERROR_MESSAGE.notFormat,
+      });
+      await runExceptions({
+        inputs: ['[컵라면8]'],
         inputsToTerminate: INPUTS_TO_TERMINATE,
         expectedErrorMessage: ERROR_MESSAGE.notFormat,
       });
     });
 
+    test('Y/N 질문에 대한 형식을 올바르지 않게 작성할 경우 예외를 처리한다.', async () => {
+      await runExceptions({
+        inputs: ['[컵라면-8]', 'y'],
+        inputsToTerminate: INPUTS_TO_TERMINATE,
+        expectedErrorMessage: ERROR_MESSAGE.notYesOrNo,
+      });
+      await runExceptions({
+        inputs: ['[컵라면-8]', '예'],
+        inputsToTerminate: INPUTS_TO_TERMINATE,
+        expectedErrorMessage: ERROR_MESSAGE.notYesOrNo,
+      });
+      await runExceptions({
+        inputs: ['[컵라면-8]', '[컵라면-8]'],
+        inputsToTerminate: INPUTS_TO_TERMINATE,
+        expectedErrorMessage: ERROR_MESSAGE.notYesOrNo,
+      });
+      await runExceptions({
+        inputs: ['[컵라면-8]', '놉'],
+        inputsToTerminate: INPUTS_TO_TERMINATE,
+        expectedErrorMessage: ERROR_MESSAGE.notYesOrNo,
+      });
+    });
+
     test('없는 상품을 입력할 경우 예외를 처리한다.', async () => {
       await runExceptions({
-        inputs: ['[컵볶이-3]', 'N', 'N'],
+        inputs: ['[컵볶이-3]'],
         inputsToTerminate: INPUTS_TO_TERMINATE,
         expectedErrorMessage: ERROR_MESSAGE.itemsZero,
       });
       await runExceptions({
-        inputs: ['[에너지바-5]', 'N', 'Y', '[에너지바-1]', 'N'],
+        inputs: ['[에너지바-5]', 'N', 'Y', '[에너지바-1]'],
         inputsToTerminate: INPUTS_TO_TERMINATE,
         expectedErrorMessage: ERROR_MESSAGE.itemsZero,
       });
