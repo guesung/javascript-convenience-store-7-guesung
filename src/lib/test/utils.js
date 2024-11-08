@@ -1,5 +1,4 @@
 import { MissionUtils } from '@woowacourse/mission-utils';
-import App from '../../App';
 import { SEPARATOR } from '../constants';
 
 export const mockQuestions = (inputs) => {
@@ -44,21 +43,4 @@ export const expectLogContainsWithoutSpacesAndEquals = (received, expects) => {
   expects.forEach((exp) => {
     expect(processedReceived).toContain(exp);
   });
-};
-
-export const runExceptions = async ({
-  inputs = [],
-  inputsToTerminate = [],
-  expectedErrorMessage = '',
-}) => {
-  // given
-  const logSpy = getLogSpy();
-  mockQuestions([...inputs, ...inputsToTerminate]);
-
-  // when
-  const app = new App();
-  await app.run();
-
-  // then
-  expect(logSpy).toHaveBeenCalledWith(expect.stringContaining(expectedErrorMessage));
 };

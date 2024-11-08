@@ -7,7 +7,6 @@ import {
   getOutput,
   mockNowDate,
   mockQuestions,
-  runExceptions,
 } from '../src/lib/test/utils.js';
 
 const INPUTS_TO_TERMINATE = ['[비타민워터-1]', 'N', 'N', 'N', 'N'];
@@ -32,6 +31,20 @@ const run = async ({
   if (expected.length > 0) {
     expectLogContains(output, expected);
   }
+};
+
+const runExceptions = async ({
+  inputs = [],
+  inputsToTerminate = [],
+  expectedErrorMessage = '',
+}) => {
+  const logSpy = getLogSpy();
+  mockQuestions([...inputs, ...inputsToTerminate]);
+
+  const app = new App();
+  await app.run();
+
+  expect(logSpy).toHaveBeenCalledWith(expect.stringContaining(expectedErrorMessage));
 };
 
 describe('편의점', () => {
