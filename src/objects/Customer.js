@@ -26,28 +26,28 @@ class Customer {
     if (!promotionInfo) return;
 
     const promotionUnit = promotionInfo.buy + promotionInfo.get;
-    const isPromotionProductLessThanQuantity = store.getPromotionProductQuantity(item) < quantity;
 
-    const currentPromotionQuantity =
-      Math.floor(Math.min(quantity, store.getPromotionProductQuantity(item)) / promotionUnit) *
-      promotionUnit;
+    const isOneMoreFree = (quantity + 1) % promotionUnit === 0;
+    if (isOneMoreFree) await this.#askOneMoreFree(item);
 
-    if (isPromotionProductLessThanQuantity) {
-      await this.#askNoPromotion(item, quantity - currentPromotionQuantity);
-      return;
-    }
+    const promotionProductQuantity = store.getPromotionProductQuantity(item);
+    const promotionPosibbleQuantity =
+      Math.floor(promotionProductQuantity / promotionUnit) * promotionUnit;
 
-    if ((quantity + 1) % promotionUnit === 0) await this.#askOneMoreFree(item);
-  }
+    const isPromotionProductLessThanQuantity = quantity > promotionPosibbleQuantity;
 
-  async #askNoPromotion(item, quantity) {
-    const isMoreForPromotion = await InputController.readIsBuyWithoutPromotion(item, quantity);
-    if (isMoreForPromotion) this.#orderHistory.addQuantity(item);
+    if (isPromotionProductLessThanQuantity)
+      await this.#askIsBuyWithoutPromotion(item, quantity - promotionPosibbleQuantity);
   }
 
   async #askOneMoreFree(item) {
     const isOneMoreFree = await InputController.readIsGetFreePromotion(item);
     if (isOneMoreFree) this.#orderHistory.addQuantity(item);
+  }
+
+  async #askIsBuyWithoutPromotion(item, quantity) {
+    const isBuyWithoutPromotion = await InputController.readIsBuyWithoutPromotion(item, quantity);
+    if (!isBuyWithoutPromotion) this.#orderHistory.reduceQuantity(item, quantity);
   }
 
   calculateOrder(store) {
@@ -56,13 +56,17 @@ class Customer {
     for (const [item, quantity] of this.#orderHistory.orderMap) {
       const promotionInfo = store.getPromotionInfo(item);
       const price = store.getPrice(item);
+      const promotionProductQuantity = store.getPromotionProductQuantity(item);
 
       let promotionQuantity = 0;
       let promotionAdjustQuantity = 0;
 
       if (promotionInfo) {
-        promotionQuantity = Math.floor(quantity / (promotionInfo.buy + promotionInfo.get));
-        promotionAdjustQuantity = promotionQuantity * (promotionInfo.buy + promotionInfo.get);
+        const promotionUnit = promotionInfo.buy + promotionInfo.get;
+        promotionQuantity = Math.floor(
+          Math.min(quantity, promotionProductQuantity) / promotionUnit,
+        );
+        promotionAdjustQuantity = promotionQuantity * promotionUnit;
       }
 
       this.#receipt.addItem({

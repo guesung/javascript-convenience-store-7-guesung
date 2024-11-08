@@ -12,5 +12,9 @@ class OrderHistory {
   addQuantity(item) {
     this.orderMap.set(item, this.orderMap.get(item) + 1);
   }
+
+  reduceQuantity(item, quantity = 1) {
+    this.orderMap.set(item, this.orderMap.get(item) - quantity);
+  }
 }
 export default OrderHistory;
