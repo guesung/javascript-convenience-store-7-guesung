@@ -39,16 +39,14 @@ class ReceiptModel {
     }, 0);
   }
 
-  getMembershipDiscount(isMembershipDiscount) {
-    if (!isMembershipDiscount) return 0;
-    return (
-      (this.#receipt.reduce(
-        (prev, cur) => prev + (cur.quantity - cur.promotionAdjustQuantity) * cur.price,
-        0,
-      ) *
-        3) /
-      10
+  getMembershipDiscount() {
+    if (!this.#isMembershipDiscount) return 0;
+    const totalNoPromotionAdjustPrice = this.#receipt.reduce(
+      (prev, cur) => prev + (cur.quantity - cur.promotionAdjustQuantity) * cur.price,
+      0,
     );
+
+    return (totalNoPromotionAdjustPrice * 30) / 100;
   }
 }
 

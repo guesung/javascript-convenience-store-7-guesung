@@ -10,7 +10,7 @@ class OutputView {
     products.forEach(({ name, price, quantity, promotion }) => {
       const quantityOutput = this.#getQuantityOutput(quantity);
 
-      const productOutput = `- ${name} ${price.toLocaleString()}원 ${quantityOutput} ${this.removePromotionIfNull(
+      const productOutput = `- ${name} ${price.toLocaleString()}원 ${quantityOutput} ${this.#removePromotionIfNull(
         promotion,
       )}`;
 
@@ -18,14 +18,14 @@ class OutputView {
     });
   }
 
-  static removePromotionIfNull(promotion) {
-    if (promotion === 'null') return '';
-    return promotion;
-  }
-
   static #getQuantityOutput(quantity) {
     if (quantity > 0) return `${quantity}개`;
     return OUTPUT_MESSAGE.noQuantity;
+  }
+
+  static #removePromotionIfNull(promotion) {
+    if (promotion === 'null') return '';
+    return promotion;
   }
 
   static printReceipt(receipt) {
@@ -67,7 +67,7 @@ class OutputView {
     const totalQuantity = receipt.getTotalQuantity();
     const totalPrice = receipt.getTotalPrice();
     const promotionPrice = receipt.getTotalPromotionPrice();
-    const membershipDiscount = receipt.getMembershipDiscount(receipt.isMembershipDiscount);
+    const membershipDiscount = receipt.getMembershipDiscount();
     const realPrice = totalPrice - promotionPrice - membershipDiscount;
     return {
       totalQuantity,

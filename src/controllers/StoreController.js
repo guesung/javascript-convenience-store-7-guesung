@@ -18,7 +18,7 @@ class StoreController {
   async openTheStore() {
     await InputView.retryWhileOrderFinish(async () => {
       this.#orderHistoryModel = new OrderHistoryModel();
-      await this.#orderHistoryModel.getOrder(this.#productModel);
+      await this.#orderHistoryModel.generateOrderHistoryModel(this.#productModel);
 
       await this.#checkItemsPromotion();
       await this.#checkMembershipDiscount();

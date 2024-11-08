@@ -1,6 +1,6 @@
 import { MissionUtils } from '@woowacourse/mission-utils';
-import { EOL as LINE_SEPARATOR } from 'os';
 import App from '../../App';
+import { SEPARATOR } from '../constants';
 
 export const mockQuestions = (inputs) => {
   const messages = [];
@@ -31,7 +31,7 @@ export const getLogSpy = () => {
   return logSpy;
 };
 
-export const getOutput = (logSpy) => [...logSpy.mock.calls].join(LINE_SEPARATOR);
+export const getOutput = (logSpy) => [...logSpy.mock.calls].join(SEPARATOR);
 
 export const expectLogContains = (received, expects) => {
   expects.forEach((exp) => {
