@@ -1,4 +1,4 @@
-class OrderHistory {
+class OrderHistoryModel {
   orderMap;
 
   constructor(items) {
@@ -17,4 +17,4 @@ class OrderHistory {
     this.orderMap.set(item, this.orderMap.get(item) - quantity);
   }
 }
-export default OrderHistory;
+export default OrderHistoryModel;

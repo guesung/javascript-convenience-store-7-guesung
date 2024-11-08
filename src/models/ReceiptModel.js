@@ -1,4 +1,4 @@
-class Receipt {
+class ReceiptModel {
   #receipt;
 
   constructor() {
@@ -41,4 +41,4 @@ class Receipt {
   }
 }
 
-export default Receipt;
+export default ReceiptModel;

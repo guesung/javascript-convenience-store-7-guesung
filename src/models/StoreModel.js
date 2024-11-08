@@ -1,7 +1,7 @@
-import { FileController, OutputController } from '../controllers/index.js';
-import { ERROR_MESSAGE } from '../lib/constants.js';
+import FileController from '../views/FileView.js';
+import OutputView from '../views/OutputView.js';
 
-class Store {
+class StoreModel {
   #products;
   #promotions;
 
@@ -9,8 +9,8 @@ class Store {
     this.#products = FileController.getProducts();
     this.#promotions = FileController.getPromotions();
 
-    OutputController.printHello();
-    OutputController.printProducts(this.#products);
+    OutputView.printHello();
+    OutputView.printProducts(this.#products);
   }
 
   getPromotionUnit(item) {
@@ -82,4 +82,4 @@ class Store {
   }
 }
 
-export default Store;
+export default StoreModel;

@@ -1,6 +1,6 @@
 import { MissionUtils } from '@woowacourse/mission-utils';
 
-class OutputController {
+class OutputView {
   static printHello() {
     MissionUtils.Console.print('안녕하세요. W편의점입니다.\n현재 보유하고 있는 상품입니다.\n');
   }
@@ -54,4 +54,4 @@ class OutputController {
   }
 }
 
-export default OutputController;
+export default OutputView;

@@ -1,9 +1,9 @@
 import { MissionUtils } from '@woowacourse/mission-utils';
 import { INPUT_MEESAGE } from '../lib/constants.js';
-import Validator from './Validator.js';
-import Parser from './Parser.js';
+import Validator from '../helpers/Validator.js';
+import Parser from '../helpers/Parser.js';
 
-class InputController {
+class InputView {
   static async readItems(store) {
     return this.#retryWhileCatchedError(async () => {
       const rawItems = await MissionUtils.Console.readLineAsync(INPUT_MEESAGE.readItem);
@@ -82,4 +82,4 @@ class InputController {
   }
 }
 
-export default InputController;
+export default InputView;

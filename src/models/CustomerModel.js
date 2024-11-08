@@ -1,18 +1,19 @@
-import { InputController, OutputController } from '../controllers/index.js';
-import OrderHistory from './OrderHistory.js';
-import Receipt from './Receipt.js';
+import InputView from '../views/InputView.js';
+import OutputView from '../views/OutputView.js';
+import OrderHistoryModel from './OrderHistoryModel.js';
+import ReceiptModel from './ReceiptModel.js';
 
 // TODO: Customer에 책임이 너무 많다.
 
-class Customer {
+class CustomerModel {
   #orderHistory;
   #isMembershipDiscount;
   #receipt;
 
   async order(store) {
-    const items = await InputController.readItems(store);
+    const items = await InputView.readItems(store);
 
-    this.#orderHistory = new OrderHistory(items);
+    this.#orderHistory = new OrderHistoryModel(items);
   }
 
   async checkItemsPromotion(store) {
@@ -36,23 +37,23 @@ class Customer {
   }
 
   async #askOneMoreFree(item) {
-    const isOneMoreFree = await InputController.readIsGetFreePromotion(item);
+    const isOneMoreFree = await InputView.readIsGetFreePromotion(item);
     if (isOneMoreFree) this.#orderHistory.addQuantity(item);
   }
 
   async #askIsBuyWithoutPromotion(item, quantity) {
-    const isBuyWithoutPromotion = await InputController.readIsBuyWithoutPromotion(item, quantity);
+    const isBuyWithoutPromotion = await InputView.readIsBuyWithoutPromotion(item, quantity);
     if (!isBuyWithoutPromotion) this.#orderHistory.reduceQuantity(item, quantity);
   }
 
   showRecipt(store) {
-    this.#receipt = new Receipt();
+    this.#receipt = new ReceiptModel();
 
     for (const order of this.#orderHistory.orderMap) {
       this.#calculateOrder(store, order);
     }
 
-    OutputController.printReceipt(this.#receipt, this.#isMembershipDiscount);
+    OutputView.printReceipt(this.#receipt, this.#isMembershipDiscount);
   }
 
   #calculateOrder(store, [item, quantity]) {
@@ -80,10 +81,10 @@ class Customer {
   }
 
   async checkMembershipDiscount() {
-    const isMembershipDiscount = await InputController.readtIsMembershipDiscount();
+    const isMembershipDiscount = await InputView.readtIsMembershipDiscount();
 
     this.#isMembershipDiscount = isMembershipDiscount;
   }
 }
 
-export default Customer;
+export default CustomerModel;

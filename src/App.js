@@ -1,20 +1,22 @@
-import InputController from './controllers/InputController.js';
-import Customer from './objects/Customer.js';
-import Store from './objects/Store.js';
+import InputView from './views/InputView.js';
+import CustomerModel from './models/CustomerModel.js';
+import StoreModel from './models/StoreModel.js';
 
 class App {
   #store;
 
   constructor() {
-    this.#store = new Store();
+    this.#store = new StoreModel();
   }
 
   async run() {
-    await InputController.retryWhileOrderFinish(async () => {
-      const customer = new Customer();
+    await InputView.retryWhileOrderFinish(async () => {
+      const customer = new CustomerModel();
       await customer.order(this.#store);
+
       await customer.checkItemsPromotion(this.#store);
       await customer.checkMembershipDiscount();
+
       customer.showRecipt(this.#store);
     });
   }
