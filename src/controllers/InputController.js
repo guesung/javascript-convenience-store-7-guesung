@@ -10,7 +10,7 @@ class InputController {
       const rawItems = await MissionUtils.Console.readLineAsync(INPUT_MEESAGE.readItem);
       this.#validateItemsFormat(rawItems);
       const items = this.#parseItems(rawItems);
-      store.validateItemsQuantity(items);
+      this.#validateItemsQuantity(store, items);
 
       return items;
     });
@@ -20,6 +20,14 @@ class InputController {
     const items = rawItems.split(this.#ITEMS_SEPARATOR);
     items.forEach((item) => {
       if (!this.#ITEMS_REGEXR.test(item)) throw new Error(ERROR_MESSAGE.notFormat);
+    });
+  }
+
+  static #validateItemsQuantity(store, items) {
+    items.forEach(([name, quantity]) => {
+      const productQuantity = store.getProductQuantity(name);
+      if (productQuantity === 0) throw new Error(ERROR_MESSAGE.itemsZero);
+      if (productQuantity < quantity) throw new Error(ERROR_MESSAGE.itemsOverQuantity);
     });
   }
 

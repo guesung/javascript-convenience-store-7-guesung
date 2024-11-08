@@ -13,29 +13,10 @@ class Store {
     OutputController.printProducts(this.#products);
   }
 
-  validateItemsQuantity(items) {
-    this.validateItemsZero(items);
-    this.validateItemsOverQuantity(items);
-  }
-
-  validateItemsZero(items) {
-    items.forEach(([name]) => {
-      const productQuantity = this.getProductQuantity(name);
-      if (productQuantity === 0) throw new Error(ERROR_MESSAGE.itemsZero);
-    });
-  }
-
-  validateItemsOverQuantity(items) {
-    items.forEach(([name, quantity]) => {
-      const productQuantity = this.getProductQuantity(name);
-      if (productQuantity < quantity) throw new Error(ERROR_MESSAGE.itemsOverQuantity);
-    });
-  }
-
   getPromotionInfo(item) {
     const productInfo = this.#getPromotionProductInfo(item);
     const promotionInfo = this.#promotions.find(
-      (promotion) => promotion.name === productInfo.promotion,
+      (promotion) => promotion.name === productInfo?.promotion,
     );
 
     return promotionInfo;
@@ -45,12 +26,8 @@ class Store {
     return this.#getProducts(item).reduce((prev, cur) => prev + cur.quantity, 0);
   }
 
-  #getPromotionProducts(item) {
-    return this.#getProducts(item).filter((product) => product.promotion !== '');
-  }
-
   getPromotionProductQuantity(item) {
-    return this.#getPromotionProducts(item).reduce((prev, cur) => prev + cur.quantity, 0);
+    return this.#getPromotionProductInfo(item)?.quantity;
   }
 
   #getPromotionProductInfo(item) {
@@ -63,6 +40,8 @@ class Store {
 
   reduceProduct(item, quantity = 1) {
     const products = this.#getProducts(item);
+
+    // [ ] 불변성
     let leftQuantity = quantity;
 
     products.forEach((product) => {
