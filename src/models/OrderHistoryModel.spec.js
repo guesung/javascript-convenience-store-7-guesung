@@ -1,15 +1,19 @@
 import { mockQuestions } from '../lib/test/utils';
+import FileView from '../views/FileView';
+import InputView from '../views/InputView';
 import OrderHistoryModel from './OrderHistoryModel';
 import ProductModel from './ProductModel';
 
 describe('OrderHistoryModel', () => {
   let orderHistoryModel;
   beforeEach(async () => {
-    const productModel = new ProductModel();
-    orderHistoryModel = new OrderHistoryModel();
-    mockQuestions(['[콜라-8],[에너지바-5],[감자칩-10],[컵라면-10],[닭가슴살-9]']);
+    const products = FileView.getProducts();
+    const promotions = FileView.getPromotions();
+    const productModel = new ProductModel(products, promotions);
 
-    await orderHistoryModel.generateOrderHistoryModel(productModel);
+    mockQuestions(['[콜라-8],[에너지바-5],[감자칩-10],[컵라면-10],[닭가슴살-9]']);
+    const items = await InputView.readItems(productModel);
+    orderHistoryModel = new OrderHistoryModel(items);
   });
 
   describe('getQuantity', () => {

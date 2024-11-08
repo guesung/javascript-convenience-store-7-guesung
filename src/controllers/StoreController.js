@@ -1,6 +1,7 @@
 import OrderHistoryModel from '../models/OrderHistoryModel.js';
 import ProductModel from '../models/ProductModel.js';
 import ReceiptModel from '../models/ReceiptModel.js';
+import FileView from '../views/FileView.js';
 import InputView from '../views/InputView.js';
 import OutputView from '../views/OutputView.js';
 
@@ -11,14 +12,21 @@ class StoreController {
   #orderHistoryModel;
 
   constructor() {
-    this.#productModel = new ProductModel();
+    const products = FileView.getProducts();
+    const promotions = FileView.getPromotions();
+
+    this.#productModel = new ProductModel(products, promotions);
     this.#receiptModel = new ReceiptModel();
+
+    OutputView.printHello();
+    OutputView.printProducts(products);
   }
 
   async openTheStore() {
     await InputView.retryWhileOrderFinish(async () => {
-      this.#orderHistoryModel = new OrderHistoryModel();
-      await this.#orderHistoryModel.generateOrderHistoryModel(this.#productModel);
+      const items = await InputView.readItems(this.#productModel);
+
+      this.#orderHistoryModel = new OrderHistoryModel(items);
 
       await this.#checkItemsPromotion();
       await this.#checkMembershipDiscount();

@@ -1,16 +1,10 @@
-import FileView from '../views/FileView.js';
-import OutputView from '../views/OutputView.js';
-
 class ProductModel {
   #products;
   #promotions;
 
-  constructor() {
-    this.#products = FileView.getProducts();
-    this.#promotions = FileView.getPromotions();
-
-    OutputView.printHello();
-    OutputView.printProducts(this.#products);
+  constructor(products, promotions) {
+    this.#products = products;
+    this.#promotions = promotions;
   }
 
   getPromotionInfo(item) {

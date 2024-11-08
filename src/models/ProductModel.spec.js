@@ -1,9 +1,12 @@
+import FileView from '../views/FileView';
 import ProductModel from './ProductModel';
 
 describe('ProductModel', () => {
   let productModel;
   beforeEach(() => {
-    productModel = new ProductModel();
+    const products = FileView.getProducts();
+    const promotions = FileView.getPromotions();
+    productModel = new ProductModel(products, promotions);
   });
 
   describe('getPromotionInfo', () => {

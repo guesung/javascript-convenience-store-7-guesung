@@ -1,11 +1,7 @@
-import InputView from '../views/InputView.js';
-
 class OrderHistoryModel {
   orderMap;
 
-  async generateOrderHistoryModel(productModel) {
-    const items = await InputView.readItems(productModel);
-
+  constructor(items) {
     this.orderMap = new Map(items);
   }
 
