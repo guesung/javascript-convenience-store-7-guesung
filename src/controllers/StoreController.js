@@ -1,4 +1,3 @@
-import CustomerModel from '../models/CustomerModel.js';
 import OrderHistoryModel from '../models/OrderHistoryModel.js';
 import ProductModel from '../models/ProductModel.js';
 import ReceiptModel from '../models/ReceiptModel.js';
@@ -20,14 +19,14 @@ class StoreController {
       this.#orderHistoryModel = new OrderHistoryModel();
       await this.#orderHistoryModel.getOrder(this.#productModel);
 
-      await this.checkItemsPromotion(this.#productModel);
-      await this.checkMembershipDiscount();
+      await this.#checkItemsPromotion();
+      await this.#checkMembershipDiscount();
 
-      this.showRecipt(this.#productModel);
+      this.#showRecipt();
     });
   }
 
-  async checkItemsPromotion() {
+  async #checkItemsPromotion() {
     for await (const [item, quantity] of this.#orderHistoryModel.orderMap) {
       await this.#checkItemPromotion(item, quantity);
     }
@@ -57,33 +56,27 @@ class StoreController {
     if (!isBuyWithoutPromotion) this.#orderHistoryModel.reduceQuantity(item, quantity);
   }
 
-  showRecipt(store) {
+  #showRecipt() {
     this.#receiptModel = new ReceiptModel();
 
     for (const order of this.#orderHistoryModel.orderMap) {
-      this.#calculateOrder(store, order);
+      this.#calculateOrder(order);
     }
 
     OutputView.printReceipt(this.#receiptModel, this.#isMembershipDiscount);
   }
 
-  #calculateOrder(store, [item, quantity]) {
-    const promotionUnit = this.#productModel.getPromotionUnit(item);
+  #calculateOrder([item, quantity]) {
     const price = this.#productModel.getPrice(item);
-    const promotionProductQuantity = this.#productModel.getPromotionProductQuantity(item);
-
-    let promotionQuantity = 0;
-    let promotionAdjustQuantity = 0;
-
-    if (promotionUnit > 0) {
-      promotionQuantity = Math.floor(Math.min(quantity, promotionProductQuantity) / promotionUnit);
-      promotionAdjustQuantity = promotionQuantity * promotionUnit;
-    }
+    const { promotionQuantity, promotionAdjustQuantity } = this.#getPromotionQuantity(
+      item,
+      quantity,
+    );
 
     this.#receiptModel.addItem({
-      quantity,
-      price,
       name: item,
+      price,
+      quantity,
       promotionQuantity,
       promotionAdjustQuantity,
     });
@@ -91,7 +84,27 @@ class StoreController {
     this.#productModel.reduceProduct(item, quantity);
   }
 
-  async checkMembershipDiscount() {
+  #getPromotionQuantity(item, quantity) {
+    const promotionUnit = this.#productModel.getPromotionUnit(item);
+    if (!promotionUnit)
+      return {
+        promotionQuantity: 0,
+        promotionAdjustQuantity: 0,
+      };
+
+    const promotionProductQuantity = this.#productModel.getPromotionProductQuantity(item);
+    const promotionQuantity = Math.floor(
+      Math.min(quantity, promotionProductQuantity) / promotionUnit,
+    );
+    const promotionAdjustQuantity = promotionQuantity * promotionUnit;
+
+    return {
+      promotionQuantity,
+      promotionAdjustQuantity,
+    };
+  }
+
+  async #checkMembershipDiscount() {
     const isMembershipDiscount = await InputView.readtIsMembershipDiscount();
 
     this.#isMembershipDiscount = isMembershipDiscount;

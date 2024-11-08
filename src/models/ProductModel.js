@@ -13,30 +13,24 @@ class ProductModel {
     OutputView.printProducts(this.#products);
   }
 
+  getPromotionInfo(item) {
+    const productInfo = this.#getPromotionProductInfo(item);
+    return this.#promotions.find((promotion) => promotion.name === productInfo?.promotion);
+  }
+
   getPromotionUnit(item) {
     const promotionInfo = this.getPromotionInfo(item);
 
     if (!promotionInfo) return null;
-    const promotionUnit = promotionInfo.buy + promotionInfo.get;
-    return promotionUnit;
+    return promotionInfo.buy + promotionInfo.get;
   }
 
   getPromotionPossibleQuantity(item) {
     const promotionProductQuantity = this.getPromotionProductQuantity(item);
     const promotionUnit = this.getPromotionUnit(item);
-    const promotionPossibleQuantity =
-      Math.floor(promotionProductQuantity / promotionUnit) * promotionUnit;
+    if (!promotionUnit) return 0;
 
-    return promotionPossibleQuantity;
-  }
-
-  getPromotionInfo(item) {
-    const productInfo = this.#getPromotionProductInfo(item);
-    const promotionInfo = this.#promotions.find(
-      (promotion) => promotion.name === productInfo?.promotion,
-    );
-
-    return promotionInfo;
+    return Math.floor(promotionProductQuantity / promotionUnit) * promotionUnit;
   }
 
   getProductQuantity(item) {
@@ -44,21 +38,15 @@ class ProductModel {
   }
 
   getPromotionProductQuantity(item) {
-    return this.#getPromotionProductInfo(item)?.quantity;
+    return this.#getPromotionProductInfo(item)?.quantity ?? 0;
   }
 
   #getPromotionProductInfo(item) {
     return this.#getProducts(item).find((product) => product.promotion !== 'null');
   }
 
-  getIsProductLeft(item, quantity) {
-    return this.getProductQuantity(item) >= quantity;
-  }
-
   reduceProduct(item, quantity = 1) {
     const products = this.#getProducts(item);
-
-    // [ ] 불변성
     let leftQuantity = quantity;
 
     products.forEach((product) => {
