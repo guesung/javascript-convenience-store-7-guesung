@@ -1,4 +1,4 @@
-import FileController from '../views/FileView.js';
+import FileView from '../views/FileView.js';
 import OutputView from '../views/OutputView.js';
 
 class ProductModel {
@@ -6,8 +6,8 @@ class ProductModel {
   #promotions;
 
   constructor() {
-    this.#products = FileController.getProducts();
-    this.#promotions = FileController.getPromotions();
+    this.#products = FileView.getProducts();
+    this.#promotions = FileView.getPromotions();
 
     OutputView.printHello();
     OutputView.printProducts(this.#products);

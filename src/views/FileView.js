@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import { getIsDateBetween } from '../lib/utils.js';
 import { LINE_BREAK, SEPARATOR } from '../lib/constants.js';
 
-class FileController {
+class FileView {
   static getProducts() {
     const rawProducts = fs.readFileSync('public/products.md', 'utf8');
     const products = this.#parseProducts(rawProducts);
@@ -73,4 +73,4 @@ class FileController {
   }
 }
 
-export default FileController;
+export default FileView;
