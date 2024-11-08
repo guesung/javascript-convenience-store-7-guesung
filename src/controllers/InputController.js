@@ -1,33 +1,16 @@
 import { MissionUtils } from '@woowacourse/mission-utils';
 import { ERROR_MESSAGE, INPUT_MEESAGE } from '../lib/constants.js';
+import Validator from './Validator.js';
 
 class InputController {
-  static #ITEMS_REGEXR = /^\[[가-힣a-zA-Z]+-\d+\]$/;
-  static #ITEMS_SEPARATOR = ',';
-
   static async readItems(store) {
     return this.#retryWhileCatchedError(async () => {
       const rawItems = await MissionUtils.Console.readLineAsync(INPUT_MEESAGE.readItem);
-      this.#validateItemsFormat(rawItems);
+      Validator.validateItemsFormat(rawItems);
       const items = this.#parseItems(rawItems);
-      this.#validateItemsQuantity(store, items);
+      Validator.validateItemsQuantity(store, items);
 
       return items;
-    });
-  }
-
-  static #validateItemsFormat(rawItems) {
-    const items = rawItems.split(this.#ITEMS_SEPARATOR);
-    items.forEach((item) => {
-      if (!this.#ITEMS_REGEXR.test(item)) throw new Error(ERROR_MESSAGE.notFormat);
-    });
-  }
-
-  static #validateItemsQuantity(store, items) {
-    items.forEach(([name, quantity]) => {
-      const productQuantity = store.getProductQuantity(name);
-      if (productQuantity === 0) throw new Error(ERROR_MESSAGE.itemsZero);
-      if (productQuantity < quantity) throw new Error(ERROR_MESSAGE.itemsOverQuantity);
     });
   }
 
@@ -47,7 +30,7 @@ class InputController {
         `현재 ${item}은(는) 1개를 무료로 더 받을 수 있습니다. 추가하시겠습니까? (Y/N)\n`,
       );
 
-      this.#validateYesOrNo(answer);
+      Validator.validateYesOrNo(answer);
       return answer === 'Y';
     });
   }
@@ -58,7 +41,7 @@ class InputController {
         `현재 ${item} ${quantity}개는 프로모션 할인이 적용되지 않습니다. 그래도 구매하시겠습니까? (Y/N)\n`,
       );
 
-      this.#validateYesOrNo(answer);
+      Validator.validateYesOrNo(answer);
 
       return answer === 'Y';
     });
@@ -70,7 +53,7 @@ class InputController {
         '멤버십 할인을 받으시겠습니까? (Y/N)\n',
       );
 
-      this.#validateYesOrNo(answer);
+      Validator.validateYesOrNo(answer);
 
       return answer === 'Y';
     });
@@ -90,7 +73,7 @@ class InputController {
         '감사합니다. 구매하고 싶은 다른 상품이 있나요? (Y/N)\n',
       );
 
-      this.#validateYesOrNo(answer);
+      Validator.validateYesOrNo(answer);
 
       return answer === 'Y';
     });
@@ -105,11 +88,6 @@ class InputController {
       const retried = await this.#retryWhileCatchedError(callbackFunction);
       return retried;
     }
-  }
-
-  static #validateYesOrNo(answer) {
-    const ANSWERLIST = ['Y', 'N'];
-    if (!ANSWERLIST.includes(answer)) throw new Error(ERROR_MESSAGE.notYesOrNo);
   }
 }
 
