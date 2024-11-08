@@ -7,11 +7,12 @@ import OutputView from '../views/OutputView.js';
 class StoreController {
   #productModel;
   #receiptModel;
-  #isMembershipDiscount;
+
   #orderHistoryModel;
 
   constructor() {
     this.#productModel = new ProductModel();
+    this.#receiptModel = new ReceiptModel();
   }
 
   async openTheStore() {
@@ -57,13 +58,17 @@ class StoreController {
   }
 
   #showRecipt() {
-    this.#receiptModel = new ReceiptModel();
-
     for (const order of this.#orderHistoryModel.orderMap) {
       this.#calculateOrder(order);
     }
 
-    OutputView.printReceipt(this.#receiptModel, this.#isMembershipDiscount);
+    OutputView.printReceipt(this.#receiptModel);
+  }
+
+  async #checkMembershipDiscount() {
+    const isMembershipDiscount = await InputView.readtIsMembershipDiscount();
+
+    if (isMembershipDiscount) this.#receiptModel.setMembershipDiscount();
   }
 
   #calculateOrder([item, quantity]) {
@@ -102,12 +107,6 @@ class StoreController {
       promotionQuantity,
       promotionAdjustQuantity,
     };
-  }
-
-  async #checkMembershipDiscount() {
-    const isMembershipDiscount = await InputView.readtIsMembershipDiscount();
-
-    this.#isMembershipDiscount = isMembershipDiscount;
   }
 }
 

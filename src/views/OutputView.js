@@ -28,10 +28,10 @@ class OutputView {
     return OUTPUT_MESSAGE.noQuantity;
   }
 
-  static printReceipt(receipt, isMembershipDiscount) {
+  static printReceipt(receipt) {
     this.#printTotalProducts(receipt);
     this.#printPromotionProducts(receipt);
-    this.#printTotalCalculate(receipt, isMembershipDiscount);
+    this.#printTotalCalculate(receipt);
   }
 
   static #printTotalProducts(receipt) {
@@ -52,9 +52,9 @@ class OutputView {
     });
   }
 
-  static #printTotalCalculate(receipt, isMembershipDiscount) {
+  static #printTotalCalculate(receipt) {
     const { totalQuantity, totalPrice, promotionPrice, membershipDiscount, realPrice } =
-      this.#calculate(receipt, isMembershipDiscount);
+      this.#calculate(receipt);
 
     MissionUtils.Console.print('==============================');
     MissionUtils.Console.print(`총구매액 ${totalQuantity} ${totalPrice.toLocaleString()}`);
@@ -63,11 +63,11 @@ class OutputView {
     MissionUtils.Console.print(`내실돈 ${realPrice.toLocaleString()}`);
   }
 
-  static #calculate(receipt, isMembershipDiscount) {
+  static #calculate(receipt) {
     const totalQuantity = receipt.getTotalQuantity();
     const totalPrice = receipt.getTotalPrice();
     const promotionPrice = receipt.getTotalPromotionPrice();
-    const membershipDiscount = receipt.getMembershipDiscount(isMembershipDiscount);
+    const membershipDiscount = receipt.getMembershipDiscount(receipt.isMembershipDiscount);
     const realPrice = totalPrice - promotionPrice - membershipDiscount;
     return {
       totalQuantity,

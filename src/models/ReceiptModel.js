@@ -1,12 +1,23 @@
 class ReceiptModel {
   #receipt;
 
+  #isMembershipDiscount;
+
   constructor() {
     this.#receipt = [];
+    this.#isMembershipDiscount = false;
   }
 
   get receipt() {
     return this.#receipt;
+  }
+
+  get isMembershipDiscount() {
+    return this.#isMembershipDiscount;
+  }
+
+  setMembershipDiscount() {
+    this.#isMembershipDiscount = true;
   }
 
   addItem(item) {
