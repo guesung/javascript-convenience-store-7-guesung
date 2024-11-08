@@ -1,6 +1,6 @@
 import { SEPARATOR } from '../lib/constants.js';
 
-class Parser {
+class InputParser {
   static parseItems(rawItems) {
     const items = rawItems
       .split(SEPARATOR)
@@ -12,4 +12,4 @@ class Parser {
   }
 }
 
-export default Parser;
+export default InputParser;

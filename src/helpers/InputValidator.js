@@ -1,6 +1,6 @@
 import { ERROR_MESSAGE, ITEMS_REGEXR, SEPARATOR } from '../lib/constants.js';
 
-class Validator {
+class InputValidator {
   static validateItemsFormat(rawItems) {
     const items = rawItems.split(SEPARATOR);
     items.forEach((item) => {
@@ -22,4 +22,4 @@ class Validator {
   }
 }
 
-export default Validator;
+export default InputValidator;
