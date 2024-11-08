@@ -9,8 +9,8 @@ class OrderHistory {
     return this.orderMap.get(item) ?? 0;
   }
 
-  addQuantity(item) {
-    this.orderMap.set(item, this.orderMap.get(item) + 1);
+  addQuantity(item, quantity = 1) {
+    this.orderMap.set(item, this.orderMap.get(item) + quantity);
   }
 
   reduceQuantity(item, quantity = 1) {

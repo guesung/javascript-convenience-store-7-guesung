@@ -13,6 +13,23 @@ class Store {
     OutputController.printProducts(this.#products);
   }
 
+  getPromotionUnit(item) {
+    const promotionInfo = this.getPromotionInfo(item);
+
+    if (!promotionInfo) return null;
+    const promotionUnit = promotionInfo.buy + promotionInfo.get;
+    return promotionUnit;
+  }
+
+  getPromotionPossibleQuantity(item) {
+    const promotionProductQuantity = this.getPromotionProductQuantity(item);
+    const promotionUnit = this.getPromotionUnit(item);
+    const promotionPossibleQuantity =
+      Math.floor(promotionProductQuantity / promotionUnit) * promotionUnit;
+
+    return promotionPossibleQuantity;
+  }
+
   getPromotionInfo(item) {
     const productInfo = this.#getPromotionProductInfo(item);
     const promotionInfo = this.#promotions.find(

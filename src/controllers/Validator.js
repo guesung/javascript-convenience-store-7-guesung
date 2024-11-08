@@ -1,4 +1,4 @@
-import { ERROR_MESSAGE, ITEMS_REGEXR, SEPARATOR } from '../lib/constants';
+import { ERROR_MESSAGE, ITEMS_REGEXR, SEPARATOR } from '../lib/constants.js';
 
 class Validator {
   static validateItemsFormat(rawItems) {

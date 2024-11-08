@@ -22,18 +22,13 @@ class Customer {
   }
 
   async #checkItemPromotion(store, item, quantity) {
-    const promotionInfo = store.getPromotionInfo(item);
-    if (!promotionInfo) return;
+    const promotionUnit = store.getPromotionUnit(item);
+    if (!promotionUnit) return;
 
-    const promotionUnit = promotionInfo.buy + promotionInfo.get;
+    const canOneMoreFree = (quantity + 1) % promotionUnit === 0;
+    if (canOneMoreFree) await this.#askOneMoreFree(item);
 
-    const isOneMoreFree = (quantity + 1) % promotionUnit === 0;
-    if (isOneMoreFree) await this.#askOneMoreFree(item);
-
-    const promotionProductQuantity = store.getPromotionProductQuantity(item);
-    const promotionPosibbleQuantity =
-      Math.floor(promotionProductQuantity / promotionUnit) * promotionUnit;
-
+    const promotionPosibbleQuantity = store.getPromotionPossibleQuantity(item);
     const isPromotionProductLessThanQuantity = quantity > promotionPosibbleQuantity;
 
     if (isPromotionProductLessThanQuantity)
@@ -50,7 +45,7 @@ class Customer {
     if (!isBuyWithoutPromotion) this.#orderHistory.reduceQuantity(item, quantity);
   }
 
-  calculateOrder(store) {
+  showRecipt(store) {
     this.#receipt = new Receipt();
 
     for (const [item, quantity] of this.#orderHistory.orderMap) {
@@ -79,16 +74,14 @@ class Customer {
 
       store.reduceProduct(item, quantity);
     }
+
+    OutputController.printReceipt(this.#receipt, this.#isMembershipDiscount);
   }
 
   async checkMembershipDiscount() {
     const isMembershipDiscount = await InputController.readtIsMembershipDiscount();
 
     this.#isMembershipDiscount = isMembershipDiscount;
-  }
-
-  calculateAll() {
-    OutputController.printReceipt(this.#receipt, this.#isMembershipDiscount);
   }
 }
 

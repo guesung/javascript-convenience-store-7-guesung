@@ -12,16 +12,10 @@ class App {
   async run() {
     await InputController.retryWhileOrderFinish(async () => {
       const customer = new Customer();
-
       await customer.order(this.#store);
-
       await customer.checkItemsPromotion(this.#store);
-
-      customer.calculateOrder(this.#store);
-
       await customer.checkMembershipDiscount();
-
-      customer.calculateAll();
+      customer.showRecipt(this.#store);
     });
   }
 }

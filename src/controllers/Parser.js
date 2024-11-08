@@ -1,4 +1,4 @@
-import { SEPARATOR } from '../lib/constants';
+import { SEPARATOR } from '../lib/constants.js';
 
 class Parser {
   static parseItems(rawItems) {
