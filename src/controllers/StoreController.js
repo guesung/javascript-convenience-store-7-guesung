@@ -11,7 +11,7 @@ class StoreController {
 
   #orderHistoryModel;
 
-  constructor() {
+  openTheStore() {
     const products = FileView.getProducts();
     const promotions = FileView.getPromotions();
 
@@ -22,7 +22,7 @@ class StoreController {
     OutputView.printProducts(products);
   }
 
-  async openTheStore() {
+  async startTakeOrder() {
     await InputView.retryWhileOrderFinish(async () => {
       const items = await InputView.readItems(this.#productModel);
 
