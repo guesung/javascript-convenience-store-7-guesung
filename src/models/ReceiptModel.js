@@ -46,7 +46,7 @@ class ReceiptModel {
       0,
     );
 
-    return (totalNoPromotionAdjustPrice * 30) / 100;
+    return Math.min((totalNoPromotionAdjustPrice * 30) / 100, 8_000);
   }
 }
 

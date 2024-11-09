@@ -66,5 +66,16 @@ describe('ReceiptModel', () => {
       // 멤버십 할인 금액 = 6,900 * 30 / 100 = 2,070
       expect(receiptModel.getMembershipDiscount()).toBe(2_070);
     });
+    test('멤버십 할인의 최대 금액은 8000원이다', () => {
+      receiptModel.setMembershipDiscount();
+      receiptModel.addItem({
+        name: '콜라',
+        price: 1000,
+        quantity: 100,
+        promotionQuantity: 3,
+        promotionAdjustQuantity: 9,
+      });
+      expect(receiptModel.getMembershipDiscount()).toBe(8_000);
+    });
   });
 });
