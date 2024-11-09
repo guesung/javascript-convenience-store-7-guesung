@@ -25,11 +25,11 @@ class StoreController {
     await InputView.retryWhileOrderFinish(async () => {
       await this.#prepareTheOrder();
 
-      await this.#checkItemsPromotion(); // Product, OrderHistory
-      await this.#checkMembershipDiscount(); // Receipt
+      await this.#checkItemsPromotion();
+      await this.#checkMembershipDiscount();
 
-      this.#generateRecipt(); // OrderHistory, Receipt
-      this.#printReceipt(); // Receipt
+      this.#generateRecipt();
+      this.#printReceipt();
     });
   }
 
@@ -83,41 +83,19 @@ class StoreController {
   }
 
   #calculateOrder([item, quantity]) {
-    const price = this.#productModel.getPrice(item);
-    const { promotionQuantity, promotionAdjustQuantity } = this.#getPromotionQuantity(
-      item,
-      quantity,
-    );
+    const promotionUnit = this.#productModel.getPromotionUnit(item);
+    const promotionQuantity = this.#productModel.getPromotionAdjustQuantity(item, quantity);
+    const promotionAdjustQuantity = promotionQuantity * promotionUnit;
 
     this.#receiptModel.addItem({
       name: item,
-      price,
+      price: this.#productModel.getPrice(item),
       quantity,
       promotionQuantity,
       promotionAdjustQuantity,
     });
 
     this.#productModel.reduceProduct(item, quantity);
-  }
-
-  #getPromotionQuantity(item, quantity) {
-    const promotionUnit = this.#productModel.getPromotionUnit(item);
-    if (!promotionUnit)
-      return {
-        promotionQuantity: 0,
-        promotionAdjustQuantity: 0,
-      };
-
-    const promotionProductQuantity = this.#productModel.getPromotionProductQuantity(item);
-    const promotionQuantity = Math.floor(
-      Math.min(quantity, promotionProductQuantity) / promotionUnit,
-    );
-    const promotionAdjustQuantity = promotionQuantity * promotionUnit;
-
-    return {
-      promotionQuantity,
-      promotionAdjustQuantity,
-    };
   }
 
   #printReceipt() {
