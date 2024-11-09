@@ -8,9 +8,7 @@ class StoreController {
   #orderHistoryModel;
   #receiptModel;
 
-  #promotionService;
-
-  openTheStore() {
+  constructor() {
     const products = FileView.getProducts();
     const promotions = FileView.getPromotions();
 
@@ -22,32 +20,26 @@ class StoreController {
 
   async startTakeOrder() {
     await InputView.retryWhileOrderFinish(async () => {
-      await this.#prepareTheOrder();
+      await this.#takeOrder();
 
-      await this.#promotionService.checkItemsPromotion();
-
-      await this.#checkMembershipDiscount();
+      const promotionService = new PromotionService(this.#productModel, this.#orderHistoryModel);
+      await promotionService.checkItemsPromotion();
 
       this.#generateRecipt();
+      await this.#checkMembershipDiscount();
       this.#printReceipt();
     });
   }
 
-  async #prepareTheOrder() {
+  async #takeOrder() {
     const items = await InputView.readItems(this.#productModel);
 
     this.#orderHistoryModel = new OrderHistoryModel(items);
-    this.#receiptModel = new ReceiptModel();
-    this.#promotionService = new PromotionService(this.#productModel, this.#orderHistoryModel);
-  }
-
-  async #checkMembershipDiscount() {
-    const isMembershipDiscount = await InputView.readtIsMembershipDiscount();
-
-    if (isMembershipDiscount) this.#receiptModel.setMembershipDiscount();
   }
 
   #generateRecipt() {
+    this.#receiptModel = new ReceiptModel();
+
     for (const [item, quantity] of this.#orderHistoryModel.orderMap) {
       this.#calculateOrder(item, quantity);
       this.#productModel.reduceProduct(item, quantity);
@@ -62,6 +54,12 @@ class StoreController {
       promotionQuantity: this.#productModel.getPromotionAdjustQuantity(item, quantity),
       promotionAdjustTotalQuantity: this.#productModel.getPromotionAdjustTotalQuantity(item, quantity),
     });
+  }
+
+  async #checkMembershipDiscount() {
+    const isMembershipDiscount = await InputView.readtIsMembershipDiscount();
+
+    if (isMembershipDiscount) this.#receiptModel.setMembershipDiscount();
   }
 
   #printReceipt() {

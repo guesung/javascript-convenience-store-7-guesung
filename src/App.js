@@ -8,8 +8,6 @@ class App {
   }
 
   async run() {
-    this.#storeController.openTheStore();
-
     await this.#storeController.startTakeOrder();
   }
 }
