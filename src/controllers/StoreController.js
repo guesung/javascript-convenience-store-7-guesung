@@ -7,9 +7,9 @@ import OutputView from '../views/OutputView.js';
 
 class StoreController {
   #productModel;
-  #receiptModel;
 
   #orderHistoryModel;
+  #receiptModel;
 
   openTheStore() {
     const products = FileView.getProducts();
@@ -23,16 +23,20 @@ class StoreController {
 
   async startTakeOrder() {
     await InputView.retryWhileOrderFinish(async () => {
-      const items = await InputView.readItems(this.#productModel);
-
-      this.#orderHistoryModel = new OrderHistoryModel(items);
-      this.#receiptModel = new ReceiptModel();
+      await this.#prepareTheOrder();
 
       await this.#checkItemsPromotion();
       await this.#checkMembershipDiscount();
 
       this.#showRecipt();
     });
+  }
+
+  async #prepareTheOrder() {
+    const items = await InputView.readItems(this.#productModel);
+
+    this.#orderHistoryModel = new OrderHistoryModel(items);
+    this.#receiptModel = new ReceiptModel();
   }
 
   async #checkItemsPromotion() {
