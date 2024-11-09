@@ -36,6 +36,13 @@ class ProductModel {
     return Math.floor(Math.min(quantity, promotionProductQuantity) / promotionUnit);
   }
 
+  getPromotionAdjustTotalQuantity(item, quantity) {
+    const promotionUnit = this.getPromotionUnit(item);
+    const promotionQuantity = this.getPromotionAdjustQuantity(item, quantity);
+
+    return promotionQuantity * promotionUnit;
+  }
+
   getCanFreeProduct(item, quantity) {
     const promotionUnit = this.getPromotionUnit(item);
     const promotionPossibleQuantity = this.getPromotionPossibleQuantity(item);
