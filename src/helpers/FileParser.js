@@ -50,9 +50,7 @@ class InputParser {
   }
 
   static filterTodayPromotions(promotions) {
-    return promotions.filter((promotion) =>
-      getIsDateBetween(DateTimes.now(), promotion.startDate, promotion.endDate),
-    );
+    return promotions.filter((promotion) => getIsDateBetween(DateTimes.now(), promotion.startDate, promotion.endDate));
   }
 }
 

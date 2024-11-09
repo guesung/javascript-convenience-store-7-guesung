@@ -10,9 +10,7 @@ class OutputView {
     products.forEach(({ name, price, quantity, promotion }) => {
       const quantityOutput = this.#getQuantityOutput(quantity);
 
-      const productOutput = `- ${name} ${price.toLocaleString()}원 ${quantityOutput} ${this.#removePromotionIfNull(
-        promotion,
-      )}`;
+      const productOutput = `- ${name} ${price.toLocaleString()}원 ${quantityOutput} ${this.#removePromotionIfNull(promotion)}`;
 
       MissionUtils.Console.print(productOutput);
     });
@@ -38,23 +36,19 @@ class OutputView {
     MissionUtils.Console.print('===========W 편의점===========');
     MissionUtils.Console.print('상품명   수량   금액');
     receipt.receipt.forEach((item) => {
-      MissionUtils.Console.print(
-        `${item.name}   ${item.quantity}   ${item.price.toLocaleString()}`,
-      );
+      MissionUtils.Console.print(`${item.name}   ${item.quantity}   ${item.price.toLocaleString()}`);
     });
   }
 
   static #printPromotionProducts(receipt) {
     MissionUtils.Console.print('===========증	 정===========');
     receipt.receipt.forEach((item) => {
-      if (item.promotionQuantity > 0)
-        MissionUtils.Console.print(`${item.name}   ${item.promotionQuantity}`);
+      if (item.promotionQuantity > 0) MissionUtils.Console.print(`${item.name}   ${item.promotionQuantity}`);
     });
   }
 
   static #printTotalCalculate(receipt) {
-    const { totalQuantity, totalPrice, promotionPrice, membershipDiscount, realPrice } =
-      this.#calculate(receipt);
+    const { totalQuantity, totalPrice, promotionPrice, membershipDiscount, realPrice } = this.#calculate(receipt);
 
     MissionUtils.Console.print('==============================');
     MissionUtils.Console.print(`총구매액 ${totalQuantity} ${totalPrice.toLocaleString()}`);
@@ -64,17 +58,12 @@ class OutputView {
   }
 
   static #calculate(receipt) {
-    const totalQuantity = receipt.getTotalQuantity();
-    const totalPrice = receipt.getTotalPrice();
-    const promotionPrice = receipt.getTotalPromotionPrice();
-    const membershipDiscount = receipt.getMembershipDiscount();
-    const realPrice = totalPrice - promotionPrice - membershipDiscount;
     return {
-      totalQuantity,
-      totalPrice,
-      promotionPrice,
-      membershipDiscount,
-      realPrice,
+      totalQuantity: receipt.getTotalQuantity(),
+      totalPrice: receipt.getTotalPrice(),
+      promotionPrice: receipt.getTotalPromotionPrice(),
+      membershipDiscount: receipt.getMembershipDiscount(),
+      realPrice: receipt.getTotalPrice() - receipt.getTotalPromotionPrice() - receipt.getMembershipDiscount(),
     };
   }
 }

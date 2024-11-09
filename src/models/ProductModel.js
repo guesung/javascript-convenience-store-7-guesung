@@ -27,6 +27,12 @@ class ProductModel {
     return Math.floor(promotionProductQuantity / promotionUnit) * promotionUnit;
   }
 
+  getGapQuantityAndPromotionProduct(item, quantity) {
+    const promotionPosibbleQuantity = this.getPromotionPossibleQuantity(item);
+
+    return quantity - promotionPosibbleQuantity;
+  }
+
   getPromotionAdjustQuantity(item, quantity) {
     const promotionUnit = this.getPromotionUnit(item);
     const promotionProductQuantity = this.getPromotionProductQuantity(item);

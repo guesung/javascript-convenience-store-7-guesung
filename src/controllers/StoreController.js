@@ -51,22 +51,19 @@ class StoreController {
     if (!promotionInfo) return;
 
     const canFreeProduct = this.#productModel.getCanFreeProduct(item, quantity);
-    if (canFreeProduct) await this.#askOneMoreFree(item);
+    if (canFreeProduct) await this.#askFreeProduct(item);
 
-    const promotionPosibbleQuantity = this.#productModel.getPromotionPossibleQuantity(item);
-    const isPromotionProductLessThanQuantity = quantity > promotionPosibbleQuantity;
-
-    if (isPromotionProductLessThanQuantity)
-      await this.#askIsBuyWithoutPromotion(item, quantity - promotionPosibbleQuantity);
+    const gapQuantityAndPromotionProduct = this.#productModel.getGapQuantityAndPromotionProduct(item, quantity);
+    if (gapQuantityAndPromotionProduct > 0) await this.#askBuyWithoutPromotion(item, gapQuantityAndPromotionProduct);
   }
 
-  async #askOneMoreFree(item) {
-    const isOneMoreFree = await InputView.readIsGetFreePromotion(item);
-    if (isOneMoreFree) this.#orderHistoryModel.addQuantity(item);
+  async #askFreeProduct(item) {
+    const isFreeProduct = await InputView.readFreeProduct(item);
+    if (isFreeProduct) this.#orderHistoryModel.addQuantity(item);
   }
 
-  async #askIsBuyWithoutPromotion(item, quantity) {
-    const isBuyWithoutPromotion = await InputView.readIsBuyWithoutPromotion(item, quantity);
+  async #askBuyWithoutPromotion(item, quantity) {
+    const isBuyWithoutPromotion = await InputView.readBuyWithoutPromotion(item, quantity);
     if (!isBuyWithoutPromotion) this.#orderHistoryModel.reduceQuantity(item, quantity);
   }
 
@@ -77,24 +74,20 @@ class StoreController {
   }
 
   #generateRecipt() {
-    for (const order of this.#orderHistoryModel.orderMap) {
-      this.#calculateOrder(order);
+    for (const [item, quantity] of this.#orderHistoryModel.orderMap) {
+      this.#calculateOrder(item, quantity);
+      this.#productModel.reduceProduct(item, quantity);
     }
   }
 
-  #calculateOrder([item, quantity]) {
+  #calculateOrder(item, quantity) {
     this.#receiptModel.addItem({
       name: item,
       price: this.#productModel.getPrice(item),
       quantity,
       promotionQuantity: this.#productModel.getPromotionAdjustQuantity(item, quantity),
-      promotionAdjustTotalQuantity: this.#productModel.getPromotionAdjustTotalQuantity(
-        item,
-        quantity,
-      ),
+      promotionAdjustTotalQuantity: this.#productModel.getPromotionAdjustTotalQuantity(item, quantity),
     });
-
-    this.#productModel.reduceProduct(item, quantity);
   }
 
   #printReceipt() {

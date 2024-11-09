@@ -17,14 +17,8 @@ describe('ProductModel', () => {
       expect(productModel.getPromotionInfo('콜라')).toHaveProperty('name', '탄산2+1');
       expect(productModel.getPromotionInfo('콜라')).toHaveProperty('buy', 2);
       expect(productModel.getPromotionInfo('콜라')).toHaveProperty('get', 1);
-      expect(productModel.getPromotionInfo('콜라')).toHaveProperty(
-        'startDate',
-        new Date('2024-01-01'),
-      );
-      expect(productModel.getPromotionInfo('콜라')).toHaveProperty(
-        'endDate',
-        new Date('2024-12-31'),
-      );
+      expect(productModel.getPromotionInfo('콜라')).toHaveProperty('startDate', new Date('2024-01-01'));
+      expect(productModel.getPromotionInfo('콜라')).toHaveProperty('endDate', new Date('2024-12-31'));
     });
   });
 

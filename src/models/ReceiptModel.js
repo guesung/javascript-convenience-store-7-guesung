@@ -41,10 +41,7 @@ class ReceiptModel {
 
   getMembershipDiscount() {
     if (!this.#isMembershipDiscount) return 0;
-    const totalNoPromotionAdjustPrice = this.#receipt.reduce(
-      (prev, cur) => prev + (cur.quantity - cur.promotionAdjustTotalQuantity) * cur.price,
-      0,
-    );
+    const totalNoPromotionAdjustPrice = this.#receipt.reduce((prev, cur) => prev + (cur.quantity - cur.promotionAdjustTotalQuantity) * cur.price, 0);
 
     return Math.min((totalNoPromotionAdjustPrice * 30) / 100, 8_000);
   }

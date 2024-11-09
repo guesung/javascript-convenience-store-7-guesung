@@ -1,22 +1,10 @@
 import App from '../src/App.js';
 import { ERROR_MESSAGE } from '../src/lib/constants.js';
-import {
-  expectLogContains,
-  expectLogContainsWithoutSpacesAndEquals,
-  getLogSpy,
-  getOutput,
-  mockNowDate,
-  mockQuestions,
-} from '../src/lib/test/utils.js';
+import { expectLogContains, expectLogContainsWithoutSpacesAndEquals, getLogSpy, getOutput, mockNowDate, mockQuestions } from '../src/lib/test/utils.js';
 
 const INPUTS_TO_TERMINATE = ['[비타민워터-1]', 'N', 'N', 'N', 'N'];
 
-const run = async ({
-  inputs = [],
-  inputsToTerminate = [],
-  expected = [],
-  expectedIgnoringWhiteSpaces = [],
-}) => {
+const run = async ({ inputs = [], inputsToTerminate = [], expected = [], expectedIgnoringWhiteSpaces = [] }) => {
   const logSpy = getLogSpy();
   mockQuestions([...inputs, ...inputsToTerminate]);
 
@@ -33,11 +21,7 @@ const run = async ({
   }
 };
 
-const runExceptions = async ({
-  inputs = [],
-  inputsToTerminate = [],
-  expectedErrorMessage = '',
-}) => {
+const runExceptions = async ({ inputs = [], inputsToTerminate = [], expectedErrorMessage = '' }) => {
   const logSpy = getLogSpy();
   mockQuestions([...inputs, ...inputsToTerminate]);
 
@@ -113,15 +97,7 @@ describe('편의점', () => {
 
     test('프로모션 가능한 제품이 없을 경우, 프로모션 없이 진행해야한다고 묻는다. 그리고 이에 수락을 할 경우 프로모션 없이 구매한다.', async () => {
       await run({
-        inputs: [
-          '[콜라-8],[에너지바-5],[감자칩-10],[컵라면-10],[오렌지주스-9]',
-          'Y',
-          'Y',
-          'Y',
-          'Y',
-          'Y',
-          'N',
-        ], // 상품, 1개 공짜(콜라), 프로모션 없이(감자칩), 프로모션 없이(컵라면), 프로모션 없이(오렌지주스) 멤버십, 추가 구매
+        inputs: ['[콜라-8],[에너지바-5],[감자칩-10],[컵라면-10],[오렌지주스-9]', 'Y', 'Y', 'Y', 'Y', 'Y', 'N'], // 상품, 1개 공짜(콜라), 프로모션 없이(감자칩), 프로모션 없이(컵라면), 프로모션 없이(오렌지주스) 멤버십, 추가 구매
         expectedIgnoringWhiteSpaces: [
           '총구매액4367,200', // 콜라 9 + 에너지바 5 + 감자칩 10 + 컵라면 10 + 오렌지주스 9 = 9000 + 10000 + 15000 + 17000 + 16,200 = 67,200
           '행사할인-13,200', // 콜라 3 + 감자칩 2 + 오렌지주스 4 = 3000 + 3000 + 7200 = 13,200
@@ -145,14 +121,7 @@ describe('편의점', () => {
 
     test('현재 기간이 아닌 할인에 대해서는 적용하지 않는다. 또한, 프로모션 적용에 대해 묻지도 않는다.', async () => {
       await run({
-        inputs: [
-          '[콜라-8],[에너지바-5],[감자칩-10],[컵라면-10],[닭가슴살-9]',
-          'Y',
-          'Y',
-          'Y',
-          'Y',
-          'N',
-        ], // 상품, 1개 공짜(콜라), 프로모션 없이(에너지바), 프로모션 없이(컵라면) 멤버십, 추가 구매
+        inputs: ['[콜라-8],[에너지바-5],[감자칩-10],[컵라면-10],[닭가슴살-9]', 'Y', 'Y', 'Y', 'Y', 'N'], // 상품, 1개 공짜(콜라), 프로모션 없이(에너지바), 프로모션 없이(컵라면) 멤버십, 추가 구매
         expectedIgnoringWhiteSpaces: [
           '총구매액4378,000', // 콜라 9 + 에너지바 5 + 감자칩 10 + 컵라면 10 + 닭가슴살 9  = 9000 + 10000 + 15000 + 17000 + 27000 = 78,000
           '행사할인-6,000', // 콜라 3 + 감자칩 2 = 3000 + 3000 = 6000
@@ -173,24 +142,14 @@ describe('편의점', () => {
     test('프로모션 재고가 부족하여 일부 수량을 프로모션 혜택 없이 결제해야 하는 경우, 일부 수량에 대해 정가로 결제할지 묻고, 수락한다면 그대로 결제한다.', async () => {
       await run({
         inputs: ['[콜라-12]', 'N', 'N', 'N'], // [상품 개수, 정가 결제, 멤버십, 추가 구매]
-        expectedIgnoringWhiteSpaces: [
-          '행사할인-3,000',
-          '멤버십할인-0',
-          '총구매액99,000',
-          '내실돈6,000',
-        ],
+        expectedIgnoringWhiteSpaces: ['행사할인-3,000', '멤버십할인-0', '총구매액99,000', '내실돈6,000'],
       });
     });
 
     test('프로모션 재고가 부족하여 일부 수량을 프로모션 혜택 없이 결제해야 하는 경우, 일부 수량에 대해 정가로 결제할지 묻고, 거절한다면 상품을 제거한다.', async () => {
       await run({
         inputs: ['[콜라-12]', 'N', 'N', 'N'],
-        expectedIgnoringWhiteSpaces: [
-          '행사할인-3,000',
-          '멤버십할인-0',
-          '총구매액99,000',
-          '내실돈6,000',
-        ],
+        expectedIgnoringWhiteSpaces: ['행사할인-3,000', '멤버십할인-0', '총구매액99,000', '내실돈6,000'],
       });
     });
   });
