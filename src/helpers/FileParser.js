@@ -7,7 +7,7 @@ class InputParser {
     const products = rawProducts.trim().split(LINE_BREAK);
     products.shift();
 
-    return this.#productsMapping(products);
+    return this.#sortByPromotionProducts(this.#productsMapping(products));
   }
 
   static #productsMapping(products) {
@@ -22,8 +22,8 @@ class InputParser {
     });
   }
 
-  static sortByPromotionProducts(products) {
-    products.sort((a) => {
+  static #sortByPromotionProducts(products) {
+    return products.sort((a) => {
       if (a.promotion === 'null') return 1;
       return -1;
     });
@@ -33,7 +33,7 @@ class InputParser {
     const promotions = rawPromotions.trim().split(LINE_BREAK);
     promotions.shift();
 
-    return this.#promotionMapping(promotions);
+    return this.#filterTodayPromotions(this.#promotionMapping(promotions));
   }
 
   static #promotionMapping(promotions) {
@@ -49,7 +49,7 @@ class InputParser {
     });
   }
 
-  static filterTodayPromotions(promotions) {
+  static #filterTodayPromotions(promotions) {
     return promotions.filter((promotion) => getIsDateBetween(DateTimes.now(), promotion.startDate, promotion.endDate));
   }
 }
