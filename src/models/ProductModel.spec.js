@@ -1,5 +1,5 @@
-import FileView from '../views/FileView';
-import ProductModel from './ProductModel';
+import { FileView } from '../views/index.js';
+import { ProductModel } from './index.js';
 
 describe('ProductModel', () => {
   let productModel;

@@ -1,8 +1,6 @@
 import { mockQuestions } from '../lib/test/utils';
-import FileView from '../views/FileView';
-import InputView from '../views/InputView';
-import OrderHistoryModel from './OrderHistoryModel';
-import ProductModel from './ProductModel';
+import { FileView, InputView } from '../views/index.js';
+import { OrderHistoryModel, ProductModel } from './index.js';
 
 describe('OrderHistoryModel', () => {
   let orderHistoryModel;

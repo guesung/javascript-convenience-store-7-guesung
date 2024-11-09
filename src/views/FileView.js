@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import FileParser from '../helpers/FileParser.js';
+import { FileParser } from '../helpers/index.js';
 
 class FileView {
   static getProducts() {

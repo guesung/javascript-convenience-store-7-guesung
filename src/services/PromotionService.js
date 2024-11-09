@@ -1,4 +1,4 @@
-import InputView from '../views/InputView.js';
+import { InputView } from '../views/index.js';
 
 class PromotionService {
   #productModel;

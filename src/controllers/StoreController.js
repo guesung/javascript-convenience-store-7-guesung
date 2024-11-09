@@ -1,10 +1,6 @@
-import OrderHistoryModel from '../models/OrderHistoryModel.js';
-import ProductModel from '../models/ProductModel.js';
-import ReceiptModel from '../models/ReceiptModel.js';
-import PromotionService from '../services/PromotionService.js';
-import FileView from '../views/FileView.js';
-import InputView from '../views/InputView.js';
-import OutputView from '../views/OutputView.js';
+import { ReceiptModel, ProductModel, OrderHistoryModel } from '../models/index.js';
+import { PromotionService } from '../services/index.js';
+import { FileView, InputView, OutputView } from '../views/index.js';
 
 class StoreController {
   #productModel;

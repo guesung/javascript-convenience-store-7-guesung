@@ -1,5 +1,5 @@
 import { MissionUtils } from '@woowacourse/mission-utils';
-import { SEPARATOR } from '../constants';
+import { SEPARATOR } from '../constants.js';
 
 export const mockQuestions = (inputs) => {
   const messages = [];

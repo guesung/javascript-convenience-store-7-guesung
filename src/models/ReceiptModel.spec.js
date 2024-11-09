@@ -1,4 +1,4 @@
-import ReceiptModel from './ReceiptModel.js';
+import { ReceiptModel } from './index.js';
 
 describe('ReceiptModel', () => {
   let receiptModel;

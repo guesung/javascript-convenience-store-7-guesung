@@ -1,4 +1,4 @@
-import StoreController from './controllers/StoreController.js';
+import { StoreController } from './controllers/index.js';
 
 class App {
   #storeController;

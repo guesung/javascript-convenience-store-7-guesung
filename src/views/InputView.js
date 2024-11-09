@@ -1,7 +1,6 @@
 import { MissionUtils } from '@woowacourse/mission-utils';
 import { INPUT_MEESAGE } from '../lib/constants.js';
-import InputValidator from '../helpers/InputValidator.js';
-import InputParser from '../helpers/InputParser.js';
+import { InputValidator, InputParser } from '../helpers/index.js';
 
 class InputView {
   static async readItems(store) {
