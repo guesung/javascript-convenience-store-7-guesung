@@ -24,8 +24,8 @@ class InputParser {
 
   static sortByPromotionProducts(products) {
     products.sort((a) => {
-      if (a?.promotion !== 'null') return -1;
-      return 1;
+      if (a.promotion === 'null') return 1;
+      return -1;
     });
   }
 
