@@ -19,6 +19,7 @@ class InputView {
       const answer = await MissionUtils.Console.readLineAsync(`현재 ${item}은(는) 1개를 무료로 더 받을 수 있습니다. 추가하시겠습니까? (Y/N)\n`);
 
       InputValidator.validateYesOrNo(answer);
+
       return answer === 'Y';
     });
   }
@@ -35,7 +36,7 @@ class InputView {
 
   static async readtIsMembershipDiscount() {
     return this.#retryWhileCatchedError(async () => {
-      const answer = await MissionUtils.Console.readLineAsync('멤버십 할인을 받으시겠습니까? (Y/N)\n');
+      const answer = await MissionUtils.Console.readLineAsync(INPUT_MEESAGE.membershipDiscount);
 
       InputValidator.validateYesOrNo(answer);
 
@@ -53,7 +54,7 @@ class InputView {
 
   static async #readIsMoreOrder() {
     return this.#retryWhileCatchedError(async () => {
-      const answer = await MissionUtils.Console.readLineAsync('감사합니다. 구매하고 싶은 다른 상품이 있나요? (Y/N)\n');
+      const answer = await MissionUtils.Console.readLineAsync(INPUT_MEESAGE.tryMoreOrder);
 
       InputValidator.validateYesOrNo(answer);
 
@@ -69,8 +70,7 @@ class InputView {
 
       MissionUtils.Console.print(error.message);
 
-      const retried = await this.#retryWhileCatchedError(callbackFunction, tryCount + 1);
-      return retried;
+      return await this.#retryWhileCatchedError(callbackFunction, tryCount + 1);
     }
   }
 }
