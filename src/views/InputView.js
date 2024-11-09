@@ -70,13 +70,15 @@ class InputView {
     });
   }
 
-  static async #retryWhileCatchedError(callbackFunction) {
+  static async #retryWhileCatchedError(callbackFunction, tryCount = 0) {
     try {
       return await callbackFunction();
     } catch (error) {
+      if (tryCount > 10) return null;
+
       MissionUtils.Console.print(error.message);
 
-      const retried = await this.#retryWhileCatchedError(callbackFunction);
+      const retried = await this.#retryWhileCatchedError(callbackFunction, tryCount + 1);
       return retried;
     }
   }
