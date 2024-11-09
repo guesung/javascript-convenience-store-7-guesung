@@ -21,3 +21,5 @@ export const SEPARATOR = ',';
 export const QUANTITY_SEPARATOR = '-';
 export const ITEMS_REGEXR = /^\[[가-힣a-zA-Z]+-\d+\]$/;
 export const LINE_BREAK = '\n';
+export const YES = 'Y';
+export const NO = 'N';

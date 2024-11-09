@@ -18,6 +18,7 @@ class InputValidator {
 
   static validateYesOrNo(answer) {
     const ANSWERLIST = ['Y', 'N'];
+
     if (!ANSWERLIST.includes(answer)) throw new Error(ERROR_MESSAGE.notYesOrNo);
   }
 }

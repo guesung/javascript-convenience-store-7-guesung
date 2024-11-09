@@ -1,6 +1,7 @@
 import { MissionUtils } from '@woowacourse/mission-utils';
-import { INPUT_MEESAGE } from '../lib/constants.js';
+import { INPUT_MEESAGE, YES } from '../lib/constants.js';
 import { InputValidator, InputParser } from '../helpers/index.js';
+import { checkYesOrNo } from '../lib/utils.js';
 
 class InputView {
   static async readItems(store) {
@@ -20,7 +21,7 @@ class InputView {
 
       InputValidator.validateYesOrNo(answer);
 
-      return answer === 'Y';
+      return checkYesOrNo(answer);
     });
   }
 
@@ -30,7 +31,7 @@ class InputView {
 
       InputValidator.validateYesOrNo(answer);
 
-      return answer === 'Y';
+      return checkYesOrNo(answer);
     });
   }
 
@@ -40,7 +41,7 @@ class InputView {
 
       InputValidator.validateYesOrNo(answer);
 
-      return answer === 'Y';
+      return checkYesOrNo(answer);
     });
   }
 
@@ -58,7 +59,7 @@ class InputView {
 
       InputValidator.validateYesOrNo(answer);
 
-      return answer === 'Y';
+      return checkYesOrNo(answer);
     });
   }
 
