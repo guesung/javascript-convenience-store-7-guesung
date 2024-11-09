@@ -27,6 +27,13 @@ class ProductModel {
     return Math.floor(promotionProductQuantity / promotionUnit) * promotionUnit;
   }
 
+  getCanFreeProduct(item, quantity) {
+    const promotionUnit = this.getPromotionUnit(item);
+    const promotionPossibleQuantity = this.getPromotionPossibleQuantity(item);
+
+    return (quantity + 1) % promotionUnit === 0 && promotionPossibleQuantity >= quantity + 1;
+  }
+
   getProductQuantity(item) {
     return this.#getProducts(item).reduce((prev, cur) => prev + cur.quantity, 0);
   }
