@@ -25,10 +25,11 @@ class StoreController {
     await InputView.retryWhileOrderFinish(async () => {
       await this.#prepareTheOrder();
 
-      await this.#checkItemsPromotion();
-      await this.#checkMembershipDiscount();
+      await this.#checkItemsPromotion(); // Product, OrderHistory
+      await this.#checkMembershipDiscount(); // Receipt
 
-      this.#showRecipt();
+      this.#generateRecipt(); // OrderHistory, Receipt
+      this.#printReceipt(); // Receipt
     });
   }
 
@@ -75,12 +76,10 @@ class StoreController {
     if (isMembershipDiscount) this.#receiptModel.setMembershipDiscount();
   }
 
-  #showRecipt() {
+  #generateRecipt() {
     for (const order of this.#orderHistoryModel.orderMap) {
       this.#calculateOrder(order);
     }
-
-    OutputView.printReceipt(this.#receiptModel);
   }
 
   #calculateOrder([item, quantity]) {
@@ -119,6 +118,10 @@ class StoreController {
       promotionQuantity,
       promotionAdjustQuantity,
     };
+  }
+
+  #printReceipt() {
+    OutputView.printReceipt(this.#receiptModel);
   }
 }
 
