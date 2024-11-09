@@ -9,28 +9,28 @@ describe('ReceiptModel', () => {
       price: 1000,
       quantity: 9,
       promotionQuantity: 3,
-      promotionAdjustQuantity: 9,
+      promotionAdjustTotalQuantity: 9,
     });
     receiptModel.addItem({
       name: '사이다',
       price: 1200,
       quantity: 8,
       promotionQuantity: 2,
-      promotionAdjustQuantity: 6,
+      promotionAdjustTotalQuantity: 6,
     });
     receiptModel.addItem({
       name: '감자칩',
       price: 1500,
       quantity: 10,
       promotionQuantity: 3,
-      promotionAdjustQuantity: 9,
+      promotionAdjustTotalQuantity: 9,
     });
     receiptModel.addItem({
       name: '컵라면',
       price: 3000,
       quantity: 7,
       promotionQuantity: 3,
-      promotionAdjustQuantity: 6,
+      promotionAdjustTotalQuantity: 6,
     });
   });
 
@@ -73,7 +73,7 @@ describe('ReceiptModel', () => {
         price: 1000,
         quantity: 100,
         promotionQuantity: 3,
-        promotionAdjustQuantity: 9,
+        promotionAdjustTotalQuantity: 9,
       });
       expect(receiptModel.getMembershipDiscount()).toBe(8_000);
     });

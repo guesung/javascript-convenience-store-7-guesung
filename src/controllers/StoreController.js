@@ -85,14 +85,14 @@ class StoreController {
   #calculateOrder([item, quantity]) {
     const promotionUnit = this.#productModel.getPromotionUnit(item);
     const promotionQuantity = this.#productModel.getPromotionAdjustQuantity(item, quantity);
-    const promotionAdjustQuantity = promotionQuantity * promotionUnit;
+    const promotionAdjustTotalQuantity = promotionQuantity * promotionUnit;
 
     this.#receiptModel.addItem({
       name: item,
       price: this.#productModel.getPrice(item),
       quantity,
       promotionQuantity,
-      promotionAdjustQuantity,
+      promotionAdjustTotalQuantity,
     });
 
     this.#productModel.reduceProduct(item, quantity);
