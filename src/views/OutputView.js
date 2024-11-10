@@ -45,7 +45,7 @@ class OutputView {
     this.#print('===========W 편의점===========');
     this.#print('상품명   수량   금액');
     for (const item of receipt) {
-      this.#print(`${item.name}   ${item.quantity}   ${(item.price * item.quantity).toLocaleString()}`);
+      if (item.quantity > 0) this.#print(`${item.name}   ${item.quantity}   ${(item.price * item.quantity).toLocaleString()}`);
     }
   }
 
