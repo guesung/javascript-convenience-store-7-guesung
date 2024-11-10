@@ -40,7 +40,7 @@ class StoreController {
   #generateRecipt() {
     this.#receiptModel = new ReceiptModel();
 
-    for (const [item, quantity] of this.#orderHistoryModel.orderMap) {
+    for (const [item, quantity] of this.#orderHistoryModel) {
       this.#calculateOrder(item, quantity);
       this.#productModel.reduceProduct(item, quantity);
     }

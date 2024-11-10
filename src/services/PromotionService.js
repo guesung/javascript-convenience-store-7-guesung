@@ -10,7 +10,7 @@ class PromotionService {
   }
 
   async checkItemsPromotion() {
-    for await (const [item, quantity] of this.#orderHistoryModel.orderMap) {
+    for await (const [item, quantity] of this.#orderHistoryModel) {
       await this.#checkItemPromotion(item, quantity);
     }
   }
@@ -23,7 +23,8 @@ class PromotionService {
     if (canFreeProduct) await this.#askFreeProduct(item);
 
     const gapQuantityAndPromotionProduct = this.#productModel.getGapQuantityAndPromotionProduct(item, quantity);
-    if (gapQuantityAndPromotionProduct > 0) await this.#askBuyWithoutPromotion(item, gapQuantityAndPromotionProduct);
+    const isBuyWithoutPromotion = gapQuantityAndPromotionProduct > 0;
+    if (isBuyWithoutPromotion) await this.#askBuyWithoutPromotion(item, gapQuantityAndPromotionProduct);
   }
 
   async #askFreeProduct(item) {

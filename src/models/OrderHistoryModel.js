@@ -1,20 +1,24 @@
 class OrderHistoryModel {
-  orderMap;
+  #orderMap;
+
+  [Symbol.iterator]() {
+    return this.#orderMap.entries();
+  }
 
   constructor(items) {
-    this.orderMap = new Map(items);
+    this.#orderMap = new Map(items);
   }
 
   getQuantity(item) {
-    return this.orderMap.get(item) ?? 0;
+    return this.#orderMap.get(item) ?? 0;
   }
 
   addQuantity(item, quantity = 1) {
-    this.orderMap.set(item, this.getQuantity(item) + quantity);
+    this.#orderMap.set(item, this.getQuantity(item) + quantity);
   }
 
   reduceQuantity(item, quantity = 1) {
-    this.orderMap.set(item, Math.max(this.getQuantity(item) - quantity, 0));
+    this.#orderMap.set(item, Math.max(this.getQuantity(item) - quantity, 0));
   }
 }
 export default OrderHistoryModel;
