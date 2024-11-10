@@ -24,53 +24,60 @@
 
 ```
 
-이렇게 한 이야기가 끝이 납니다. 이 이야기를 코드로 풀어낸 것이 [App](./src/App.js)과 [Store](./src/controllers/StoreController.js)입니다.
+이렇게 한 이야기가 끝이 납니다. 이 이야기를 코드로 풀어낸 것이 [App](./src/App.js)과 [StoreController](./src/controllers/StoreController.js)입니다.
 
 ## 🤸‍♀️ 코드 설명
 
 ### 1. MVC패턴
 
 > MVC패턴
-> : Controller가 주축이 되어, Model과 View를 연결한다. Model은 데이터에 대한 관리만, View는 사용자의 입출력만을 담당한다.
+> : Controller가 주축이 되어 Model과 View를 연결한다. Model은 데이터에 대한 관리만, View는 사용자의 입출력만을 담당한다.
+>
+> #### 특징
 >
 > 1. Model은 View와 Controller에 의존하지 않는다.
 > 2. View는 필요에 따라 Model를 주입받을 수 있으며, Controller에 의존하지 않는다.
 > 3. Controller는 Model과 View을 이용하여 프로그램의 흐름을 담당한다.
 
-이번 과제에서는 MVC패턴을 적용했습니다. 객체들, 특히 제품과 주문 목록간의 의존성이 너무 강해서 이를 하나의 모델에서 수행하기에는 어렵다고 판단하였습니다. 왜냐하면 하나의 모델에서 특정 행위를 수행하면, 다른 모델을 반드시 메서드의 인자로 넘겨주어야 하기 때문입니다. 그래서 이 제품과 주문 목록을 Product와 OrderHistory라는 모델로 분리를 하고, Controller에서 이를 제어하도록 하였습니다.
+이번 과제에서는 MVC패턴을 적용했습니다. 객체들, 특히 제품과 주문 목록간의 의존성이 너무 강해서 이를 하나의 모델에서 수행하기에는 어렵다고 판단하였습니다. 왜냐하면 하나의 모델에서 특정 행위를 수행하면, 다른 모델을 반드시 메서드의 인자로 넘겨주어야 하기 때문입니다. 결국 이 둘의 의존성이 강해지고 유지보수에 어렵다고 판단하였습니다. 그래서 이 제품과 주문 목록을 ProductModel과 OrderHistoryModel이라는 모델로 분리를 하고 Controller에서 이를 제어하도록 하였습니다.
 
-이렇게 MVC패턴으로 각 객체를 분리하고 나니 Controller가 대단히 무거워졌습니다. 그래서, 프로모션에 대한 로직을 PromotionService라는 서비스 계층으로 분리하여 Controller의 책임을 분산했습니다.
+이렇게 MVC패턴으로 각 객체를 분리하고 나니 Controller가 대단히 무거워졌습니다. 그래서 프로모션에 대한 로직을 PromotionService라는 서비스 계층으로 분리하여 Controller의 책임을 분산했습니다.
 
 1. [Model](./src/models/) : 데이터를 담당합니다.
 
-   1. ProductModel : 상품에 대한 데이터를 담고 있는 객체입니다.
-   2. OrderHistoryModel : 주문 목록에 대한 데이터를 담고 있는 객체입니다.
-   3. ReceiptModel : 영수증에 필요한 데이터를 담고 있는 객체입니다.
+   1. `ProductModel` : 상품에 대한 데이터를 담고 있는 객체입니다.
+   2. `OrderHistoryModel` : 주문 목록에 대한 데이터를 담고 있는 객체입니다.
+   3. `ReceiptModel` : 영수증에 필요한 데이터를 담고 있는 객체입니다.
 
 2. [View](./src/views/) : 사용자의 입출력만을 담당합니다.
 
-   1. FileView : 파일을 읽는 객체입니다.
-   2. InputView : 사용자로부터 입력을 받는 객체입니다.
-   3. OutputView : 사용자로에게 결과를 출력하는 객체입니다.
+   1. `FileView` : 파일을 읽는 객체입니다.
+   2. `InputView` : 사용자로부터 입력을 받는 객체입니다.
+   3. `OutputView` : 사용자로에게 결과를 출력하는 객체입니다.
 
 3. [Controller](./src/controllers/) : Model과 View를 연결하여 프로그램의 전체적인 흐름을 담당합니다.
 
-   1. StoreController : 편의점의 전반적인 흐름을 담당하는 객체입니다.
+   1. `StoreController` : 편의점의 전반적인 흐름을 담당하는 객체입니다.
 
 4. [Service](./src/services/) : Controller의 책임을 덜어줍니다.
 
-   1. PromotionService : 편의점에서 프로모션 관련된 로직을 담당하는 객체입니다.
+   1. `PromotionService` : 편의점에서 프로모션 관련된 로직을 담당하는 객체입니다.
 
 5. [helpers](./src/helpers/) : 핼퍼 객체이며, 주로 View에서 필요한 기능을 담당합니다.
-   1. FileParser : 파일 입력을 받았을 때 이를 가공하는 객체입니다.
-   2. InputParser : 사용자의 입력을 받았을 때 이를 가공하는 객체입니다.
-   3. InputValidator : 사용자의 입력을 받았을 때 유효성 검사하는 객체입니다.
+   1. `FileParser` : 파일 입력을 받았을 때 이를 가공하는 객체입니다.
+   2. `InputParser` : 사용자의 입력을 받았을 때 이를 가공하는 객체입니다.
+   3. `InputValidator` : 사용자의 입력을 받았을 때 유효성 검사하는 객체입니다.
 
 ### 2. 테스트
 
-App의 테스트 코드는 **tests**폴더에 있고, 그 외의 테스트 코드는 각 파일이 위치한 폴더에 함께 위치해있습니다. 이렇게 테스트 코드 파일과 메인 파일을 함께 둔 이유는 응집성때문입니다. 이 둘이 멀리 떨어져있으면 물리적으로 떨어져 더 손이 안가게되고, 점점 관리를 안하게 될 것이라 판단하여 같은 폴더에 배치했습니다.
+App의 테스트 코드는 `\_\_tests\_\_`폴더에 있고, 그 외의 테스트 코드는 각 파일이 위치한 폴더에 함께 위치해있습니다. 이렇게 테스트 코드 파일과 메인 파일을 함께 둔 이유는 응집성때문입니다. 이 둘이 멀리 떨어져있으면 물리적으로 떨어져 더 손이 안가게되고, 점점 관리를 안하게 될 것이라 판단하여 같은 폴더에 배치했습니다.
 
 클래스에 대한 테스트 코드는 Model에 대한 테스트만 작성했습니다. Controller와 View는 다른 객체와의 의존성이 너무 강하고, 애플리케이션에 대한 테스트로 충분히 대체가 가능하다고 생각했습니다.
+
+1. `ApplicationTest` : 애플리케이션의 테스트 코드
+2. `ReceiptModel.spec.js` : ReceiptModel의 테스트 코드
+3. `ProductModel.spec.js` : ProductModel의 테스트 코드
+4. `OrderHistoryModel.spec.js` : OrderHistoryModel의 테스트 코드
 
 ### 3. 라이브러리
 
@@ -78,7 +85,7 @@ lib 폴더에서 확인할 수 있습니다. 애플리케이션 혹은 테스트
 
 1. [constants](./src/lib/constants.js) : 애플리케이션에서 사용하는 상수
 2. [utils](./src/lib/utils.js) : 애플리케이션에서 사용하는 유틸 함수
-3. [test/utils](./src/lib/test/utils.js) : 테스트할 때 모킹에 필요한 유틸 함수
+3. [test/utils](./src/lib/test/utils.js) : 테스트할 때 사용하는 유틸 함수
 
 ## 🔨 기능 구현 목록
 
