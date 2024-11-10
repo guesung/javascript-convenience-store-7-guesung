@@ -48,7 +48,7 @@ class OutputView {
   }
 
   static #printTotalCalculate(receipt) {
-    const { totalQuantity, totalPrice, promotionPrice, membershipDiscount, realPrice } = this.#calculate(receipt);
+    const { totalQuantity, totalPrice, promotionPrice, membershipDiscount, realPrice } = this.#calculateTotal(receipt);
 
     MissionUtils.Console.print('==============================');
     MissionUtils.Console.print(`총구매액 ${totalQuantity} ${totalPrice.toLocaleString()}`);
@@ -57,7 +57,7 @@ class OutputView {
     MissionUtils.Console.print(`내실돈 ${realPrice.toLocaleString()}`);
   }
 
-  static #calculate(receipt) {
+  static #calculateTotal(receipt) {
     return {
       totalQuantity: receipt.getTotalQuantity(),
       totalPrice: receipt.getTotalPrice(),
