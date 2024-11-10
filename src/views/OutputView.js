@@ -11,12 +11,13 @@ class OutputView {
   }
 
   static printProducts(products) {
-    if (products.getPromotionTotalQuantity() === 0) this.#print(OUTPUT_MESSAGE.noProduct);
+    if (products.getPromotionTotalQuantity() === 0) {
+      this.#print(OUTPUT_MESSAGE.noProduct);
+      return;
+    }
     for (const { name, price, quantity, promotion } of products) {
       const quantityOutput = this.#getQuantityOutput(quantity);
-
       const productOutput = `- ${name} ${price.toLocaleString()}원 ${quantityOutput} ${this.#getPromotionOutput(promotion)}`;
-
       this.#print(productOutput);
     }
   }
