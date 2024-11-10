@@ -11,10 +11,6 @@ class ReceiptModel {
     yield* this.#receipt;
   }
 
-  get isMembershipDiscount() {
-    return this.#isMembershipDiscount;
-  }
-
   setMembershipDiscount() {
     this.#isMembershipDiscount = true;
   }
