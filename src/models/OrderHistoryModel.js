@@ -1,17 +1,17 @@
 class OrderHistoryModel {
-  #orderMap;
+  #orderHistory;
 
   constructor(items) {
-    this.#orderMap = new Map(items);
+    this.#orderHistory = new Map(items);
   }
 
-  [Symbol.iterator]() {
-    return this.#orderMap.entries();
+  *[Symbol.iterator]() {
+    yield* this.#orderHistory;
   }
 
   /** 주문 개수를 반환한다. */
   getQuantity(item) {
-    return this.#orderMap.get(item) ?? 0;
+    return this.#orderHistory.get(item) ?? 0;
   }
 
   /**
@@ -20,7 +20,7 @@ class OrderHistoryModel {
    * quantity를 넘길 경우, quantity개의 제품을 추가한다.
    */
   addQuantity(item, quantity = 1) {
-    this.#orderMap.set(item, this.getQuantity(item) + quantity);
+    this.#orderHistory.set(item, this.getQuantity(item) + quantity);
   }
 
   /**
@@ -29,7 +29,7 @@ class OrderHistoryModel {
    * quantity를 넘길 경우, quantity개의 제품을 감소시킨다.
    */
   reduceQuantity(item, quantity = 1) {
-    this.#orderMap.set(item, Math.max(this.getQuantity(item) - quantity, 0));
+    this.#orderHistory.set(item, Math.max(this.getQuantity(item) - quantity, 0));
   }
 }
 export default OrderHistoryModel;

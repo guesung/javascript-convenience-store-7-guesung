@@ -9,8 +9,8 @@ class ReceiptModel {
     this.#isMembershipDiscount = false;
   }
 
-  *[Symbol.iterator]() {
-    yield* this.#receipt;
+  [Symbol.iterator]() {
+    return this.#receipt[Symbol.iterator]();
   }
 
   /** 멤버십 할인을 설정한다. */
