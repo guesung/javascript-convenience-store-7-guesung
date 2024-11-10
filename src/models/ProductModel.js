@@ -62,6 +62,7 @@ class ProductModel {
     return this.#products.filter((product) => product.name === item);
   }
 
+  /** item을 quantity개 가져왔을 때 무료로 얻을 수 있는지 */
   getCanFreeProduct(item, quantity) {
     const promotionUnit = this.getPromotionUnit(item);
     const promotionPossibleQuantity = this.getPromotionEnableQuantity(item);
@@ -69,6 +70,11 @@ class ProductModel {
     return (quantity + 1) % promotionUnit === 0 && promotionPossibleQuantity >= quantity + 1;
   }
 
+  /**
+   * item의 개수를 감소
+   * quantity를 넘기지 않을 경우 1개 감소
+   * quantity를 넘길 경우 quantity개만큼 감소
+   */
   reduceProduct(item, quantity = 1) {
     const products = this.#getProducts(item);
     let leftQuantity = quantity;
