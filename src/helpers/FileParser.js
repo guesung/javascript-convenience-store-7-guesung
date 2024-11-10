@@ -8,26 +8,9 @@ class InputParser {
     products.shift();
 
     const newProducts = this.#productsMapping(products);
-    this.#f(newProducts);
+    this.#addProductIfHasNoPromotionProduct(newProducts);
     this.#sortByPromotionProducts(newProducts);
-
     return newProducts;
-  }
-
-  static #f(products) {
-    return products.forEach((product) => {
-      if (product.promotion !== 'null') {
-        const isNoNoPromotion = !!products.find((product) => product.promotion);
-        if (isNoNoPromotion) {
-          products.push({
-            name: product.name,
-            price: product.price,
-            quantity: 0,
-            promotion: 'null',
-          });
-        }
-      }
-    });
   }
 
   static #productsMapping(products) {
@@ -39,6 +22,20 @@ class InputParser {
         quantity: Number(quantity),
         promotion,
       };
+    });
+  }
+
+  static #addProductIfHasNoPromotionProduct(products) {
+    return products.forEach((product) => {
+      const hasPromotion = product.promotion !== 'null';
+      const hasNoPromotionProduct = products.some((it) => it.name === product.name && it.promotion === 'null');
+      if (hasPromotion && !hasNoPromotionProduct)
+        products.push({
+          name: product.name,
+          price: product.price,
+          quantity: 0,
+          promotion: 'null',
+        });
     });
   }
 
