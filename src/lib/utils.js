@@ -18,6 +18,6 @@ export const retryWhileCatchedError = async (callbackFunction, tryCount = 0) => 
 
     MissionUtils.Console.print(error.message);
 
-    await retryWhileCatchedError(callbackFunction, tryCount + 1);
+    return await retryWhileCatchedError(callbackFunction, tryCount + 1);
   }
 };
