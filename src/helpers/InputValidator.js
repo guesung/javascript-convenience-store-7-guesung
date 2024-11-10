@@ -18,7 +18,7 @@ class InputValidator {
   }
 
   static validateItemsUnique(items) {
-    const itemNames = items.map((item) => item.name);
+    const itemNames = items.map(([name]) => name);
     const isItemsUnique = itemNames.length === new Set(itemNames).size;
 
     if (!isItemsUnique) throw new Error(ERROR_MESSAGE.notUnique);
