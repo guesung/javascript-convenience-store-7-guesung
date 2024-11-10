@@ -4,13 +4,13 @@ class InputValidator {
   static validateItemsFormat(rawItems) {
     const items = rawItems.split(SEPARATOR);
     items.forEach((item) => {
-      if (!ITEMS_REGEXR.test(item)) throw new Error(ERROR_MESSAGE.notFormat);
+      if (!ITEMS_REGEXR.test(item)) throw new Error(ERROR_MESSAGE.notItemsFormat);
     });
   }
 
-  static validateItemsQuantity(store, items) {
+  static validateItemsQuantity(productModel, items) {
     items.forEach(([name, quantity]) => {
-      const productQuantity = store.getProductQuantity(name);
+      const productQuantity = productModel.getQuantity(name);
       if (productQuantity === 0) throw new Error(ERROR_MESSAGE.itemsZero);
       if (productQuantity < quantity) throw new Error(ERROR_MESSAGE.itemsOverQuantity);
     });

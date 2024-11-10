@@ -22,7 +22,7 @@ class PromotionService {
     const canFreeProduct = this.#productModel.getCanFreeProduct(item, quantity);
     if (canFreeProduct) await this.#askFreeProduct(item);
 
-    const gapQuantityAndPromotionProduct = this.#productModel.getGapQuantityAndPromotionProduct(item, quantity);
+    const gapQuantityAndPromotionProduct = quantity - this.#productModel.getPromotionEnableQuantity(item);
     const isBuyWithoutPromotion = gapQuantityAndPromotionProduct > 0;
     if (isBuyWithoutPromotion) await this.#askBuyWithoutPromotion(item, gapQuantityAndPromotionProduct);
   }

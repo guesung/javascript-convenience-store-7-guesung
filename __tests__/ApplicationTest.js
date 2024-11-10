@@ -167,22 +167,22 @@ describe('편의점', () => {
       await runExceptions({
         inputs: ['[컵라면-8-3]'],
         inputsToTerminate: INPUTS_TO_TERMINATE,
-        expectedErrorMessage: ERROR_MESSAGE.notFormat,
+        expectedErrorMessage: ERROR_MESSAGE.notItemsFormat,
       });
       await runExceptions({
         inputs: ['[컵라면-8'],
         inputsToTerminate: INPUTS_TO_TERMINATE,
-        expectedErrorMessage: ERROR_MESSAGE.notFormat,
+        expectedErrorMessage: ERROR_MESSAGE.notItemsFormat,
       });
       await runExceptions({
         inputs: ['컵라면-8'],
         inputsToTerminate: INPUTS_TO_TERMINATE,
-        expectedErrorMessage: ERROR_MESSAGE.notFormat,
+        expectedErrorMessage: ERROR_MESSAGE.notItemsFormat,
       });
       await runExceptions({
         inputs: ['[컵라면8]'],
         inputsToTerminate: INPUTS_TO_TERMINATE,
-        expectedErrorMessage: ERROR_MESSAGE.notFormat,
+        expectedErrorMessage: ERROR_MESSAGE.notItemsFormat,
       });
     });
 

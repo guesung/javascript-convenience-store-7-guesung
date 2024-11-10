@@ -38,24 +38,24 @@ describe('ProductModel', () => {
     });
   });
 
-  describe('getPromotionPossibleQuantity', () => {
+  describe('getPromotionEnableQuantity', () => {
     test('프로모션 적용이 가능한 상품의 개수를 반환한다', () => {
-      expect(productModel.getPromotionPossibleQuantity('콜라')).toBe(9);
-      expect(productModel.getPromotionPossibleQuantity('사이다')).toBe(6);
-      expect(productModel.getPromotionPossibleQuantity('오렌지주스')).toBe(8);
-      expect(productModel.getPromotionPossibleQuantity('탄산수')).toBe(3);
-      expect(productModel.getPromotionPossibleQuantity('감자칩')).toBe(4);
-      expect(productModel.getPromotionPossibleQuantity('물')).toBe(0);
+      expect(productModel.getPromotionEnableQuantity('콜라')).toBe(9);
+      expect(productModel.getPromotionEnableQuantity('사이다')).toBe(6);
+      expect(productModel.getPromotionEnableQuantity('오렌지주스')).toBe(8);
+      expect(productModel.getPromotionEnableQuantity('탄산수')).toBe(3);
+      expect(productModel.getPromotionEnableQuantity('감자칩')).toBe(4);
+      expect(productModel.getPromotionEnableQuantity('물')).toBe(0);
     });
   });
 
-  describe('getProductQuantity', () => {
+  describe('getQuantity', () => {
     test('제품 개수를 반환한다.', () => {
-      expect(productModel.getProductQuantity('콜라')).toBe(20);
-      expect(productModel.getProductQuantity('사이다')).toBe(15);
-      expect(productModel.getProductQuantity('오렌지주스')).toBe(9);
-      expect(productModel.getProductQuantity('탄산수')).toBe(5);
-      expect(productModel.getProductQuantity('물')).toBe(10);
+      expect(productModel.getQuantity('콜라')).toBe(20);
+      expect(productModel.getQuantity('사이다')).toBe(15);
+      expect(productModel.getQuantity('오렌지주스')).toBe(9);
+      expect(productModel.getQuantity('탄산수')).toBe(5);
+      expect(productModel.getQuantity('물')).toBe(10);
     });
   });
 
@@ -82,19 +82,19 @@ describe('ProductModel', () => {
   describe('reduceProduct', () => {
     test('제품 개수를 감소시킨다.', () => {
       productModel.reduceProduct('콜라', 5);
-      expect(productModel.getProductQuantity('콜라')).toBe(15);
+      expect(productModel.getQuantity('콜라')).toBe(15);
 
       productModel.reduceProduct('콜라', 5);
-      expect(productModel.getProductQuantity('콜라')).toBe(10);
+      expect(productModel.getQuantity('콜라')).toBe(10);
 
       productModel.reduceProduct('콜라', 5);
-      expect(productModel.getProductQuantity('콜라')).toBe(5);
+      expect(productModel.getQuantity('콜라')).toBe(5);
 
       productModel.reduceProduct('콜라', 5);
-      expect(productModel.getProductQuantity('콜라')).toBe(0);
+      expect(productModel.getQuantity('콜라')).toBe(0);
 
       productModel.reduceProduct('콜라', 5);
-      expect(productModel.getProductQuantity('콜라')).toBe(0);
+      expect(productModel.getQuantity('콜라')).toBe(0);
     });
 
     test('프로모션 제품의 개수를 먼저 감소시킨다.', () => {

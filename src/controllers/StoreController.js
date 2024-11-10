@@ -51,8 +51,8 @@ class StoreController {
       name: item,
       price: this.#productModel.getPrice(item),
       quantity,
-      promotionQuantity: this.#productModel.getPromotionAdjustQuantity(item, quantity),
-      promotionAdjustTotalQuantity: this.#productModel.getPromotionAdjustTotalQuantity(item, quantity),
+      promotionQuantity: this.#productModel.getPromotionEnableQuantity(item, quantity) / this.#productModel.getPromotionUnit(item),
+      promotionAdjustTotalQuantity: this.#productModel.getPromotionEnableQuantity(item, quantity),
     });
   }
 

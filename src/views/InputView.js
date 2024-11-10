@@ -4,12 +4,12 @@ import { InputValidator, InputParser } from '../helpers/index.js';
 import { checkYesOrNo, retryWhileCatchedError } from '../lib/utils.js';
 
 class InputView {
-  static async readItems(store) {
+  static async readItems(productModel) {
     return retryWhileCatchedError(async () => {
       const rawItems = await MissionUtils.Console.readLineAsync(INPUT_MEESAGE.readItem);
       InputValidator.validateItemsFormat(rawItems);
       const items = InputParser.parseItems(rawItems);
-      InputValidator.validateItemsQuantity(store, items);
+      InputValidator.validateItemsQuantity(productModel, items);
 
       return items;
     });

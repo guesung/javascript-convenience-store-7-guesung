@@ -7,11 +7,13 @@ class ProductModel {
     this.#promotions = promotions;
   }
 
+  /** 프로모션 정보 */
   getPromotionInfo(item) {
     const productInfo = this.#getPromotionProductInfo(item);
     return this.#promotions.find((promotion) => promotion.name === productInfo?.promotion);
   }
 
+  /** 프로모션 단위 개수 */
   getPromotionUnit(item) {
     const promotionInfo = this.getPromotionInfo(item);
 
@@ -19,44 +21,16 @@ class ProductModel {
     return promotionInfo.buy + promotionInfo.get;
   }
 
-  getPromotionPossibleQuantity(item) {
-    const promotionProductQuantity = this.getPromotionProductQuantity(item);
-    const promotionUnit = this.getPromotionUnit(item);
-    if (!promotionUnit) return 0;
-
-    return Math.floor(promotionProductQuantity / promotionUnit) * promotionUnit;
-  }
-
-  getGapQuantityAndPromotionProduct(item, quantity) {
-    const promotionPosibbleQuantity = this.getPromotionPossibleQuantity(item);
-
-    return quantity - promotionPosibbleQuantity;
-  }
-
-  getPromotionAdjustQuantity(item, quantity) {
+  /** 프로모션 적용이 가능한 제품의 전체 개수 */
+  getPromotionEnableQuantity(item, quantity = Infinity) {
     const promotionUnit = this.getPromotionUnit(item);
     const promotionProductQuantity = this.getPromotionProductQuantity(item);
-
     if (!promotionUnit) return 0;
 
-    return Math.floor(Math.min(quantity, promotionProductQuantity) / promotionUnit);
+    return Math.floor(Math.min(promotionProductQuantity, quantity) / promotionUnit) * promotionUnit;
   }
 
-  getPromotionAdjustTotalQuantity(item, quantity) {
-    const promotionUnit = this.getPromotionUnit(item);
-    const promotionQuantity = this.getPromotionAdjustQuantity(item, quantity);
-
-    return promotionQuantity * promotionUnit;
-  }
-
-  getCanFreeProduct(item, quantity) {
-    const promotionUnit = this.getPromotionUnit(item);
-    const promotionPossibleQuantity = this.getPromotionPossibleQuantity(item);
-
-    return (quantity + 1) % promotionUnit === 0 && promotionPossibleQuantity >= quantity + 1;
-  }
-
-  getProductQuantity(item) {
+  getQuantity(item) {
     return this.#getProducts(item).reduce((prev, cur) => prev + cur.quantity, 0);
   }
 
@@ -66,6 +40,24 @@ class ProductModel {
 
   #getPromotionProductInfo(item) {
     return this.#getProducts(item).find((product) => product.promotion !== 'null');
+  }
+
+  getPrice(item) {
+    const products = this.#getProducts(item);
+    const product = products[0];
+
+    return product.price;
+  }
+
+  #getProducts(item) {
+    return this.#products.filter((product) => product.name === item);
+  }
+
+  getCanFreeProduct(item, quantity) {
+    const promotionUnit = this.getPromotionUnit(item);
+    const promotionPossibleQuantity = this.getPromotionEnableQuantity(item);
+
+    return (quantity + 1) % promotionUnit === 0 && promotionPossibleQuantity >= quantity + 1;
   }
 
   reduceProduct(item, quantity = 1) {
@@ -79,17 +71,6 @@ class ProductModel {
         leftQuantity -= reducedQuantity;
       }
     });
-  }
-
-  getPrice(item) {
-    const products = this.#getProducts(item);
-    const product = products[0];
-
-    return product.price;
-  }
-
-  #getProducts(item) {
-    return this.#products.filter((product) => product.name === item);
   }
 }
 
