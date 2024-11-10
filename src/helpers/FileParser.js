@@ -7,7 +7,27 @@ class InputParser {
     const products = rawProducts.trim().split(LINE_BREAK);
     products.shift();
 
-    return this.#sortByPromotionProducts(this.#productsMapping(products));
+    const newProducts = this.#productsMapping(products);
+    this.#f(newProducts);
+    this.#sortByPromotionProducts(newProducts);
+
+    return newProducts;
+  }
+
+  static #f(products) {
+    return products.forEach((product) => {
+      if (product.promotion !== 'null') {
+        const isNoNoPromotion = !!products.find((product) => product.promotion);
+        if (isNoNoPromotion) {
+          products.push({
+            name: product.name,
+            price: product.price,
+            quantity: 0,
+            promotion: 'null',
+          });
+        }
+      }
+    });
   }
 
   static #productsMapping(products) {
