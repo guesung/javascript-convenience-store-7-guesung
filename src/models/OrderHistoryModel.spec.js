@@ -14,6 +14,11 @@ describe('OrderHistoryModel', () => {
     orderHistoryModel = new OrderHistoryModel(items);
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+    jest.restoreAllMocks();
+  });
+
   describe('getQuantity', () => {
     test('구매 내역에서 item의 개수를 반환한다.', () => {
       expect(orderHistoryModel.getQuantity('콜라')).toBe(8);
