@@ -13,13 +13,13 @@ class StoreController {
     const promotions = FileView.getPromotions();
 
     this.#productModel = new ProductModel(products, promotions);
-
-    OutputView.printHello();
-    OutputView.printProducts(products);
   }
 
   async startTakeOrder() {
     await InputView.retryWhileOrderFinish(async () => {
+      OutputView.printHello();
+      OutputView.printProducts(this.#productModel);
+
       await this.#takeOrder();
 
       const promotionService = new PromotionService(this.#productModel, this.#orderHistoryModel);

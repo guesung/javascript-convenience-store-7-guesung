@@ -11,13 +11,13 @@ class OutputView {
   }
 
   static printProducts(products) {
-    products.forEach(({ name, price, quantity, promotion }) => {
+    for (const { name, price, quantity, promotion } of products) {
       const quantityOutput = this.#getQuantityOutput(quantity);
 
       const productOutput = `- ${name} ${price.toLocaleString()}원 ${quantityOutput} ${this.#getPromotionOutput(promotion)}`;
 
       this.#print(productOutput);
-    });
+    }
   }
 
   static #getQuantityOutput(quantity) {

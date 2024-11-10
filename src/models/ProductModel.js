@@ -7,6 +7,10 @@ class ProductModel {
     this.#promotions = promotions;
   }
 
+  [Symbol.iterator]() {
+    return this.#products[Symbol.iterator]();
+  }
+
   /** item 제품의 프로모션을 반환한다. */
   getPromotion(item) {
     const product = this.#getPromotionProduct(item);
