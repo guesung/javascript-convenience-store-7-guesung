@@ -235,5 +235,13 @@ describe('편의점', () => {
         expectedErrorMessage: ERROR_MESSAGE.itemsZero,
       });
     });
+
+    test('제품을 0개 입력한 제품이 있을 경우 예외 처리한다.', async () => {
+      await runExceptions({
+        inputs: ['[콜라-0]'],
+        inputsToTerminate: INPUTS_TO_TERMINATE,
+        expectedErrorMessage: ERROR_MESSAGE.inputItemsZero,
+      });
+    });
   });
 });
