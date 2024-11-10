@@ -185,45 +185,6 @@ lib 폴더에서 확인할 수 있습니다. 애플리케이션 혹은 테스트
    감사합니다. 구매하고 싶은 다른 상품이 있나요? (Y/N)
    ```
 
-## 클래스 다이어그램
-
-```mermaid
-classDiagram
-  App --|> StoreController
-  StoreController --|> PromotionService
-  StoreController --|> ProductModel
-  StoreController --|> OrderHistoryModel
-  StoreController --|> ReceiptModel
-
-  class App{
-	  run()
-  }
-
-  class StoreController{
-	  openTheStore()
-
-	  startTakeOrder()
-  }
-
-  class PromotionService{
-	  checkItemsPromotion()
-  }
-
-  class ProductModel{
-	  #products
-	  #promotions
-  }
-
-  class OrderHistoryModel{
-	  #orderHistory
-  }
-
-  class ReceiptModel{
-	  #receipt
-	  #isMembershipDiscount
-  }
-```
-
 ## 더 알아보기
 
 🤸‍♂️ 제 4주차 과제에서 어떤 점을 고민했고, 무엇을 배웠는지에 대한 이야기가 궁금하신가요?
