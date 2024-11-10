@@ -71,6 +71,54 @@ describe('편의점', () => {
       });
     });
 
+    test('예제에 있는 테스트', async () => {
+      await run({
+        inputs: ['[콜라-3],[에너지바-5]', 'Y', 'Y', '[콜라-10]', 'Y', 'N', 'Y', '[오렌지주스-1]', 'Y', 'Y', 'N'],
+        expectedIgnoringWhiteSpaces: [
+          '콜라33,000',
+          '에너지바510,000',
+          '콜라1',
+          '총구매액813,000',
+          '행사할인-1,000',
+          '내실돈9,000',
+          '콜라1010,000',
+          '콜라2',
+          '총구매액1010,000',
+          '행사할인-2,000',
+          '멤버십할인-0',
+          '내실돈8,000',
+          '오렌지주스23,600',
+          '오렌지주스1',
+          '총구매액23,600',
+          '행사할인-1,800',
+          '멤버십할인-0',
+          '내실돈1,800',
+        ],
+        expected: [
+          '안녕하세요. W편의점입니다.',
+          '현재 보유하고 있는 상품입니다.',
+          '- 콜라 1,000원 재고 없음 탄산2+1',
+          '- 콜라 1,000원 7개',
+          '- 사이다 1,000원 8개 탄산2+1',
+          '- 사이다 1,000원 7개',
+          '- 오렌지주스 1,800원 9개 MD추천상품',
+          '- 오렌지주스 1,800원 재고 없음',
+          '- 탄산수 1,200원 5개 탄산2+1',
+          '- 탄산수 1,200원 재고 없음',
+          '- 물 500원 10개',
+          '- 비타민워터 1,500원 6개',
+          '- 감자칩 1,500원 5개 반짝할인',
+          '- 감자칩 1,500원 5개',
+          '- 초코바 1,200원 5개 MD추천상품',
+          '- 초코바 1,200원 5개',
+          '- 에너지바 2,000원 재고 없음',
+          '- 정식도시락 6,400원 8개',
+          '- 컵라면 1,700원 1개 MD추천상품',
+          '- 컵라면 1,700원 10개',
+        ],
+      });
+    });
+
     test('프로모션 해택 없이 구매할 것에 동의하지 않을 경우, 해당 제품을 제외한다.', async () => {
       await run({
         inputs: ['[콜라-8],[에너지바-5],[감자칩-10],[컵라면-10]', 'Y', 'Y', 'N', 'Y', 'N'], // 상품, 1개 공짜(콜라), 프로모션 없이(에너지바), 프로모션 없이(컵라면) 멤버십, 추가 구매
@@ -169,9 +217,9 @@ describe('편의점', () => {
   });
 
   describe('예외 케이스', () => {
-    test('재고 수량을 초과하여 입력할 경우 예외를 처리한다.', async () => {
+    test('구매 수량이 재고 수량을 초과한 경우 예외를 처리한다.', async () => {
       await runExceptions({
-        inputs: ['[컵라면-12]'],
+        inputs: ['[컵라면-20]'],
         inputsToTerminate: INPUTS_TO_TERMINATE,
         expectedErrorMessage: ERROR_MESSAGE.itemsOverQuantity,
       });
@@ -179,22 +227,27 @@ describe('편의점', () => {
 
     test('상품에 대한 형식을 올바르지 않게 작성할 경우 예외를 처리한다.', async () => {
       await runExceptions({
-        inputs: ['[컵라면-8-3]'],
+        inputs: ['[콜라-8-3]'],
         inputsToTerminate: INPUTS_TO_TERMINATE,
         expectedErrorMessage: ERROR_MESSAGE.notItemsFormat,
       });
       await runExceptions({
-        inputs: ['[컵라면-8'],
+        inputs: ['[콜라-8][사이다-2]'],
         inputsToTerminate: INPUTS_TO_TERMINATE,
         expectedErrorMessage: ERROR_MESSAGE.notItemsFormat,
       });
       await runExceptions({
-        inputs: ['컵라면-8'],
+        inputs: ['[콜라-8'],
         inputsToTerminate: INPUTS_TO_TERMINATE,
         expectedErrorMessage: ERROR_MESSAGE.notItemsFormat,
       });
       await runExceptions({
-        inputs: ['[컵라면8]'],
+        inputs: ['콜라-8'],
+        inputsToTerminate: INPUTS_TO_TERMINATE,
+        expectedErrorMessage: ERROR_MESSAGE.notItemsFormat,
+      });
+      await runExceptions({
+        inputs: ['[콜라8]'],
         inputsToTerminate: INPUTS_TO_TERMINATE,
         expectedErrorMessage: ERROR_MESSAGE.notItemsFormat,
       });
@@ -202,28 +255,28 @@ describe('편의점', () => {
 
     test('Y/N 질문에 대한 형식을 올바르지 않게 작성할 경우 예외를 처리한다.', async () => {
       await runExceptions({
-        inputs: ['[컵라면-8]', 'y'],
+        inputs: ['[콜라-8]', 'y'],
         inputsToTerminate: INPUTS_TO_TERMINATE,
         expectedErrorMessage: ERROR_MESSAGE.notYesOrNo,
       });
       await runExceptions({
-        inputs: ['[컵라면-8]', '예'],
+        inputs: ['[콜라-8]', '예'],
         inputsToTerminate: INPUTS_TO_TERMINATE,
         expectedErrorMessage: ERROR_MESSAGE.notYesOrNo,
       });
       await runExceptions({
-        inputs: ['[컵라면-8]', '[컵라면-8]'],
+        inputs: ['[콜라-8]', '[콜라-8]'],
         inputsToTerminate: INPUTS_TO_TERMINATE,
         expectedErrorMessage: ERROR_MESSAGE.notYesOrNo,
       });
       await runExceptions({
-        inputs: ['[컵라면-8]', '놉'],
+        inputs: ['[콜라-8]', '놉'],
         inputsToTerminate: INPUTS_TO_TERMINATE,
         expectedErrorMessage: ERROR_MESSAGE.notYesOrNo,
       });
     });
 
-    test('없는 상품을 입력할 경우 예외를 처리한다.', async () => {
+    test('존재하지 않는 상품을 입력한 경우 예외를 처리한다.', async () => {
       await runExceptions({
         inputs: ['[컵볶이-3]'],
         inputsToTerminate: INPUTS_TO_TERMINATE,
