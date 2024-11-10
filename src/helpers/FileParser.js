@@ -11,8 +11,8 @@ class InputParser {
   }
 
   static #productsMapping(products) {
-    return products.map((productInformation) => {
-      const [name, price, quantity, promotion] = productInformation.split(SEPARATOR);
+    return products.map((product) => {
+      const [name, price, quantity, promotion] = product.split(SEPARATOR);
       return {
         name,
         price: Number(price),

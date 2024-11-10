@@ -9,16 +9,16 @@ describe('ProductModel', () => {
     productModel = new ProductModel(products, promotions);
   });
 
-  describe('getPromotionInfo', () => {
+  describe('getPromotion', () => {
     test('날짜가 지난 프로모션 정보를 반환하지 않는다.', () => {
-      expect(productModel.getPromotionInfo('닭가슴살')).toBeUndefined();
+      expect(productModel.getPromotion('닭가슴살')).toBeUndefined();
     });
     test('아이템의 프로모션의 정보를 반환한다.', () => {
-      expect(productModel.getPromotionInfo('콜라')).toHaveProperty('name', '탄산2+1');
-      expect(productModel.getPromotionInfo('콜라')).toHaveProperty('buy', 2);
-      expect(productModel.getPromotionInfo('콜라')).toHaveProperty('get', 1);
-      expect(productModel.getPromotionInfo('콜라')).toHaveProperty('startDate', new Date('2024-01-01'));
-      expect(productModel.getPromotionInfo('콜라')).toHaveProperty('endDate', new Date('2024-12-31'));
+      expect(productModel.getPromotion('콜라')).toHaveProperty('name', '탄산2+1');
+      expect(productModel.getPromotion('콜라')).toHaveProperty('buy', 2);
+      expect(productModel.getPromotion('콜라')).toHaveProperty('get', 1);
+      expect(productModel.getPromotion('콜라')).toHaveProperty('startDate', new Date('2024-01-01'));
+      expect(productModel.getPromotion('콜라')).toHaveProperty('endDate', new Date('2024-12-31'));
     });
   });
 

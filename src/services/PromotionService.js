@@ -16,8 +16,8 @@ class PromotionService {
   }
 
   async #checkItemPromotion(item, quantity) {
-    const promotionInfo = this.#productModel.getPromotionInfo(item);
-    if (!promotionInfo) return;
+    const promotion = this.#productModel.getPromotion(item);
+    if (!promotion) return;
 
     const canFreeProduct = this.#productModel.getCanFreeProduct(item, quantity);
     if (canFreeProduct) await this.#askFreeProduct(item);

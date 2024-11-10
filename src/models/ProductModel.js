@@ -7,21 +7,25 @@ class ProductModel {
     this.#promotions = promotions;
   }
 
-  /** 프로모션 정보 */
-  getPromotionInfo(item) {
-    const productInfo = this.#getPromotionProductInfo(item);
-    return this.#promotions.find((promotion) => promotion.name === productInfo?.promotion);
+  /** item 제품의 프로모션 */
+  getPromotion(item) {
+    const product = this.#getPromotionProduct(item);
+    return this.#promotions.find((promotion) => promotion.name === product?.promotion);
   }
 
   /** 프로모션 단위 개수 */
   getPromotionUnit(item) {
-    const promotionInfo = this.getPromotionInfo(item);
+    const promotion = this.getPromotion(item);
 
-    if (!promotionInfo) return null;
-    return promotionInfo.buy + promotionInfo.get;
+    if (!promotion) return null;
+    return promotion.buy + promotion.get;
   }
 
-  /** 프로모션 적용이 가능한 제품의 전체 개수 */
+  /**
+   * 프로모션 적용이 가능한 제품의 전체 개수
+   * quantity를 넘기지 않을 경우, 남아있는 재고에서 개수를 확인한다.
+   * quantity를 넘길 경우, 주문한 개수와 남아있는 재고 중 더 작은 값으로 계산한다.
+   */
   getPromotionEnableQuantity(item, quantity = Infinity) {
     const promotionUnit = this.getPromotionUnit(item);
     const promotionProductQuantity = this.getPromotionProductQuantity(item);
@@ -30,18 +34,22 @@ class ProductModel {
     return Math.floor(Math.min(promotionProductQuantity, quantity) / promotionUnit) * promotionUnit;
   }
 
+  /** item 제품의 전체 개수 */
   getQuantity(item) {
     return this.#getProducts(item).reduce((prev, cur) => prev + cur.quantity, 0);
   }
 
+  /** item 프로모션 제품의 개수 */
   getPromotionProductQuantity(item) {
-    return this.#getPromotionProductInfo(item)?.quantity ?? 0;
+    return this.#getPromotionProduct(item)?.quantity ?? 0;
   }
 
-  #getPromotionProductInfo(item) {
+  /** item 제품의 프로모션 정보 */
+  #getPromotionProduct(item) {
     return this.#getProducts(item).find((product) => product.promotion !== 'null');
   }
 
+  /** item의 가격 */
   getPrice(item) {
     const products = this.#getProducts(item);
     const product = products[0];
@@ -49,6 +57,7 @@ class ProductModel {
     return product.price;
   }
 
+  /** item 제품 정보 */
   #getProducts(item) {
     return this.#products.filter((product) => product.name === item);
   }
