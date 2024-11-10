@@ -61,9 +61,9 @@ class OutputView {
     return {
       totalQuantity: receipt.getTotalQuantity(),
       totalPrice: receipt.getTotalPrice(),
-      promotionPrice: receipt.getTotalPromotionPrice(),
+      promotionPrice: receipt.getPromotionDiscount(),
       membershipDiscount: receipt.getMembershipDiscount(),
-      realPrice: receipt.getTotalPrice() - receipt.getTotalPromotionPrice() - receipt.getMembershipDiscount(),
+      realPrice: receipt.getTotalPrice() - receipt.getPromotionDiscount() - receipt.getMembershipDiscount(),
     };
   }
 }

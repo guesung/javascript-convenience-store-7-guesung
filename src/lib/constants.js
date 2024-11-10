@@ -23,3 +23,5 @@ export const ITEMS_REGEXR = /^\[[가-힣a-zA-Z]+-\d+\]$/;
 export const LINE_BREAK = '\n';
 export const YES = 'Y';
 export const NO = 'N';
+export const MEMBERSHIP_DISCOUNT_PERCENTAGE = 30 / 100;
+export const MEMBERSHIP_DISCOUNT_MAX = 8_000;

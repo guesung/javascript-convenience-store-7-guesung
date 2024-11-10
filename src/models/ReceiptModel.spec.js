@@ -48,10 +48,10 @@ describe('ReceiptModel', () => {
     });
   });
 
-  describe('getTotalPromotionPrice', () => {
+  describe('getPromotionDiscount', () => {
     test('전체 프로모션 금액을 계산한다.', () => {
       // 3000 + 2400 + 4500 + 9000 = 18,900
-      expect(receiptModel.getTotalPromotionPrice()).toBe(18_900);
+      expect(receiptModel.getPromotionDiscount()).toBe(18_900);
     });
   });
 
