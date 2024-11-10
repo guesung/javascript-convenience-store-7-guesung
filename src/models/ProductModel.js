@@ -10,6 +10,7 @@ class ProductModel {
   /** item 제품의 프로모션을 반환한다. */
   getPromotion(item) {
     const product = this.#getPromotionProduct(item);
+
     return this.#promotions.find((promotion) => promotion.name === product?.promotion);
   }
 
