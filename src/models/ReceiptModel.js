@@ -1,6 +1,5 @@
 class ReceiptModel {
   #receipt;
-
   #isMembershipDiscount;
 
   constructor() {
@@ -8,8 +7,8 @@ class ReceiptModel {
     this.#isMembershipDiscount = false;
   }
 
-  get receipt() {
-    return this.#receipt;
+  *[Symbol.iterator]() {
+    yield* this.#receipt;
   }
 
   get isMembershipDiscount() {

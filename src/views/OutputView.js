@@ -35,16 +35,16 @@ class OutputView {
   static #printTotalProducts(receipt) {
     MissionUtils.Console.print('===========W 편의점===========');
     MissionUtils.Console.print('상품명   수량   금액');
-    receipt.receipt.forEach((item) => {
+    for (const item of receipt) {
       MissionUtils.Console.print(`${item.name}   ${item.quantity}   ${item.price.toLocaleString()}`);
-    });
+    }
   }
 
   static #printPromotionProducts(receipt) {
     MissionUtils.Console.print('===========증	 정===========');
-    receipt.receipt.forEach((item) => {
+    for (const item of receipt) {
       if (item.promotionQuantity > 0) MissionUtils.Console.print(`${item.name}   ${item.promotionQuantity}`);
-    });
+    }
   }
 
   static #printTotalCalculate(receipt) {
