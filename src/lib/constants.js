@@ -25,3 +25,6 @@ export const YES = 'Y';
 export const NO = 'N';
 export const MEMBERSHIP_DISCOUNT_PERCENTAGE = 30 / 100;
 export const MEMBERSHIP_DISCOUNT_MAX = 8_000;
+
+export const PRODUCT_FILE_PATH = 'public/products.md';
+export const PROMOTION_FILE_PATH = 'public/promotions.md';

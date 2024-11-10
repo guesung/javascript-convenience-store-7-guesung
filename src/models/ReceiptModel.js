@@ -1,4 +1,4 @@
-import { MEMBERSHIP_DISCOUNT_MAX, MEMBERSHIP_DISCOUNT_PERCENTAGE } from '../lib/constants';
+import { MEMBERSHIP_DISCOUNT_MAX, MEMBERSHIP_DISCOUNT_PERCENTAGE } from '../lib/constants.js';
 
 class ReceiptModel {
   #receipt;
