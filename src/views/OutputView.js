@@ -23,7 +23,7 @@ class OutputView {
   static #getQuantityOutput(quantity) {
     if (quantity > 0) return `${quantity}개`;
 
-    return OUTPUT_MESSAGE.noQuantity;
+    return OUTPUT_MESSAGE.noProduct;
   }
 
   static #getPromotionOutput(promotion) {
@@ -58,8 +58,8 @@ class OutputView {
 
     this.#print('==============================');
     this.#print(`총구매액 ${totalQuantity} ${totalPrice.toLocaleString()}`);
-    this.#print(`행사할인 ${OUTPUT_MESSAGE.minus}${promotionPrice.toLocaleString()}`);
-    this.#print(`멤버십할인 ${OUTPUT_MESSAGE.minus}${membershipDiscount.toLocaleString()}`);
+    this.#print(`행사할인 ${OUTPUT_MESSAGE.negative}${promotionPrice.toLocaleString()}`);
+    this.#print(`멤버십할인 ${OUTPUT_MESSAGE.negative}${membershipDiscount.toLocaleString()}`);
     this.#print(`내실돈 ${realPrice.toLocaleString()}`);
   }
 
