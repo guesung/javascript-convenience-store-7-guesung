@@ -11,6 +11,7 @@ class InputValidator {
   static validateItemsQuantity(productModel, items) {
     items.forEach(([name, quantity]) => {
       const productQuantity = productModel.getQuantity(name);
+      if (quantity === 0) throw new Error(ERROR_MESSAGE.inputItemsZero);
       if (productQuantity === 0) throw new Error(ERROR_MESSAGE.itemsZero);
       if (productQuantity < quantity) throw new Error(ERROR_MESSAGE.itemsOverQuantity);
     });
