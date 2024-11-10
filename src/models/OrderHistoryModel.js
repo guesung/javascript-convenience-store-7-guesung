@@ -1,12 +1,12 @@
 class OrderHistoryModel {
   #orderMap;
 
-  [Symbol.iterator]() {
-    return this.#orderMap.entries();
-  }
-
   constructor(items) {
     this.#orderMap = new Map(items);
+  }
+
+  [Symbol.iterator]() {
+    return this.#orderMap.entries();
   }
 
   getQuantity(item) {
