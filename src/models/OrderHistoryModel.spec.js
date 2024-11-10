@@ -1,4 +1,4 @@
-import { mockQuestions } from '../lib/test/utils';
+import { mockQuestions } from '../lib/test/utils.js';
 import { FileView, InputView } from '../views/index.js';
 import { OrderHistoryModel, ProductModel } from './index.js';
 
