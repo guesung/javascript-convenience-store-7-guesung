@@ -23,17 +23,17 @@ class PromotionService {
     if (canFreeProduct) await this.#askFreeProduct(item);
 
     const gapQuantityAndPromotionProduct = quantity - this.#productModel.getPromotionEnableQuantity(item);
-    const isBuyWithoutPromotion = gapQuantityAndPromotionProduct > 0;
-    if (isBuyWithoutPromotion) await this.#askBuyWithoutPromotion(item, gapQuantityAndPromotionProduct);
+    const canBuyWithoutPromotion = gapQuantityAndPromotionProduct > 0;
+    if (canBuyWithoutPromotion) await this.#askBuyWithoutPromotion(item, gapQuantityAndPromotionProduct);
   }
 
   async #askFreeProduct(item) {
-    const isFreeProduct = await InputView.readFreeProduct(item);
+    const isFreeProduct = await InputView.readIsFreeProduct(item);
     if (isFreeProduct) this.#orderHistoryModel.addQuantity(item);
   }
 
   async #askBuyWithoutPromotion(item, quantity) {
-    const isBuyWithoutPromotion = await InputView.readBuyWithoutPromotion(item, quantity);
+    const isBuyWithoutPromotion = await InputView.readIsBuyWithoutPromotion(item, quantity);
     if (!isBuyWithoutPromotion) this.#orderHistoryModel.reduceQuantity(item, quantity);
   }
 }

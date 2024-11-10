@@ -13,16 +13,6 @@ class ReceiptModel {
     return this.#receipt[Symbol.iterator]();
   }
 
-  /** 멤버십 할인을 설정한다. */
-  setMembershipDiscount() {
-    this.#isMembershipDiscount = true;
-  }
-
-  /** 상품을 추가한다. */
-  addItem(item) {
-    this.#receipt.push(item);
-  }
-
   /** 전체 상품 개수를 반환한다. */
   getTotalQuantity() {
     return this.#receipt.reduce((accumulatedQuantity, product) => accumulatedQuantity + product.quantity, 0);
@@ -47,6 +37,16 @@ class ReceiptModel {
     const promotionDisabledPrice = this.#receipt.reduce((accumulatedPromotionDisabledPrice, product) => accumulatedPromotionDisabledPrice + (product.quantity - product.promotionAdjustTotalQuantity) * product.price, 0);
 
     return Math.min(promotionDisabledPrice * MEMBERSHIP_DISCOUNT_PERCENTAGE, MEMBERSHIP_DISCOUNT_MAX);
+  }
+
+  /** 상품을 추가한다. */
+  addItem(item) {
+    this.#receipt.push(item);
+  }
+
+  /** 멤버십 할인을 설정한다. */
+  setMembershipDiscount() {
+    this.#isMembershipDiscount = true;
   }
 }
 

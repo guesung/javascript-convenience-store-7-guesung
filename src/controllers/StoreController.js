@@ -41,12 +41,12 @@ class StoreController {
     this.#receiptModel = new ReceiptModel();
 
     for (const [item, quantity] of this.#orderHistoryModel) {
-      this.#calculateOrder(item, quantity);
+      this.#addItemOnReceipt(item, quantity);
       this.#productModel.reduceProduct(item, quantity);
     }
   }
 
-  #calculateOrder(item, quantity) {
+  #addItemOnReceipt(item, quantity) {
     this.#receiptModel.addItem({
       name: item,
       price: this.#productModel.getPrice(item),
@@ -57,7 +57,7 @@ class StoreController {
   }
 
   async #checkMembershipDiscount() {
-    const isMembershipDiscount = await InputView.readtIsMembershipDiscount();
+    const isMembershipDiscount = await InputView.readIsMembershipDiscount();
 
     if (isMembershipDiscount) this.#receiptModel.setMembershipDiscount();
   }

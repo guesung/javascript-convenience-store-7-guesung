@@ -45,22 +45,12 @@ class ProductModel {
     return this.#getPromotionProduct(item)?.quantity ?? 0;
   }
 
-  /** item 제품의 프로모션 정보을 반환한다. */
-  #getPromotionProduct(item) {
-    return this.#getProducts(item).find((product) => product.promotion !== 'null');
-  }
-
   /** item의 가격을 반환한다. */
   getPrice(item) {
     const products = this.#getProducts(item);
     const product = products[0];
 
     return product.price;
-  }
-
-  /** item 제품 정보을 반환한다. */
-  #getProducts(item) {
-    return this.#products.filter((product) => product.name === item);
   }
 
   /** item을 quantity개 가져왔을 때 무료로 얻을 수 있는지을 반환한다. */
@@ -87,6 +77,16 @@ class ProductModel {
         leftQuantity -= reducedQuantity;
       }
     });
+  }
+
+  /** item 제품 정보을 반환한다. */
+  #getProducts(item) {
+    return this.#products.filter((product) => product.name === item);
+  }
+
+  /** item 제품의 프로모션 정보을 반환한다. */
+  #getPromotionProduct(item) {
+    return this.#getProducts(item).find((product) => product.promotion !== 'null');
   }
 }
 
