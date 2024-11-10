@@ -36,7 +36,8 @@ class OutputView {
 
   static printReceipt(receipt) {
     this.#printTotalProducts(receipt);
-    this.#printPromotionProducts(receipt);
+    const hasPromotionProduct = receipt.getHasPromotionProduct();
+    if (hasPromotionProduct) this.#printPromotionProducts(receipt);
     this.#printTotal(receipt);
   }
 
