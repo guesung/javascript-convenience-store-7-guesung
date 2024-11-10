@@ -17,6 +17,13 @@ class InputValidator {
     });
   }
 
+  static validateItemsUnique(items) {
+    const itemNames = items.map((item) => item.name);
+    const isItemsUnique = itemNames.length === new Set(itemNames).size;
+
+    if (!isItemsUnique) throw new Error(ERROR_MESSAGE.notUnique);
+  }
+
   static validateYesOrNo(answer) {
     const ANSWERLIST = ['Y', 'N'];
 

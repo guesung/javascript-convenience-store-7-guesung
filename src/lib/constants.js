@@ -23,6 +23,7 @@ export const ERROR_MESSAGE = {
   itemsZero: `${ERROR_MESSAGE_DEFAULT} 존재하지 않는 상품입니다. 다시 입력해 주세요.`,
   inputItemsZero: `${ERROR_MESSAGE_DEFAULT} 0개 이상의 값을 입력해주세요.`,
   notYesOrNo: `${ERROR_MESSAGE_DEFAULT} ${YES} 혹은 ${NO}을 입력해주세요.`,
+  notUnique: `${ERROR_MESSAGE_DEFAULT} 중복되는 제품명이 있습니다.`,
 };
 
 export const INPUT_MEESAGE = {

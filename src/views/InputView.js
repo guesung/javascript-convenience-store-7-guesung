@@ -1,6 +1,6 @@
 import { MissionUtils } from '@woowacourse/mission-utils';
-import { INPUT_MEESAGE, YES } from '../lib/constants.js';
-import { InputValidator, InputParser } from '../helpers/index.js';
+import { InputParser, InputValidator } from '../helpers/index.js';
+import { INPUT_MEESAGE } from '../lib/constants.js';
 import { checkYesOrNo, retryWhileCatchedError } from '../lib/utils.js';
 import OutputView from './OutputView.js';
 
@@ -12,6 +12,7 @@ class InputView {
       InputValidator.validateItemsFormat(rawItems);
       const items = InputParser.parseItems(rawItems);
       InputValidator.validateItemsQuantity(productModel, items);
+      InputValidator.validateItemsUnique(items);
 
       return items;
     });
