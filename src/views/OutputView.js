@@ -11,6 +11,7 @@ class OutputView {
   }
 
   static printProducts(products) {
+    if (products.getPromotionTotalQuantity() === 0) this.#print(OUTPUT_MESSAGE.noProduct);
     for (const { name, price, quantity, promotion } of products) {
       const quantityOutput = this.#getQuantityOutput(quantity);
 

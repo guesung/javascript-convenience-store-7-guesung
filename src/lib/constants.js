@@ -19,8 +19,8 @@ export const EXAMPLE = {
 export const ERROR_MESSAGE_DEFAULT = '[ERROR]';
 export const ERROR_MESSAGE = {
   itemsOverQuantity: `${ERROR_MESSAGE_DEFAULT} 재고 수량을 초과하여 구매할 수 없습니다. 다시 입력해 주세요.`,
-  notItemsFormat: `${ERROR_MESSAGE_DEFAULT} 형식에 맞지 않습니다. ${EXAMPLE.items}와 같은 형식으로 작성해주세요.`,
-  itemsZero: `${ERROR_MESSAGE_DEFAULT} 존재하지 않는 상품입니다.`,
+  notItemsFormat: `${ERROR_MESSAGE_DEFAULT} 올바르지 않은 형식으로 입력했습니다. ${EXAMPLE.items}와 같은 형식으로 작성해주세요.`,
+  itemsZero: `${ERROR_MESSAGE_DEFAULT} 존재하지 않는 상품입니다. 다시 입력해 주세요.`,
   inputItemsZero: `${ERROR_MESSAGE_DEFAULT} 0개 이상의 값을 입력해주세요.`,
   notYesOrNo: `${ERROR_MESSAGE_DEFAULT} ${YES} 혹은 ${NO}을 입력해주세요.`,
 };

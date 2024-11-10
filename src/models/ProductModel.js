@@ -11,6 +11,10 @@ class ProductModel {
     return this.#products[Symbol.iterator]();
   }
 
+  getPromotionTotalQuantity() {
+    return this.#products.reduce((prev, cur) => prev + cur.quantity, 0);
+  }
+
   /** item 제품의 프로모션을 반환한다. */
   getPromotion(item) {
     const product = this.#getPromotionProduct(item);
