@@ -20,7 +20,7 @@ class StoreController {
       this.#printMenu();
       await this.#takeOrder();
 
-      new PromotionService(this.#productModel, this.#orderHistoryModel).checkItemsPromotion();
+      await new PromotionService(this.#productModel, this.#orderHistoryModel).checkItemsPromotion();
 
       this.#generateRecipt();
       await this.#checkMembershipDiscount();
