@@ -23,6 +23,7 @@ class ReceiptModel {
     return this.#receipt.reduce((accumulatedPrice, product) => accumulatedPrice + product.price * product.quantity, 0);
   }
 
+  /** 프로모션 제품이 1개 이상 있는지 반환한다. */
   getHasPromotionProduct() {
     return this.#receipt.some((item) => item.promotionQuantity > 0);
   }
