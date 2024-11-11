@@ -36,21 +36,18 @@ describe('ReceiptModel', () => {
 
   describe('getTotalQuantity', () => {
     test('전체 수량을 계산한다.', () => {
-      // 9 + 8 + 10 + 7 = 34
       expect(receiptModel.getTotalQuantity()).toBe(34);
     });
   });
 
   describe('getTotalPrice', () => {
     test('전체 합산 금액을 계산한다.', () => {
-      // 9,000 + 9,600 + 15,000 + 21,000 = 54,600
       expect(receiptModel.getTotalPrice()).toBe(54_600);
     });
   });
 
   describe('getPromotionDiscount', () => {
     test('전체 프로모션 금액을 계산한다.', () => {
-      // 3000 + 2400 + 4500 + 9000 = 18,900
       expect(receiptModel.getPromotionDiscount()).toBe(18_900);
     });
   });
@@ -61,9 +58,6 @@ describe('ReceiptModel', () => {
     });
     test('멤버십 할인을 적용한다면, 멤버십 할인 금액을 계산한다.', () => {
       receiptModel.setMembershipDiscount();
-      // 멤버십 할인 금액 = 프로모션 미적용 금액 * 30 / 100
-      // 프로모션 미적용 금액 = 0 + 2,400 + 1,500 + 3,000 = 6,900
-      // 멤버십 할인 금액 = 6,900 * 30 / 100 = 2,070
       expect(receiptModel.getMembershipDiscount()).toBe(2_070);
     });
     test('멤버십 할인의 최대 금액은 8000원이다', () => {

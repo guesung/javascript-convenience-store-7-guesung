@@ -4,6 +4,7 @@ import { OrderHistoryModel, ProductModel } from './index.js';
 
 describe('OrderHistoryModel', () => {
   let orderHistoryModel;
+
   beforeEach(async () => {
     const products = FileView.getProducts();
     const promotions = FileView.getPromotions();
