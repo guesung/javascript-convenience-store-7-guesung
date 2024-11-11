@@ -4,10 +4,11 @@ import { getIsDateBetween } from '../lib/utils.js';
 
 class InputParser {
   static parseProducts(rawProducts) {
-    const products = rawProducts.trim().split(LINE_BREAK).slice(1);
+    const products = this.#preprocessFile(rawProducts);
 
     const mappedAndSortedProducts = products.map(this.#mapProduct).sort(this.#sortByPromotion);
-    return this.#createDefaultProduct(mappedAndSortedProducts);
+    const defaultProducts = this.#createDefaultProduct(mappedAndSortedProducts);
+    return [...mappedAndSortedProducts, ...defaultProducts];
   }
 
   static #mapProduct(product) {
@@ -20,8 +21,16 @@ class InputParser {
     };
   }
 
+  static #sortByPromotion() {
+    return (a, b) => {
+      if (a.promotion === 'null' && b.promotion !== 'null') return 1;
+      if (a.promotion !== 'null' && b.promotion === 'null') return -1;
+      return 0;
+    };
+  }
+
   static #createDefaultProduct(products) {
-    const defaultProducts = products
+    return products
       .filter((product) => {
         const hasPromotion = product.promotion !== 'null';
         const hasNoPromotionProduct = products.some((targetProduct) => targetProduct.name === product.name && targetProduct.promotion === 'null');
@@ -32,19 +41,10 @@ class InputParser {
         quantity: 0,
         promotion: 'null',
       }));
-    return products.concat(defaultProducts);
-  }
-
-  static #sortByPromotion() {
-    return (a, b) => {
-      if (a.promotion === 'null' && b.promotion !== 'null') return 1;
-      if (a.promotion !== 'null' && b.promotion === 'null') return -1;
-      return 0;
-    };
   }
 
   static parsePromotions(rawPromotions) {
-    const promotions = rawPromotions.trim().split(LINE_BREAK).slice(1);
+    const promotions = this.#preprocessFile(rawPromotions);
 
     return promotions.map(this.#mapPromotion).filter(this.#filterTodayPromotion);
   }
@@ -62,6 +62,10 @@ class InputParser {
 
   static #filterTodayPromotion(promotion) {
     return getIsDateBetween(DateTimes.now(), promotion.startDate, promotion.endDate);
+  }
+
+  static #preprocessFile(rawFile) {
+    return rawFile.trim().split(LINE_BREAK).slice(1);
   }
 }
 
