@@ -7,8 +7,8 @@ class ProductModel {
     this.#promotions = promotions;
   }
 
-  [Symbol.iterator]() {
-    return this.#products[Symbol.iterator]();
+  *[Symbol.iterator]() {
+    yield* this.#products;
   }
 
   findPromotion(item) {

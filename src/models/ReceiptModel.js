@@ -9,8 +9,8 @@ class ReceiptModel {
     this.#isMembershipDiscount = false;
   }
 
-  [Symbol.iterator]() {
-    return this.#receipt[Symbol.iterator]();
+  *[Symbol.iterator]() {
+    yield* this.#receipt;
   }
 
   getTotalQuantity() {
