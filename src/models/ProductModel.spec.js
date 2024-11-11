@@ -49,13 +49,13 @@ describe('ProductModel', () => {
     });
   });
 
-  describe('getTotalQuantity', () => {
+  describe('getItemQuantity', () => {
     test('제품 개수를 반환한다.', () => {
-      expect(productModel.getTotalQuantity('콜라')).toBe(20);
-      expect(productModel.getTotalQuantity('사이다')).toBe(15);
-      expect(productModel.getTotalQuantity('오렌지주스')).toBe(9);
-      expect(productModel.getTotalQuantity('탄산수')).toBe(5);
-      expect(productModel.getTotalQuantity('물')).toBe(10);
+      expect(productModel.getItemQuantity('콜라')).toBe(20);
+      expect(productModel.getItemQuantity('사이다')).toBe(15);
+      expect(productModel.getItemQuantity('오렌지주스')).toBe(9);
+      expect(productModel.getItemQuantity('탄산수')).toBe(5);
+      expect(productModel.getItemQuantity('물')).toBe(10);
     });
   });
 
@@ -82,19 +82,19 @@ describe('ProductModel', () => {
   describe('decreaseQuantity', () => {
     test('제품 개수를 감소시킨다.', () => {
       productModel.decreaseQuantity('콜라', 5);
-      expect(productModel.getTotalQuantity('콜라')).toBe(15);
+      expect(productModel.getItemQuantity('콜라')).toBe(15);
 
       productModel.decreaseQuantity('콜라', 5);
-      expect(productModel.getTotalQuantity('콜라')).toBe(10);
+      expect(productModel.getItemQuantity('콜라')).toBe(10);
 
       productModel.decreaseQuantity('콜라', 5);
-      expect(productModel.getTotalQuantity('콜라')).toBe(5);
+      expect(productModel.getItemQuantity('콜라')).toBe(5);
 
       productModel.decreaseQuantity('콜라', 5);
-      expect(productModel.getTotalQuantity('콜라')).toBe(0);
+      expect(productModel.getItemQuantity('콜라')).toBe(0);
 
       productModel.decreaseQuantity('콜라', 5);
-      expect(productModel.getTotalQuantity('콜라')).toBe(0);
+      expect(productModel.getItemQuantity('콜라')).toBe(0);
     });
 
     test('프로모션 제품의 개수를 먼저 감소시킨다.', () => {

@@ -10,7 +10,7 @@ export const checkYesOrNo = (answer) => {
   return null;
 };
 
-export const retryWhileCatchedError = async (callbackFunction, tryCount = 0) => {
+export const retryUntilSuccess = async (callbackFunction, tryCount = 0) => {
   try {
     return await callbackFunction();
   } catch (error) {
@@ -18,7 +18,7 @@ export const retryWhileCatchedError = async (callbackFunction, tryCount = 0) => 
 
     MissionUtils.Console.print(error.message);
 
-    return await retryWhileCatchedError(callbackFunction, tryCount + 1);
+    return await retryUntilSuccess(callbackFunction, tryCount + 1);
   }
 };
 

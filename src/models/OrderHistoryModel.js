@@ -9,16 +9,16 @@ class OrderHistoryModel {
     yield* this.#orderHistory;
   }
 
-  getTotalQuantity(item) {
+  getItemQuantity(item) {
     return this.#orderHistory.get(item) ?? 0;
   }
 
   increaseQuantity(item, quantity = 1) {
-    this.#orderHistory.set(item, this.getTotalQuantity(item) + quantity);
+    this.#orderHistory.set(item, this.getItemQuantity(item) + quantity);
   }
 
   decreaseQuantity(item, quantity = 1) {
-    this.#orderHistory.set(item, Math.max(this.getTotalQuantity(item) - quantity, 0));
+    this.#orderHistory.set(item, Math.max(this.getItemQuantity(item) - quantity, 0));
   }
 }
 export default OrderHistoryModel;

@@ -6,24 +6,22 @@ class OutputView {
     this.#print('');
   }
 
-  static printHello() {
-    this.#print(OUTPUT_MESSAGE.hello);
-  }
-
   static printProducts(products) {
+    this.#print(OUTPUT_MESSAGE.welcome);
+
     for (const { name, price, quantity, promotion } of products) {
-      const productOutput = `- ${name} ${price.toLocaleString()}원 ${this.#getQuantityOutput(quantity)} ${this.#findPromotionOutput(promotion)}`;
+      const productOutput = `- ${name} ${price.toLocaleString()}원 ${this.#getQuantityOutput(quantity)} ${this.#getPromotionOutput(promotion)}`;
       this.#print(productOutput);
     }
   }
 
   static #getQuantityOutput(quantity) {
-    if (quantity > 0) return `${quantity}개`;
+    if (quantity === 0) return OUTPUT_MESSAGE.noProduct;
 
-    return OUTPUT_MESSAGE.noProduct;
+    return `${quantity}개`;
   }
 
-  static #findPromotionOutput(promotion) {
+  static #getPromotionOutput(promotion) {
     if (promotion === PROMOTION_NULL) return '';
 
     return promotion;
@@ -44,8 +42,6 @@ class OutputView {
   }
 
   static #printPromotionProducts(receipt) {
-    const hasPromotionProduct = receipt.hasPromotionProduct();
-    if (!hasPromotionProduct) return;
     this.#print('===========증	 정===========');
     for (const item of receipt) {
       if (item.promotionFreeQuantity > 0) this.#print(`${item.name}   ${item.promotionFreeQuantity}`);
@@ -64,7 +60,7 @@ class OutputView {
 
   static #calculateTotal(receipt) {
     return {
-      totalQuantity: receipt.getTotalQuantity(),
+      totalQuantity: receipt.getItemQuantity(),
       totalPrice: receipt.getTotalPrice(),
       promotionPrice: receipt.getProductPromotionDiscount(),
       membershipDiscount: receipt.getMembershipDiscount(),

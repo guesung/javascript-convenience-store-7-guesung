@@ -34,9 +34,9 @@ describe('ReceiptModel', () => {
     });
   });
 
-  describe('getTotalQuantity', () => {
+  describe('getItemQuantity', () => {
     test('전체 수량을 계산한다.', () => {
-      expect(receiptModel.getTotalQuantity()).toBe(34);
+      expect(receiptModel.getItemQuantity()).toBe(34);
     });
   });
 

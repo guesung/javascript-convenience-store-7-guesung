@@ -11,9 +11,10 @@ export const NO = 'N';
 export const MEMBERSHIP_DISCOUNT_PERCENTAGE = 30 / 100;
 export const MEMBERSHIP_DISCOUNT_MAX = 8_000;
 
+const FILE_PATH_DEFAULT = 'public/';
 export const FILE_PATH = {
-  product: 'public/products.md',
-  promotion: 'public/promotions.md',
+  product: `${FILE_PATH_DEFAULT}products.md`,
+  promotion: `${FILE_PATH_DEFAULT}promotions.md`,
 };
 
 export const EXAMPLE = {
@@ -37,7 +38,7 @@ export const INPUT_MEESAGE = {
 };
 
 export const OUTPUT_MESSAGE = {
-  hello: '안녕하세요. W편의점입니다.\n현재 보유하고 있는 상품입니다.\n',
+  welcome: '안녕하세요. W편의점입니다.\n현재 보유하고 있는 상품입니다.\n',
   noProduct: '재고 없음',
   negative: '-',
 };

@@ -14,27 +14,28 @@ class ProductModel {
   }
 
   findPromotion(item) {
-    const product = this.#findPromotionEnableProduct(item);
+    const promotionEnableProduct = this.#findPromotionEnableProduct(item);
 
-    return this.#promotions.find((promotion) => promotion.name === product?.promotion);
+    return this.#promotions.find((promotion) => promotion.name === promotionEnableProduct?.promotion);
   }
 
   getPromotionUnit(item) {
     const promotion = this.findPromotion(item);
-
     if (!promotion) return null;
+
     return promotion.buy + promotion.get;
   }
 
   getPromotionEnableQuantity(item, quantity = Infinity) {
     const promotionUnit = this.getPromotionUnit(item);
-    const promotionProductQuantity = this.getPromotionProductQuantity(item);
     if (!promotionUnit) return 0;
+
+    const promotionProductQuantity = this.getPromotionProductQuantity(item);
 
     return Math.floor(Math.min(promotionProductQuantity, quantity) / promotionUnit) * promotionUnit;
   }
 
-  getTotalQuantity(item) {
+  getItemQuantity(item) {
     return this.#findProductsByName(item).reduce((accumulatedQuantity, product) => accumulatedQuantity + product.quantity, 0);
   }
 

@@ -13,16 +13,12 @@ class ReceiptModel {
     yield* this.#receipt;
   }
 
-  getTotalQuantity() {
+  getItemQuantity() {
     return this.#receipt.reduce((accumulatedQuantity, product) => accumulatedQuantity + product.quantity, 0);
   }
 
   getTotalPrice() {
     return this.#receipt.reduce((accumulatedPrice, product) => accumulatedPrice + product.price * product.quantity, 0);
-  }
-
-  hasPromotionProduct() {
-    return this.#receipt.some((item) => item.promotionFreeQuantity > 0);
   }
 
   getProductPromotionDiscount() {
@@ -33,7 +29,7 @@ class ReceiptModel {
   }
 
   getMembershipDiscount() {
-    if (this.#isMembershipDiscount === false) return 0;
+    if (!this.#isMembershipDiscount) return 0;
 
     const promotionDisabledPrice = this.#getPromotionDisabledPrice();
 

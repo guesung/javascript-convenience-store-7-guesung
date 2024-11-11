@@ -4,6 +4,7 @@ import { checkUnique } from '../lib/utils.js';
 class OutputValidator {
   static validateItemsFormat(rawItems) {
     const items = rawItems.split(SEPARATOR);
+
     items.forEach((item) => {
       if (!ITEMS_REGEXR.test(item)) throw new Error(ERROR_MESSAGE.notItemsFormat);
     });
@@ -11,10 +12,10 @@ class OutputValidator {
 
   static validateItemsQuantity(productModel, items) {
     items.forEach(([name, quantity]) => {
-      const productQuantity = productModel.getTotalQuantity(name);
+      const totalQuantity = productModel.getItemQuantity(name);
       if (quantity === 0) throw new Error(ERROR_MESSAGE.inputItemsZero);
-      if (productQuantity === 0) throw new Error(ERROR_MESSAGE.itemsZero);
-      if (productQuantity < quantity) throw new Error(ERROR_MESSAGE.itemsOverQuantity);
+      if (totalQuantity === 0) throw new Error(ERROR_MESSAGE.itemsZero);
+      if (totalQuantity < quantity) throw new Error(ERROR_MESSAGE.itemsOverQuantity);
     });
   }
 

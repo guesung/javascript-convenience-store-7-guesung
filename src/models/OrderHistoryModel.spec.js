@@ -20,58 +20,58 @@ describe('OrderHistoryModel', () => {
     jest.restoreAllMocks();
   });
 
-  describe('getTotalQuantity', () => {
+  describe('getItemQuantity', () => {
     test('구매 내역에서 item의 개수를 반환한다.', () => {
-      expect(orderHistoryModel.getTotalQuantity('콜라')).toBe(8);
-      expect(orderHistoryModel.getTotalQuantity('에너지바')).toBe(5);
-      expect(orderHistoryModel.getTotalQuantity('감자칩')).toBe(10);
-      expect(orderHistoryModel.getTotalQuantity('컵라면')).toBe(10);
-      expect(orderHistoryModel.getTotalQuantity('닭가슴살')).toBe(9);
+      expect(orderHistoryModel.getItemQuantity('콜라')).toBe(8);
+      expect(orderHistoryModel.getItemQuantity('에너지바')).toBe(5);
+      expect(orderHistoryModel.getItemQuantity('감자칩')).toBe(10);
+      expect(orderHistoryModel.getItemQuantity('컵라면')).toBe(10);
+      expect(orderHistoryModel.getItemQuantity('닭가슴살')).toBe(9);
     });
     test('구매 내역에 없는 item일 경우 0을 반환한다.', () => {
-      expect(orderHistoryModel.getTotalQuantity('핫식스')).toBe(0);
-      expect(orderHistoryModel.getTotalQuantity('몬스터')).toBe(0);
-      expect(orderHistoryModel.getTotalQuantity('치킨')).toBe(0);
+      expect(orderHistoryModel.getItemQuantity('핫식스')).toBe(0);
+      expect(orderHistoryModel.getItemQuantity('몬스터')).toBe(0);
+      expect(orderHistoryModel.getItemQuantity('치킨')).toBe(0);
     });
   });
 
   describe('increaseQuantity', () => {
     test('quantity에 해당하는 만큼 item의 구매 개수를 추가한다.', () => {
       expect(orderHistoryModel.increaseQuantity('콜라', 10));
-      expect(orderHistoryModel.getTotalQuantity('콜라')).toBe(18);
+      expect(orderHistoryModel.getItemQuantity('콜라')).toBe(18);
     });
     test('quantity가 없을 경우 item의 구매 개수를 1개만 추가한다.', () => {
       expect(orderHistoryModel.increaseQuantity('콜라'));
-      expect(orderHistoryModel.getTotalQuantity('콜라')).toBe(9);
+      expect(orderHistoryModel.getItemQuantity('콜라')).toBe(9);
     });
     test('구매 내역에 없는 item일 경우 0에서 해당하는 개수를 추가한다.', () => {
       expect(orderHistoryModel.increaseQuantity('핫식스', 10));
-      expect(orderHistoryModel.getTotalQuantity('핫식스')).toBe(10);
+      expect(orderHistoryModel.getItemQuantity('핫식스')).toBe(10);
 
       expect(orderHistoryModel.increaseQuantity('치킨'));
-      expect(orderHistoryModel.getTotalQuantity('치킨')).toBe(1);
+      expect(orderHistoryModel.getItemQuantity('치킨')).toBe(1);
     });
   });
 
   describe('decreaseQuantity', () => {
     test('quantity에 해당하는 만큼 item의 구매 개수를 뺀다.', () => {
       expect(orderHistoryModel.decreaseQuantity('콜라', 8));
-      expect(orderHistoryModel.getTotalQuantity('콜라')).toBe(0);
+      expect(orderHistoryModel.getItemQuantity('콜라')).toBe(0);
     });
     test('quantity가 없을 경우 item의 구매 개수를 1개만 뺀다.', () => {
       expect(orderHistoryModel.decreaseQuantity('콜라'));
-      expect(orderHistoryModel.getTotalQuantity('콜라')).toBe(7);
+      expect(orderHistoryModel.getItemQuantity('콜라')).toBe(7);
     });
     test('quantity보다 보유한 item 개수가 적을 경우 0으로 만든다.', () => {
       expect(orderHistoryModel.decreaseQuantity('콜라', 18));
-      expect(orderHistoryModel.getTotalQuantity('콜라')).toBe(0);
+      expect(orderHistoryModel.getItemQuantity('콜라')).toBe(0);
     });
     test('구매 내역에 없는 item일 경우 여전히 0개이다.', () => {
       expect(orderHistoryModel.decreaseQuantity('핫식스', 10));
-      expect(orderHistoryModel.getTotalQuantity('핫식스')).toBe(0);
+      expect(orderHistoryModel.getItemQuantity('핫식스')).toBe(0);
 
       expect(orderHistoryModel.decreaseQuantity('치킨'));
-      expect(orderHistoryModel.getTotalQuantity('치킨')).toBe(0);
+      expect(orderHistoryModel.getItemQuantity('치킨')).toBe(0);
     });
   });
 });
