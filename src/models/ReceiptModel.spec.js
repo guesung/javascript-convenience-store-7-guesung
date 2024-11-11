@@ -46,9 +46,9 @@ describe('ReceiptModel', () => {
     });
   });
 
-  describe('findProductPromotionDiscount', () => {
+  describe('getProductPromotionDiscount', () => {
     test('전체 프로모션 금액을 계산한다.', () => {
-      expect(receiptModel.findProductPromotionDiscount()).toBe(18_900);
+      expect(receiptModel.getProductPromotionDiscount()).toBe(18_900);
     });
   });
 

@@ -19,7 +19,7 @@ class PromotionService {
     const promotion = this.#productModel.findProductPromotion(item);
     if (!promotion) return;
 
-    const canFreeProduct = this.#productModel.getCanFreeProduct(item, quantity);
+    const canFreeProduct = this.#productModel.checkFreeProductEligibility(item, quantity);
     if (canFreeProduct) await this.#askFreeProduct(item);
 
     const gapQuantityAndPromotionProduct = quantity - this.#productModel.findProductPromotionEnableQuantity(item);

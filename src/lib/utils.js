@@ -1,7 +1,7 @@
 import { MissionUtils } from '@woowacourse/mission-utils';
 import { NO, YES } from './constants.js';
 
-export const getIsDateBetween = (date, startDate, endDate) => date >= startDate && date <= endDate;
+export const checkDateBetween = (date, startDate, endDate) => date >= startDate && date <= endDate;
 
 export const checkYesOrNo = (answer) => {
   if (answer === YES) return true;
@@ -22,4 +22,4 @@ export const retryWhileCatchedError = async (callbackFunction, tryCount = 0) => 
   }
 };
 
-export const getIsUnique = (array) => array.length === new Set(array).size;
+export const checkUnique = (array) => array.length === new Set(array).size;

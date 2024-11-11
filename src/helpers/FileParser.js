@@ -1,6 +1,6 @@
 import { DateTimes } from '@woowacourse/mission-utils';
 import { LINE_BREAK, SEPARATOR } from '../lib/constants.js';
-import { getIsDateBetween } from '../lib/utils.js';
+import { checkDateBetween } from '../lib/utils.js';
 
 class InputParser {
   static parseProducts(rawProducts) {
@@ -61,7 +61,7 @@ class InputParser {
   }
 
   static #filterTodayPromotion(promotion) {
-    return getIsDateBetween(DateTimes.now(), promotion.startDate, promotion.endDate);
+    return checkDateBetween(DateTimes.now(), promotion.startDate, promotion.endDate);
   }
 
   static #preprocessFile(rawFile) {

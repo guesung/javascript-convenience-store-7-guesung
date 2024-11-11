@@ -1,5 +1,5 @@
 import { ERROR_MESSAGE, ITEMS_REGEXR, SEPARATOR } from '../lib/constants.js';
-import { getIsUnique } from '../lib/utils.js';
+import { checkUnique } from '../lib/utils.js';
 
 class InputValidator {
   static validateItemsFormat(rawItems) {
@@ -20,7 +20,7 @@ class InputValidator {
 
   static validateItemsUnique(items) {
     const itemNames = items.map(([name]) => name);
-    const isItemsUnique = getIsUnique(itemNames);
+    const isItemsUnique = checkUnique(itemNames);
 
     if (!isItemsUnique) throw new Error(ERROR_MESSAGE.itemsNotUnique);
   }

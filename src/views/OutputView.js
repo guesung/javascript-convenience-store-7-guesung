@@ -44,7 +44,7 @@ class OutputView {
   }
 
   static #printPromotionProducts(receipt) {
-    const hasPromotionProduct = receipt.getHasPromotionProduct();
+    const hasPromotionProduct = receipt.checkPromotionProduct();
     if (!hasPromotionProduct) return;
     this.#print('===========증	 정===========');
     for (const item of receipt) {
@@ -66,7 +66,7 @@ class OutputView {
     return {
       totalQuantity: receipt.getTotalQuantity(),
       totalPrice: receipt.getTotalPrice(),
-      promotionPrice: receipt.findProductPromotionDiscount(),
+      promotionPrice: receipt.getProductPromotionDiscount(),
       membershipDiscount: receipt.getMembershipDiscount(),
       actualPrice: receipt.getActualPrice(),
     };

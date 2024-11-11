@@ -58,7 +58,7 @@ class ProductModel {
   }
 
   /** item을 quantity개 가져왔을 때 무료로 얻을 수 있는지을 반환한다. */
-  getCanFreeProduct(item, quantity) {
+  checkFreeProductEligibility(item, quantity) {
     const promotionUnit = this.findProductPromotionUnit(item);
     const promotionPossibleQuantity = this.findProductPromotionEnableQuantity(item);
 
