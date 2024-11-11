@@ -11,10 +11,6 @@ class ProductModel {
     return this.#products[Symbol.iterator]();
   }
 
-  getPromotionTotalQuantity() {
-    return this.#products.reduce((prev, cur) => prev + cur.quantity, 0);
-  }
-
   /** item 제품의 프로모션을 반환한다. */
   getPromotion(item) {
     const product = this.#getPromotionProduct(item);
@@ -45,7 +41,7 @@ class ProductModel {
 
   /** item 제품의 전체 개수을 반환한다. */
   getQuantity(item) {
-    return this.#getProducts(item).reduce((prev, cur) => prev + cur.quantity, 0);
+    return this.#getProducts(item).reduce((accumulatedQuantity, product) => accumulatedQuantity + product.quantity, 0);
   }
 
   /** item 프로모션 제품의 개수을 반환한다. */

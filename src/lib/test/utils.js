@@ -1,5 +1,5 @@
 import { MissionUtils } from '@woowacourse/mission-utils';
-import { NO, SEPARATOR } from '../constants.js';
+import { SEPARATOR } from '../constants.js';
 import App from '../../App.js';
 import { INPUTS_TO_TERMINATE } from './constants.js';
 

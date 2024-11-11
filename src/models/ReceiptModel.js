@@ -30,15 +30,13 @@ class ReceiptModel {
 
   /** 행사할인 금액을 반환한다. */
   getPromotionDiscount() {
-    return this.#receipt.reduce((accumulatedPromotionDiscount, product) => {
-      if (product.promotionQuantity > 0) return product.promotionQuantity * product.price + accumulatedPromotionDiscount;
-      return accumulatedPromotionDiscount;
-    }, 0);
+    return this.#receipt.reduce((accumulatedPromotionDiscount, product) => product.promotionQuantity * product.price + accumulatedPromotionDiscount, 0);
   }
 
   /** 멤버십할인 금액을 반환한다.  */
   getMembershipDiscount() {
-    if (!this.#isMembershipDiscount) return 0;
+    if (this.#isMembershipDiscount === false) return 0;
+
     const promotionDisabledPrice = this.#receipt.reduce((accumulatedPromotionDisabledPrice, product) => accumulatedPromotionDisabledPrice + (product.quantity - product.promotionAdjustTotalQuantity) * product.price, 0);
 
     return Math.min(promotionDisabledPrice * MEMBERSHIP_DISCOUNT_PERCENTAGE, MEMBERSHIP_DISCOUNT_MAX);
