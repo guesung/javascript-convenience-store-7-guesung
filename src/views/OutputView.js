@@ -44,7 +44,7 @@ class OutputView {
   }
 
   static #printPromotionProducts(receipt) {
-    const hasPromotionProduct = receipt.checkPromotionProduct();
+    const hasPromotionProduct = receipt.hasPromotionProduct();
     if (!hasPromotionProduct) return;
     this.#print('===========증	 정===========');
     for (const item of receipt) {

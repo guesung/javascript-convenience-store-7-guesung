@@ -24,7 +24,7 @@ class ReceiptModel {
   }
 
   /** 프로모션 제품이 1개 이상 있는지 반환한다. */
-  checkPromotionProduct() {
+  hasPromotionProduct() {
     return this.#receipt.some((item) => item.promotionFreeQuantity > 0);
   }
 
@@ -40,9 +40,13 @@ class ReceiptModel {
   getMembershipDiscount() {
     if (this.#isMembershipDiscount === false) return 0;
 
-    const promotionDisabledPrice = this.#receipt.reduce((accumulatedPromotionDisabledPrice, product) => accumulatedPromotionDisabledPrice + (product.quantity - product.promotionEnableQuantity) * product.price, 0);
+    const promotionDisabledPrice = this.#getPromotionDisabledPrice();
 
     return Math.min(promotionDisabledPrice * MEMBERSHIP_DISCOUNT_PERCENTAGE, MEMBERSHIP_DISCOUNT_MAX);
+  }
+
+  #getPromotionDisabledPrice() {
+    return this.#receipt.reduce((accumulatedPromotionDisabledPrice, product) => accumulatedPromotionDisabledPrice + (product.quantity - product.promotionEnableQuantity) * product.price, 0);
   }
 
   /** 상품을 추가한다. */
