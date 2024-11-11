@@ -17,18 +17,20 @@ class StoreController {
 
   async startTakeOrder() {
     await InputView.retryWhileOrderFinish(async () => {
-      OutputView.printHello();
-      OutputView.printProducts(this.#productModel);
-
+      this.#printMenu();
       await this.#takeOrder();
 
-      const promotionService = new PromotionService(this.#productModel, this.#orderHistoryModel);
-      await promotionService.checkItemsPromotion();
+      new PromotionService(this.#productModel, this.#orderHistoryModel).checkItemsPromotion();
 
       this.#generateRecipt();
       await this.#checkMembershipDiscount();
       this.#printReceipt();
     });
+  }
+
+  #printMenu() {
+    OutputView.printHello();
+    OutputView.printProducts(this.#productModel);
   }
 
   async #takeOrder() {
