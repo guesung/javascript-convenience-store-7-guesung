@@ -1,35 +1,6 @@
-import App from '../src/App.js';
+import { run } from 'jest';
 import { ERROR_MESSAGE, NO, YES } from '../src/lib/constants.js';
-import { expectLogContains, expectLogContainsWithoutSpacesAndEquals, getLogSpy, getOutput, mockNowDate, mockQuestions } from '../src/lib/test/utils.js';
-
-const INPUTS_TO_TERMINATE = ['[비타민워터-1]', NO, NO, NO, NO];
-
-const run = async ({ inputs = [], inputsToTerminate = INPUTS_TO_TERMINATE, expected = [], expectedIgnoringWhiteSpaces = [] }) => {
-  const logSpy = getLogSpy();
-  mockQuestions([...inputs, ...inputsToTerminate]);
-
-  const app = new App();
-  await app.run();
-
-  const output = getOutput(logSpy);
-
-  if (expectedIgnoringWhiteSpaces.length > 0) {
-    expectLogContainsWithoutSpacesAndEquals(output, expectedIgnoringWhiteSpaces);
-  }
-  if (expected.length > 0) {
-    expectLogContains(output, expected);
-  }
-};
-
-const runExceptions = async ({ inputs = [], inputsToTerminate = [], expectedErrorMessage = '' }) => {
-  const logSpy = getLogSpy();
-  mockQuestions([...inputs, ...inputsToTerminate]);
-
-  const app = new App();
-  await app.run();
-
-  expect(logSpy).toHaveBeenCalledWith(expect.stringContaining(expectedErrorMessage));
-};
+import { mockNowDate, runExceptions } from '../src/lib/test/utils.js';
 
 describe('편의점', () => {
   afterEach(() => {
@@ -44,7 +15,6 @@ describe('편의점', () => {
           expected: ['안녕하세요. W편의점입니다.', '현재 보유하고 있는 상품입니다.'],
         });
       });
-
       test('주문을 시작하면 파일에 있는 상품 목록을 출력한다.', async () => {
         await run({
           expected: [
@@ -72,19 +42,25 @@ describe('편의점', () => {
     });
 
     describe('재고 관리', () => {
-      test('고객이 상품을 구매할 때마다, 결제된 수량만큼 해당 상품의 재고에서 차감하여 수량을 관리한다. 이 때, 프로모션 제품이 먼저 차감된다.', async () => {
+      test('제품을 차감할 때, 프로모션 제품이 먼저 차감된다.', async () => {
         await run({
           inputs: ['[콜라-1]', NO, YES],
           expected: ['- 콜라 1,000원 9개 탄산2+1'],
         });
       });
+      test('프로모션 제품이 모두 차감되면, 일반 제품을 차감한다.', async () => {
+        await run({
+          inputs: ['[콜라-15]', YES, YES, YES],
+          expected: ['- 콜라 1,000원 재고 없음 탄산2+1', '- 콜라 1,000원 5개'],
+        });
+      });
     });
 
     describe('프로모션 할인', () => {
-      test('오늘 날짜가 프로모션 기간 내에 포함된 경우에만 할인을 적용한다.', async () => {
+      test('오늘 날짜가 프로모션 기간 외의 경우에만 할인을 적용하지 않는다.', async () => {
         mockNowDate('2020-02-14');
         await run({
-          inputs: ['[콜라-2]'],
+          inputs: ['[콜라-2]', YES],
           expectedIgnoringWhiteSpaces: ['행사할인-0'],
         });
       });
@@ -151,8 +127,7 @@ describe('편의점', () => {
           expectedIgnoringWhiteSpaces: ['행사할인-3,000', '멤버십할인-0', '총구매액99,000', '내실돈6,000'],
         });
       });
-
-      test('Y/N외의 값을 입력 후 제대로 입력했을 때 정상 동작한다.', async () => {
+      test('Y/N 외의 값을 입력 후 제대로 입력했을 때 정상 동작한다.', async () => {
         await run({
           inputs: ['[콜라-12]', 'n', NO, '아니오', NO, 'no', 'yo', NO],
           expectedIgnoringWhiteSpaces: ['행사할인-3,000', '멤버십할인-0', '총구매액99,000', '내실돈6,000'],
@@ -222,15 +197,13 @@ describe('편의점', () => {
     test.each([[['[컵라면-20]'], ['[콜라-200]']]])('구매 수량이 재고 수량을 초과한 경우 예외를 처리한다.', async (inputs) => {
       await runExceptions({
         inputs,
-        inputsToTerminate: INPUTS_TO_TERMINATE,
         expectedErrorMessage: ERROR_MESSAGE.itemsOverQuantity,
       });
     });
 
-    test.each([[['[콜라-8-3]'], ['[콜라-8][사이다-2]'], ['[콜라-8'], ['콜라-8'], ['[콜라8]']]])('상품에 대한 형식을 올바르지 않게 작성할 경우 예외를 처리한다.', async (inputs) => {
+    test.each([[['[콜라-8-3]'], ['[콜라-8][사이다-2]'], ['[콜라-8'], ['콜라-8'], ['[콜라8]'], ['[],[콜라-9]']]])('상품에 대한 형식을 올바르지 않게 작성할 경우 예외를 처리한다.', async (inputs) => {
       await runExceptions({
         inputs,
-        inputsToTerminate: INPUTS_TO_TERMINATE,
         expectedErrorMessage: ERROR_MESSAGE.notItemsFormat,
       });
     });
@@ -241,11 +214,13 @@ describe('편의점', () => {
         ['[콜라-8]', '예'],
         ['[콜라-8]', '[콜라-8]'],
         ['[콜라-8]', '놉'],
+        ['[콜라-8]', '예아'],
+        ['[콜라-8]', 'Of Course'],
+        ['[콜라-8]', 'Why Not?'],
       ],
     ])('Y/N 질문에 대한 형식을 올바르지 않게 작성할 경우 예외를 처리한다.', async (inputs) => {
       await runExceptions({
         inputs,
-        inputsToTerminate: INPUTS_TO_TERMINATE,
         expectedErrorMessage: ERROR_MESSAGE.notYesOrNo,
       });
     });
@@ -253,7 +228,6 @@ describe('편의점', () => {
     test.each([[['[컵볶이-3]'], ['[에너지바-5]', NO, YES, '[에너지바-1]']]])('존재하지 않는 상품을 입력한 경우 예외를 처리한다.', async (inputs) => {
       await runExceptions({
         inputs,
-        inputsToTerminate: INPUTS_TO_TERMINATE,
         expectedErrorMessage: ERROR_MESSAGE.itemsZero,
       });
     });
@@ -261,7 +235,6 @@ describe('편의점', () => {
     test.each([[['[콜라-0]']]])('제품을 0개 입력한 제품이 있을 경우 예외 처리한다.', async (inputs) => {
       await runExceptions({
         inputs,
-        inputsToTerminate: INPUTS_TO_TERMINATE,
         expectedErrorMessage: ERROR_MESSAGE.inputItemsZero,
       });
     });

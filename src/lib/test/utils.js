@@ -1,5 +1,7 @@
 import { MissionUtils } from '@woowacourse/mission-utils';
-import { SEPARATOR } from '../constants.js';
+import { NO, SEPARATOR } from '../constants.js';
+import App from '../../App.js';
+import { INPUTS_TO_TERMINATE } from './constants.js';
 
 export const mockQuestions = (inputs) => {
   const messages = [];
@@ -43,4 +45,31 @@ export const expectLogContainsWithoutSpacesAndEquals = (received, expects) => {
   expects.forEach((exp) => {
     expect(processedReceived).toContain(exp);
   });
+};
+
+export const run = async ({ inputs = [], inputsToTerminate = INPUTS_TO_TERMINATE, expected = [], expectedIgnoringWhiteSpaces = [] }) => {
+  const logSpy = getLogSpy();
+  mockQuestions([...inputs, ...inputsToTerminate]);
+
+  const app = new App();
+  await app.run();
+
+  const output = getOutput(logSpy);
+
+  if (expectedIgnoringWhiteSpaces.length > 0) {
+    expectLogContainsWithoutSpacesAndEquals(output, expectedIgnoringWhiteSpaces);
+  }
+  if (expected.length > 0) {
+    expectLogContains(output, expected);
+  }
+};
+
+export const runExceptions = async ({ inputs = [], inputsToTerminate = [], expectedErrorMessage = '' }) => {
+  const logSpy = getLogSpy();
+  mockQuestions([...inputs, ...inputsToTerminate]);
+
+  const app = new App();
+  await app.run();
+
+  expect(logSpy).toHaveBeenCalledWith(expect.stringContaining(expectedErrorMessage));
 };
