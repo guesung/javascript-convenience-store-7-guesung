@@ -1,5 +1,5 @@
 import { DateTimes } from '@woowacourse/mission-utils';
-import { LINE_BREAK, SEPARATOR } from '../lib/constants.js';
+import { LINE_BREAK, PROMOTION_NULL, SEPARATOR } from '../lib/constants.js';
 import { checkDateBetween } from '../lib/utils.js';
 
 class FileParser {
@@ -23,8 +23,8 @@ class FileParser {
 
   static #sortByPromotion() {
     return (a, b) => {
-      if (a.promotion === 'null' && b.promotion !== 'null') return 1;
-      if (a.promotion !== 'null' && b.promotion === 'null') return -1;
+      if (a.promotion === PROMOTION_NULL && b.promotion !== PROMOTION_NULL) return 1;
+      if (a.promotion !== PROMOTION_NULL && b.promotion === PROMOTION_NULL) return -1;
       return 0;
     };
   }
@@ -32,14 +32,14 @@ class FileParser {
   static #createDefaultProduct(products) {
     return products
       .filter((product) => {
-        const hasPromotion = product.promotion !== 'null';
-        const hasNoPromotionProduct = products.some((targetProduct) => targetProduct.name === product.name && targetProduct.promotion === 'null');
+        const hasPromotion = product.promotion !== PROMOTION_NULL;
+        const hasNoPromotionProduct = products.some((targetProduct) => targetProduct.name === product.name && targetProduct.promotion === PROMOTION_NULL);
         return hasPromotion && !hasNoPromotionProduct;
       })
       .map((product) => ({
         ...product,
         quantity: 0,
-        promotion: 'null',
+        promotion: PROMOTION_NULL,
       }));
   }
 

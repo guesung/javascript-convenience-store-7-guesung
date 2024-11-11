@@ -1,5 +1,5 @@
 import { MissionUtils } from '@woowacourse/mission-utils';
-import { OUTPUT_MESSAGE } from '../lib/constants.js';
+import { OUTPUT_MESSAGE, PROMOTION_NULL } from '../lib/constants.js';
 
 class OutputView {
   static printBlank() {
@@ -24,7 +24,7 @@ class OutputView {
   }
 
   static #findPromotionOutput(promotion) {
-    if (promotion === 'null') return '';
+    if (promotion === PROMOTION_NULL) return '';
 
     return promotion;
   }

@@ -3,6 +3,7 @@ export const QUANTITY_SEPARATOR = '-';
 export const LINE_BREAK = '\n';
 
 export const ITEMS_REGEXR = /^\[[가-힣a-zA-Z]+-\d+\]$/;
+export const PROMOTION_NULL = 'null';
 
 export const YES = 'Y';
 export const NO = 'N';

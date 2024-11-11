@@ -1,3 +1,5 @@
+import { PROMOTION_NULL } from '../lib/constants.js';
+
 class ProductModel {
   #products;
   #promotions;
@@ -76,7 +78,7 @@ class ProductModel {
   }
 
   #findPromotionEnableProduct(item) {
-    return this.#findProductsByName(item).find((product) => product.promotion !== 'null');
+    return this.#findProductsByName(item).find((product) => product.promotion !== PROMOTION_NULL);
   }
 }
 
