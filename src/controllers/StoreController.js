@@ -10,7 +10,7 @@ class StoreController {
 
   constructor() {
     const products = FileView.getProducts();
-    const promotions = FileView.getPromotions();
+    const promotions = FileView.findProductPromotions();
 
     this.#productModel = new ProductModel(products, promotions);
   }
@@ -42,7 +42,7 @@ class StoreController {
 
     for (const [item, quantity] of this.#orderHistoryModel) {
       this.#addItemOnReceipt(item, quantity);
-      this.#productModel.reduceProduct(item, quantity);
+      this.#productModel.decreaseProductQuantity(item, quantity);
     }
   }
 
@@ -51,8 +51,8 @@ class StoreController {
       name: item,
       price: this.#productModel.getPrice(item),
       quantity,
-      promotionQuantity: this.#productModel.getPromotionEnableQuantity(item, quantity) / this.#productModel.getPromotionUnit(item),
-      promotionAdjustTotalQuantity: this.#productModel.getPromotionEnableQuantity(item, quantity),
+      promotionFreeQuantity: this.#productModel.findProductPromotionFreeQuantity(item, quantity),
+      promotionEnableQuantity: this.#productModel.findProductPromotionEnableQuantity(item, quantity),
     });
   }
 

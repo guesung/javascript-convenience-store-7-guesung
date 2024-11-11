@@ -8,29 +8,29 @@ describe('ReceiptModel', () => {
       name: '콜라',
       price: 1000,
       quantity: 9,
-      promotionQuantity: 3,
-      promotionAdjustTotalQuantity: 9,
+      promotionFreeQuantity: 3,
+      promotionEnableQuantity: 9,
     });
     receiptModel.addItem({
       name: '사이다',
       price: 1200,
       quantity: 8,
-      promotionQuantity: 2,
-      promotionAdjustTotalQuantity: 6,
+      promotionFreeQuantity: 2,
+      promotionEnableQuantity: 6,
     });
     receiptModel.addItem({
       name: '감자칩',
       price: 1500,
       quantity: 10,
-      promotionQuantity: 3,
-      promotionAdjustTotalQuantity: 9,
+      promotionFreeQuantity: 3,
+      promotionEnableQuantity: 9,
     });
     receiptModel.addItem({
       name: '컵라면',
       price: 3000,
       quantity: 7,
-      promotionQuantity: 3,
-      promotionAdjustTotalQuantity: 6,
+      promotionFreeQuantity: 3,
+      promotionEnableQuantity: 6,
     });
   });
 
@@ -46,9 +46,9 @@ describe('ReceiptModel', () => {
     });
   });
 
-  describe('getPromotionDiscount', () => {
+  describe('findProductPromotionDiscount', () => {
     test('전체 프로모션 금액을 계산한다.', () => {
-      expect(receiptModel.getPromotionDiscount()).toBe(18_900);
+      expect(receiptModel.findProductPromotionDiscount()).toBe(18_900);
     });
   });
 
@@ -66,8 +66,8 @@ describe('ReceiptModel', () => {
         name: '콜라',
         price: 1000,
         quantity: 100,
-        promotionQuantity: 3,
-        promotionAdjustTotalQuantity: 9,
+        promotionFreeQuantity: 3,
+        promotionEnableQuantity: 9,
       });
       expect(receiptModel.getMembershipDiscount()).toBe(8_000);
     });

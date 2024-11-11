@@ -16,13 +16,13 @@ class PromotionService {
   }
 
   async #checkItemPromotion(item, quantity) {
-    const promotion = this.#productModel.getPromotion(item);
+    const promotion = this.#productModel.findProductPromotion(item);
     if (!promotion) return;
 
     const canFreeProduct = this.#productModel.getCanFreeProduct(item, quantity);
     if (canFreeProduct) await this.#askFreeProduct(item);
 
-    const gapQuantityAndPromotionProduct = quantity - this.#productModel.getPromotionEnableQuantity(item);
+    const gapQuantityAndPromotionProduct = quantity - this.#productModel.findProductPromotionEnableQuantity(item);
     const canBuyWithoutPromotion = gapQuantityAndPromotionProduct > 0;
     if (canBuyWithoutPromotion) await this.#askBuyWithoutPromotion(item, gapQuantityAndPromotionProduct);
   }

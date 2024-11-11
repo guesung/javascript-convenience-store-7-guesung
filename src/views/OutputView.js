@@ -12,7 +12,7 @@ class OutputView {
 
   static printProducts(products) {
     for (const { name, price, quantity, promotion } of products) {
-      const productOutput = `- ${name} ${price.toLocaleString()}원 ${this.#getQuantityOutput(quantity)} ${this.#getPromotionOutput(promotion)}`;
+      const productOutput = `- ${name} ${price.toLocaleString()}원 ${this.#getQuantityOutput(quantity)} ${this.#findProductPromotionOutput(promotion)}`;
       this.#print(productOutput);
     }
   }
@@ -23,7 +23,7 @@ class OutputView {
     return OUTPUT_MESSAGE.noProduct;
   }
 
-  static #getPromotionOutput(promotion) {
+  static #findProductPromotionOutput(promotion) {
     if (promotion === 'null') return '';
 
     return promotion;
@@ -48,7 +48,7 @@ class OutputView {
     if (!hasPromotionProduct) return;
     this.#print('===========증	 정===========');
     for (const item of receipt) {
-      if (item.promotionQuantity > 0) this.#print(`${item.name}   ${item.promotionQuantity}`);
+      if (item.promotionFreeQuantity > 0) this.#print(`${item.name}   ${item.promotionFreeQuantity}`);
     }
   }
 
@@ -66,7 +66,7 @@ class OutputView {
     return {
       totalQuantity: receipt.getTotalQuantity(),
       totalPrice: receipt.getTotalPrice(),
-      promotionPrice: receipt.getPromotionDiscount(),
+      promotionPrice: receipt.findProductPromotionDiscount(),
       membershipDiscount: receipt.getMembershipDiscount(),
       actualPrice: receipt.getActualPrice(),
     };

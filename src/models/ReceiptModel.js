@@ -25,13 +25,13 @@ class ReceiptModel {
 
   /** 프로모션 제품이 1개 이상 있는지 반환한다. */
   getHasPromotionProduct() {
-    return this.#receipt.some((item) => item.promotionQuantity > 0);
+    return this.#receipt.some((item) => item.promotionFreeQuantity > 0);
   }
 
   /** 행사할인 금액을 반환한다. */
-  getPromotionDiscount() {
+  findProductPromotionDiscount() {
     return this.#receipt.reduce((accumulatedPromotionDiscount, product) => {
-      if (product.promotionQuantity > 0) return product.promotionQuantity * product.price + accumulatedPromotionDiscount;
+      if (product.promotionFreeQuantity > 0) return product.promotionFreeQuantity * product.price + accumulatedPromotionDiscount;
       return accumulatedPromotionDiscount;
     }, 0);
   }
@@ -40,7 +40,7 @@ class ReceiptModel {
   getMembershipDiscount() {
     if (this.#isMembershipDiscount === false) return 0;
 
-    const promotionDisabledPrice = this.#receipt.reduce((accumulatedPromotionDisabledPrice, product) => accumulatedPromotionDisabledPrice + (product.quantity - product.promotionAdjustTotalQuantity) * product.price, 0);
+    const promotionDisabledPrice = this.#receipt.reduce((accumulatedPromotionDisabledPrice, product) => accumulatedPromotionDisabledPrice + (product.quantity - product.promotionEnableQuantity) * product.price, 0);
 
     return Math.min(promotionDisabledPrice * MEMBERSHIP_DISCOUNT_PERCENTAGE, MEMBERSHIP_DISCOUNT_MAX);
   }
@@ -56,7 +56,7 @@ class ReceiptModel {
   }
 
   getActualPrice() {
-    return this.getTotalPrice() - this.getPromotionDiscount() - this.getMembershipDiscount();
+    return this.getTotalPrice() - this.findProductPromotionDiscount() - this.getMembershipDiscount();
   }
 }
 

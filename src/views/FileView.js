@@ -9,7 +9,7 @@ class FileView {
     return FileParser.parseProducts(rawProducts);
   }
 
-  static getPromotions() {
+  static findProductPromotions() {
     const rawPromotions = this.#readFileSync(FILE_PATH.promotion);
 
     return FileParser.parsePromotions(rawPromotions);

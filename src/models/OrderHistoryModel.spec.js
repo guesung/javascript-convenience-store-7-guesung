@@ -7,7 +7,7 @@ describe('OrderHistoryModel', () => {
 
   beforeEach(async () => {
     const products = FileView.getProducts();
-    const promotions = FileView.getPromotions();
+    const promotions = FileView.findProductPromotions();
     const productModel = new ProductModel(products, promotions);
 
     mockQuestions(['[콜라-8],[에너지바-5],[감자칩-10],[컵라면-10],[닭가슴살-9]']);
