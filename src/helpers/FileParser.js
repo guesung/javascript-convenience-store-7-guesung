@@ -7,10 +7,9 @@ class InputParser {
     const products = rawProducts.trim().split(LINE_BREAK);
     products.shift();
 
-    const newProducts = this.#productsMapping(products);
-    this.#addProductIfHasNoPromotionProduct(newProducts);
-    this.#sortByPromotionProducts(newProducts);
-    return newProducts;
+    const mappedProducts = this.#productsMapping(products);
+    const sortedProducts = this.#sortByPromotionProducts(mappedProducts);
+    return this.#addProductIfDontHasNoPromotionProduct(sortedProducts);
   }
 
   static #productsMapping(products) {
@@ -25,24 +24,33 @@ class InputParser {
     });
   }
 
-  static #addProductIfHasNoPromotionProduct(products) {
-    return products.forEach((product) => {
-      const hasPromotion = product.promotion !== 'null';
-      const hasNoPromotionProduct = products.some((it) => it.name === product.name && it.promotion === 'null');
-      if (hasPromotion && !hasNoPromotionProduct)
-        products.push({
-          name: product.name,
-          price: product.price,
-          quantity: 0,
-          promotion: 'null',
-        });
-    });
+  /** 프로모션이 없는 제품이 없다면, 0개인 제품을 추가한다. */
+  static #addProductIfDontHasNoPromotionProduct(products) {
+    return products.reduce(
+      (acc, product) => {
+        const hasPromotion = product.promotion !== 'null';
+        const hasNoPromotionProduct = products.some((targetProduct) => targetProduct.name === product.name && targetProduct.promotion === 'null');
+
+        if (hasPromotion && !hasNoPromotionProduct)
+          return [
+            ...acc,
+            {
+              ...product,
+              quantity: 0,
+              promotion: 'null',
+            },
+          ];
+        return acc;
+      },
+      [...products],
+    );
   }
 
   static #sortByPromotionProducts(products) {
-    return products.sort((a) => {
-      if (a.promotion === 'null') return 1;
-      return -1;
+    return [...products].sort((a, b) => {
+      if (a.promotion === 'null' && b.promotion !== 'null') return 1;
+      if (a.promotion !== 'null' && b.promotion === 'null') return -1;
+      return 0;
     });
   }
 
