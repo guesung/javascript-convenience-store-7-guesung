@@ -79,11 +79,11 @@ class ProductModel {
     let leftQuantity = quantity;
 
     products.forEach((product) => {
-      if (product.quantity > 0) {
-        const reducedQuantity = Math.min(product.quantity, leftQuantity);
-        product.quantity -= reducedQuantity;
-        leftQuantity -= reducedQuantity;
-      }
+      if (product.quantity === 0) return;
+
+      const reducedQuantity = Math.min(product.quantity, leftQuantity);
+      product.quantity -= reducedQuantity;
+      leftQuantity -= reducedQuantity;
     });
   }
 
