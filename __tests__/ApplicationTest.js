@@ -217,81 +217,48 @@ describe('편의점', () => {
   });
 
   describe('예외 케이스', () => {
-    test('구매 수량이 재고 수량을 초과한 경우 예외를 처리한다.', async () => {
+    test.each([[['[컵라면-20]'], ['[콜라-200]']]])('구매 수량이 재고 수량을 초과한 경우 예외를 처리한다.', async (inputs) => {
       await runExceptions({
-        inputs: ['[컵라면-20]'],
+        inputs,
         inputsToTerminate: INPUTS_TO_TERMINATE,
         expectedErrorMessage: ERROR_MESSAGE.itemsOverQuantity,
       });
     });
 
-    test('상품에 대한 형식을 올바르지 않게 작성할 경우 예외를 처리한다.', async () => {
+    test.each([[['[콜라-8-3]'], ['[콜라-8][사이다-2]'], ['[콜라-8'], ['콜라-8'], ['[콜라8]']]])('상품에 대한 형식을 올바르지 않게 작성할 경우 예외를 처리한다.', async (inputs) => {
       await runExceptions({
-        inputs: ['[콜라-8-3]'],
-        inputsToTerminate: INPUTS_TO_TERMINATE,
-        expectedErrorMessage: ERROR_MESSAGE.notItemsFormat,
-      });
-      await runExceptions({
-        inputs: ['[콜라-8][사이다-2]'],
-        inputsToTerminate: INPUTS_TO_TERMINATE,
-        expectedErrorMessage: ERROR_MESSAGE.notItemsFormat,
-      });
-      await runExceptions({
-        inputs: ['[콜라-8'],
-        inputsToTerminate: INPUTS_TO_TERMINATE,
-        expectedErrorMessage: ERROR_MESSAGE.notItemsFormat,
-      });
-      await runExceptions({
-        inputs: ['콜라-8'],
-        inputsToTerminate: INPUTS_TO_TERMINATE,
-        expectedErrorMessage: ERROR_MESSAGE.notItemsFormat,
-      });
-      await runExceptions({
-        inputs: ['[콜라8]'],
+        inputs,
         inputsToTerminate: INPUTS_TO_TERMINATE,
         expectedErrorMessage: ERROR_MESSAGE.notItemsFormat,
       });
     });
 
-    test('Y/N 질문에 대한 형식을 올바르지 않게 작성할 경우 예외를 처리한다.', async () => {
+    test.each([
+      [
+        ['[콜라-8]', 'y'],
+        ['[콜라-8]', '예'],
+        ['[콜라-8]', '[콜라-8]'],
+        ['[콜라-8]', '놉'],
+      ],
+    ])('Y/N 질문에 대한 형식을 올바르지 않게 작성할 경우 예외를 처리한다.', async (inputs) => {
       await runExceptions({
-        inputs: ['[콜라-8]', 'y'],
-        inputsToTerminate: INPUTS_TO_TERMINATE,
-        expectedErrorMessage: ERROR_MESSAGE.notYesOrNo,
-      });
-      await runExceptions({
-        inputs: ['[콜라-8]', '예'],
-        inputsToTerminate: INPUTS_TO_TERMINATE,
-        expectedErrorMessage: ERROR_MESSAGE.notYesOrNo,
-      });
-      await runExceptions({
-        inputs: ['[콜라-8]', '[콜라-8]'],
-        inputsToTerminate: INPUTS_TO_TERMINATE,
-        expectedErrorMessage: ERROR_MESSAGE.notYesOrNo,
-      });
-      await runExceptions({
-        inputs: ['[콜라-8]', '놉'],
+        inputs,
         inputsToTerminate: INPUTS_TO_TERMINATE,
         expectedErrorMessage: ERROR_MESSAGE.notYesOrNo,
       });
     });
 
-    test('존재하지 않는 상품을 입력한 경우 예외를 처리한다.', async () => {
+    test.each([[['[컵볶이-3]'], ['[에너지바-5]', NO, YES, '[에너지바-1]']]])('존재하지 않는 상품을 입력한 경우 예외를 처리한다.', async (inputs) => {
       await runExceptions({
-        inputs: ['[컵볶이-3]'],
-        inputsToTerminate: INPUTS_TO_TERMINATE,
-        expectedErrorMessage: ERROR_MESSAGE.itemsZero,
-      });
-      await runExceptions({
-        inputs: ['[에너지바-5]', NO, YES, '[에너지바-1]'],
+        inputs,
         inputsToTerminate: INPUTS_TO_TERMINATE,
         expectedErrorMessage: ERROR_MESSAGE.itemsZero,
       });
     });
 
-    test('제품을 0개 입력한 제품이 있을 경우 예외 처리한다.', async () => {
+    test.each([[['[콜라-0]']]])('제품을 0개 입력한 제품이 있을 경우 예외 처리한다.', async (inputs) => {
       await runExceptions({
-        inputs: ['[콜라-0]'],
+        inputs,
         inputsToTerminate: INPUTS_TO_TERMINATE,
         expectedErrorMessage: ERROR_MESSAGE.inputItemsZero,
       });
