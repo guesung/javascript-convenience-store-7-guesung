@@ -30,7 +30,10 @@ class ReceiptModel {
 
   /** 행사할인 금액을 반환한다. */
   getPromotionDiscount() {
-    return this.#receipt.reduce((accumulatedPromotionDiscount, product) => product.promotionQuantity * product.price + accumulatedPromotionDiscount, 0);
+    return this.#receipt.reduce((accumulatedPromotionDiscount, product) => {
+      if (product.promotionQuantity > 0) return product.promotionQuantity * product.price + accumulatedPromotionDiscount;
+      return accumulatedPromotionDiscount;
+    }, 0);
   }
 
   /** 멤버십할인 금액을 반환한다.  */
