@@ -3,13 +3,13 @@ import { FileParser } from '../helpers/index.js';
 import { FILE_PATH } from '../lib/constants.js';
 
 class FileView {
-  static getProducts() {
+  static readProducts() {
     const rawProducts = this.#readFileSync(FILE_PATH.product);
 
     return FileParser.parseProducts(rawProducts);
   }
 
-  static findProductPromotions() {
+  static readPromotions() {
     const rawPromotions = this.#readFileSync(FILE_PATH.promotion);
 
     return FileParser.parsePromotions(rawPromotions);

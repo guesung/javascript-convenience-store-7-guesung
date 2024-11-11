@@ -50,7 +50,7 @@ class ReceiptModel {
   }
 
   /** 상품을 추가한다. */
-  addItem(item) {
+  addProduct(item) {
     this.#receipt.push(item);
   }
 
@@ -59,7 +59,8 @@ class ReceiptModel {
     this.#isMembershipDiscount = true;
   }
 
-  getActualPrice() {
+  /** 최종금액을 반환한다. */
+  getFinalPrice() {
     return this.getTotalPrice() - this.getProductPromotionDiscount() - this.getMembershipDiscount();
   }
 }

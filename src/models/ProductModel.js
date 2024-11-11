@@ -12,15 +12,15 @@ class ProductModel {
   }
 
   /** item 제품의 프로모션을 반환한다. */
-  findProductPromotion(item) {
-    const product = this.#findProductPromotionProduct(item);
+  findPromotion(item) {
+    const product = this.#findPromotionEnableProduct(item);
 
     return this.#promotions.find((promotion) => promotion.name === product?.promotion);
   }
 
   /** 프로모션 단위 개수을 반환한다. */
-  findProductPromotionUnit(item) {
-    const promotion = this.findProductPromotion(item);
+  getPromotionUnit(item) {
+    const promotion = this.findPromotion(item);
 
     if (!promotion) return null;
     return promotion.buy + promotion.get;
@@ -31,43 +31,43 @@ class ProductModel {
    * quantity를 넘기지 않을 경우, 남아있는 재고에서 개수를 확인한다.
    * quantity를 넘길 경우, 주문한 개수와 남아있는 재고 중 더 작은 값으로 계산한다.
    */
-  findProductPromotionEnableQuantity(item, quantity = Infinity) {
-    const promotionUnit = this.findProductPromotionUnit(item);
-    const promotionProductQuantity = this.findProductPromotionProductQuantity(item);
+  getPromotionEnableQuantity(item, quantity = Infinity) {
+    const promotionUnit = this.getPromotionUnit(item);
+    const promotionProductQuantity = this.getPromotionProductQuantity(item);
     if (!promotionUnit) return 0;
 
     return Math.floor(Math.min(promotionProductQuantity, quantity) / promotionUnit) * promotionUnit;
   }
 
   /** item 제품의 전체 개수을 반환한다. */
-  getQuantity(item) {
-    return this.#getProducts(item).reduce((accumulatedQuantity, product) => accumulatedQuantity + product.quantity, 0);
+  getTotalQuantity(item) {
+    return this.#findProductsByName(item).reduce((accumulatedQuantity, product) => accumulatedQuantity + product.quantity, 0);
   }
 
   /** item 프로모션 제품의 개수을 반환한다. */
-  findProductPromotionProductQuantity(item) {
-    return this.#findProductPromotionProduct(item)?.quantity ?? 0;
+  getPromotionProductQuantity(item) {
+    return this.#findPromotionEnableProduct(item)?.quantity ?? 0;
   }
 
   /** item의 가격을 반환한다. */
   getPrice(item) {
-    const products = this.#getProducts(item);
+    const products = this.#findProductsByName(item);
     const product = products[0];
 
     return product.price;
   }
 
   /** item을 quantity개 가져왔을 때 무료로 얻을 수 있는지을 반환한다. */
-  checkFreeProductEligibility(item, quantity) {
-    const promotionUnit = this.findProductPromotionUnit(item);
-    const promotionPossibleQuantity = this.findProductPromotionEnableQuantity(item);
+  getCanFreeProduct(item, quantity) {
+    const promotionUnit = this.getPromotionUnit(item);
+    const promotionEnableQuantity = this.getPromotionEnableQuantity(item);
 
-    return (quantity + 1) % promotionUnit === 0 && promotionPossibleQuantity >= quantity + 1;
+    return (quantity + 1) % promotionUnit === 0 && promotionEnableQuantity >= quantity + 1;
   }
 
   /** 프로모션으로 얻은 제품의 개수를 반환한다. */
-  findProductPromotionFreeQuantity(item, quantity) {
-    return this.findProductPromotionEnableQuantity(item, quantity) / this.findProductPromotionUnit(item);
+  getPromotionFreeQuantity(item, quantity) {
+    return this.getPromotionEnableQuantity(item, quantity) / this.getPromotionUnit(item);
   }
 
   /**
@@ -75,8 +75,8 @@ class ProductModel {
    * quantity를 넘기지 않을 경우 1개 감소
    * quantity를 넘길 경우 quantity개만큼 감소
    */
-  decreaseProductQuantity(item, quantity = 1) {
-    const products = this.#getProducts(item);
+  decreaseQuantity(item, quantity = 1) {
+    const products = this.#findProductsByName(item);
     let leftQuantity = quantity;
 
     products.forEach((product) => {
@@ -89,13 +89,13 @@ class ProductModel {
   }
 
   /** item 제품 정보을 반환한다. */
-  #getProducts(item) {
+  #findProductsByName(item) {
     return this.#products.filter((product) => product.name === item);
   }
 
   /** item 제품의 프로모션 정보을 반환한다. */
-  #findProductPromotionProduct(item) {
-    return this.#getProducts(item).find((product) => product.promotion !== 'null');
+  #findPromotionEnableProduct(item) {
+    return this.#findProductsByName(item).find((product) => product.promotion !== 'null');
   }
 }
 

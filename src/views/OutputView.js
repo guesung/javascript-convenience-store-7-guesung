@@ -12,7 +12,7 @@ class OutputView {
 
   static printProducts(products) {
     for (const { name, price, quantity, promotion } of products) {
-      const productOutput = `- ${name} ${price.toLocaleString()}원 ${this.#getQuantityOutput(quantity)} ${this.#findProductPromotionOutput(promotion)}`;
+      const productOutput = `- ${name} ${price.toLocaleString()}원 ${this.#getQuantityOutput(quantity)} ${this.#findPromotionOutput(promotion)}`;
       this.#print(productOutput);
     }
   }
@@ -23,7 +23,7 @@ class OutputView {
     return OUTPUT_MESSAGE.noProduct;
   }
 
-  static #findProductPromotionOutput(promotion) {
+  static #findPromotionOutput(promotion) {
     if (promotion === 'null') return '';
 
     return promotion;
@@ -53,13 +53,13 @@ class OutputView {
   }
 
   static #printTotal(receipt) {
-    const { totalQuantity, totalPrice, promotionPrice, membershipDiscount, actualPrice } = this.#calculateTotal(receipt);
+    const { totalQuantity, totalPrice, promotionPrice, membershipDiscount, finalPrice } = this.#calculateTotal(receipt);
 
     this.#print('==============================');
     this.#print(`총구매액 ${totalQuantity} ${totalPrice.toLocaleString()}`);
     this.#print(`행사할인 ${OUTPUT_MESSAGE.negative}${promotionPrice.toLocaleString()}`);
     this.#print(`멤버십할인 ${OUTPUT_MESSAGE.negative}${membershipDiscount.toLocaleString()}`);
-    this.#print(`내실돈 ${actualPrice.toLocaleString()}`);
+    this.#print(`내실돈 ${finalPrice.toLocaleString()}`);
   }
 
   static #calculateTotal(receipt) {
@@ -68,7 +68,7 @@ class OutputView {
       totalPrice: receipt.getTotalPrice(),
       promotionPrice: receipt.getProductPromotionDiscount(),
       membershipDiscount: receipt.getMembershipDiscount(),
-      actualPrice: receipt.getActualPrice(),
+      finalPrice: receipt.getFinalPrice(),
     };
   }
 

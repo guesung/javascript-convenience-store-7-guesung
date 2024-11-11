@@ -16,25 +16,25 @@ class PromotionService {
   }
 
   async #checkItemPromotion(item, quantity) {
-    const promotion = this.#productModel.findProductPromotion(item);
+    const promotion = this.#productModel.findPromotion(item);
     if (!promotion) return;
 
-    const canFreeProduct = this.#productModel.checkFreeProductEligibility(item, quantity);
+    const canFreeProduct = this.#productModel.getCanFreeProduct(item, quantity);
     if (canFreeProduct) await this.#askFreeProduct(item);
 
-    const gapQuantityAndPromotionProduct = quantity - this.#productModel.findProductPromotionEnableQuantity(item);
+    const gapQuantityAndPromotionProduct = quantity - this.#productModel.getPromotionEnableQuantity(item);
     const canBuyWithoutPromotion = gapQuantityAndPromotionProduct > 0;
     if (canBuyWithoutPromotion) await this.#askBuyWithoutPromotion(item, gapQuantityAndPromotionProduct);
   }
 
   async #askFreeProduct(item) {
     const isFreeProduct = await InputView.readIsFreeProduct(item);
-    if (isFreeProduct) this.#orderHistoryModel.addQuantity(item);
+    if (isFreeProduct) this.#orderHistoryModel.increaseQuantity(item);
   }
 
   async #askBuyWithoutPromotion(item, quantity) {
     const isBuyWithoutPromotion = await InputView.readIsBuyWithoutPromotion(item, quantity);
-    if (!isBuyWithoutPromotion) this.#orderHistoryModel.reduceQuantity(item, quantity);
+    if (!isBuyWithoutPromotion) this.#orderHistoryModel.decreaseQuantity(item, quantity);
   }
 }
 

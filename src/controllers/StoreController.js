@@ -9,8 +9,8 @@ class StoreController {
   #receiptModel;
 
   constructor() {
-    const products = FileView.getProducts();
-    const promotions = FileView.findProductPromotions();
+    const products = FileView.readProducts();
+    const promotions = FileView.readPromotions();
 
     this.#productModel = new ProductModel(products, promotions);
   }
@@ -41,18 +41,18 @@ class StoreController {
     this.#receiptModel = new ReceiptModel();
 
     for (const [item, quantity] of this.#orderHistoryModel) {
-      this.#addItemOnReceipt(item, quantity);
-      this.#productModel.decreaseProductQuantity(item, quantity);
+      this.#addProductOnReceipt(item, quantity);
+      this.#productModel.decreaseQuantity(item, quantity);
     }
   }
 
-  #addItemOnReceipt(item, quantity) {
-    this.#receiptModel.addItem({
+  #addProductOnReceipt(item, quantity) {
+    this.#receiptModel.addProduct({
       name: item,
       price: this.#productModel.getPrice(item),
       quantity,
-      promotionFreeQuantity: this.#productModel.findProductPromotionFreeQuantity(item, quantity),
-      promotionEnableQuantity: this.#productModel.findProductPromotionEnableQuantity(item, quantity),
+      promotionFreeQuantity: this.#productModel.getPromotionFreeQuantity(item, quantity),
+      promotionEnableQuantity: this.#productModel.getPromotionEnableQuantity(item, quantity),
     });
   }
 
