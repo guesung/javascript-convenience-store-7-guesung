@@ -4,7 +4,7 @@ import { expectLogContains, expectLogContainsWithoutSpacesAndEquals, getLogSpy, 
 
 const INPUTS_TO_TERMINATE = ['[비타민워터-1]', NO, NO, NO, NO];
 
-const run = async ({ inputs = [], inputsToTerminate = [], expected = [], expectedIgnoringWhiteSpaces = [] }) => {
+const run = async ({ inputs = [], inputsToTerminate = INPUTS_TO_TERMINATE, expected = [], expectedIgnoringWhiteSpaces = [] }) => {
   const logSpy = getLogSpy();
   mockQuestions([...inputs, ...inputsToTerminate]);
 
@@ -41,14 +41,12 @@ describe('편의점', () => {
     describe('주문 시작', () => {
       test('주문을 시작하면 인삿말을 출력한다,', async () => {
         await run({
-          inputs: INPUTS_TO_TERMINATE,
           expected: ['안녕하세요. W편의점입니다.', '현재 보유하고 있는 상품입니다.'],
         });
       });
 
       test('주문을 시작하면 파일에 있는 상품 목록을 출력한다.', async () => {
         await run({
-          inputs: INPUTS_TO_TERMINATE,
           expected: [
             '- 콜라 1,000원 10개 탄산2+1',
             '- 콜라 1,000원 10개',
@@ -90,9 +88,6 @@ describe('편의점', () => {
           expectedIgnoringWhiteSpaces: ['행사할인-0'],
         });
       });
-    });
-
-    describe('프로모션 할인', () => {
       test('프로모션 제품을 무료로 받을 경우, 해당 제품을 1개 추가한다.', async () => {
         await run({
           inputs: ['[콜라-2]', YES],
