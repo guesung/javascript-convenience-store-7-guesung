@@ -21,3 +21,5 @@ export const retryWhileCatchedError = async (callbackFunction, tryCount = 0) => 
     return await retryWhileCatchedError(callbackFunction, tryCount + 1);
   }
 };
+
+export const getIsUnique = (array) => array.length === new Set(array).size;
