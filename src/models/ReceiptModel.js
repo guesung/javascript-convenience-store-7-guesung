@@ -51,6 +51,10 @@ class ReceiptModel {
   setMembershipDiscount() {
     this.#isMembershipDiscount = true;
   }
+
+  getActualPrice() {
+    return this.getTotalPrice() - this.getPromotionDiscount() - this.getMembershipDiscount();
+  }
 }
 
 export default ReceiptModel;
