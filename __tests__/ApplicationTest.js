@@ -1,6 +1,5 @@
-import { run } from 'jest';
 import { ERROR_MESSAGE, NO, YES } from '../src/lib/constants.js';
-import { mockNowDate, runExceptions } from '../src/lib/test/utils.js';
+import { mockNowDate, run, runExceptions } from '../src/lib/test/utils.js';
 
 describe('편의점', () => {
   afterEach(() => {
