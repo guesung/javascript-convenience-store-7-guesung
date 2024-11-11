@@ -4,78 +4,64 @@ import { getIsDateBetween } from '../lib/utils.js';
 
 class InputParser {
   static parseProducts(rawProducts) {
-    const products = rawProducts.trim().split(LINE_BREAK);
-    products.shift();
+    const products = rawProducts.trim().split(LINE_BREAK).slice(1);
 
-    const mappedProducts = this.#productsMapping(products);
-    const sortedProducts = this.#sortByPromotionProducts(mappedProducts);
-    return this.#addProductIfDontHasNoPromotionProduct(sortedProducts);
+    const mappedAndSortedProducts = products.map(this.#mapProduct).sort(this.#sortByPromotion);
+    return this.#createDefaultProduct(mappedAndSortedProducts);
   }
 
-  static #productsMapping(products) {
-    return products.map((product) => {
-      const [name, price, quantity, promotion] = product.split(SEPARATOR);
-      return {
-        name,
-        price: Number(price),
-        quantity: Number(quantity),
-        promotion,
-      };
-    });
+  static #mapProduct(product) {
+    const [name, price, quantity, promotion] = product.split(SEPARATOR);
+    return {
+      name,
+      price: Number(price),
+      quantity: Number(quantity),
+      promotion,
+    };
   }
 
-  /** 프로모션이 없는 제품이 없다면, 0개인 제품을 추가한다. */
-  static #addProductIfDontHasNoPromotionProduct(products) {
-    return products.reduce(
-      (acc, product) => {
+  static #createDefaultProduct(products) {
+    const defaultProducts = products
+      .filter((product) => {
         const hasPromotion = product.promotion !== 'null';
         const hasNoPromotionProduct = products.some((targetProduct) => targetProduct.name === product.name && targetProduct.promotion === 'null');
-
-        if (hasPromotion && !hasNoPromotionProduct)
-          return [
-            ...acc,
-            {
-              ...product,
-              quantity: 0,
-              promotion: 'null',
-            },
-          ];
-        return acc;
-      },
-      [...products],
-    );
+        return hasPromotion && !hasNoPromotionProduct;
+      })
+      .map((product) => ({
+        ...product,
+        quantity: 0,
+        promotion: 'null',
+      }));
+    return products.concat(defaultProducts);
   }
 
-  static #sortByPromotionProducts(products) {
-    return [...products].sort((a, b) => {
+  static #sortByPromotion() {
+    return (a, b) => {
       if (a.promotion === 'null' && b.promotion !== 'null') return 1;
       if (a.promotion !== 'null' && b.promotion === 'null') return -1;
       return 0;
-    });
+    };
   }
 
   static parsePromotions(rawPromotions) {
-    const promotions = rawPromotions.trim().split(LINE_BREAK);
-    promotions.shift();
+    const promotions = rawPromotions.trim().split(LINE_BREAK).slice(1);
 
-    return this.#filterTodayPromotions(this.#promotionMapping(promotions));
+    return promotions.map(this.#mapPromotion).filter(this.#filterTodayPromotion);
   }
 
-  static #promotionMapping(promotions) {
-    return promotions.map((promotion) => {
-      const [name, buy, get, startDate, endDate] = promotion.split(SEPARATOR);
-      return {
-        name,
-        buy: Number(buy),
-        get: Number(get),
-        startDate: new Date(startDate),
-        endDate: new Date(endDate),
-      };
-    });
+  static #mapPromotion(promotion) {
+    const [name, buy, get, startDate, endDate] = promotion.split(SEPARATOR);
+    return {
+      name,
+      buy: Number(buy),
+      get: Number(get),
+      startDate: new Date(startDate),
+      endDate: new Date(endDate),
+    };
   }
 
-  static #filterTodayPromotions(promotions) {
-    return promotions.filter((promotion) => getIsDateBetween(DateTimes.now(), promotion.startDate, promotion.endDate));
+  static #filterTodayPromotion(promotion) {
+    return getIsDateBetween(DateTimes.now(), promotion.startDate, promotion.endDate);
   }
 }
 
