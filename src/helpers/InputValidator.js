@@ -1,7 +1,7 @@
 import { ERROR_MESSAGE, ITEMS_REGEXR, SEPARATOR } from '../lib/constants.js';
 import { checkUnique } from '../lib/utils.js';
 
-class InputValidator {
+class OutputValidator {
   static validateItemsFormat(rawItems) {
     const items = rawItems.split(SEPARATOR);
     items.forEach((item) => {
@@ -32,4 +32,4 @@ class InputValidator {
   }
 }
 
-export default InputValidator;
+export default OutputValidator;

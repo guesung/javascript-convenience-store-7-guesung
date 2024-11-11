@@ -2,7 +2,7 @@ import { DateTimes } from '@woowacourse/mission-utils';
 import { LINE_BREAK, SEPARATOR } from '../lib/constants.js';
 import { checkDateBetween } from '../lib/utils.js';
 
-class InputParser {
+class FileParser {
   static parseProducts(rawProducts) {
     const products = this.#preprocessFile(rawProducts);
 
@@ -69,4 +69,4 @@ class InputParser {
   }
 }
 
-export default InputParser;
+export default FileParser;
